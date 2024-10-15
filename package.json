@@ -1,7 +1,7 @@
 {
   "name": "env-ai",
-  "version": "0.2.0",
-  "description": " ",
+  "version": "0.2.1",
+  "description": "AI Assistant for Your Local Environment",
   "license": "GPL-3.0",
   "keywords": [
     "ai",
