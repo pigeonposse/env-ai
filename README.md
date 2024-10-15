@@ -15,21 +15,13 @@
 
 **env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. 
 
-- 📦 **JavaScript Library**: Available as a library to integrate into your projects.
-- 💻 **CLI**: Works as a command line interface in:
-    - 🟢 **Node.js**
-    - 🦕 **Deno**
-    - 🍞 **Bun**
-- 🚀 **Binary**: Also available as a binary for easy installation and use. [download](https://github.com/pigeonposse/env-ai/releases)
-
-
 > **Requirement:** **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
 
 
 ## 📑 Index
 
 1. [env-ai](#env-ai---ai-assistant-for-your-local-environment)
-2. [🚀 Features](#-features)
+2. [🌟 Features](#-features)
 3. [📦 Installation](#-installation)
 4. [📖 Using the CLI](#-using-the-cli)
    - [Main Commands](#main-commands)
@@ -44,12 +36,18 @@
 9. [📜 License](#-license)
 10. [🐦 About Us](#-about-us)
 
-## 🚀 Features
+## 🌟 Features
 
-- Real-time chat with the AI assistant from the terminal.
-- Extensive theme and output customization.
-- Configuration file support (`.mjs`, `.js`, `.json`, `.yml`, `.yaml`, `.toml`, `.tml`).
-- Available for all operating systems and architectures via [GitHub Releases](https://github.com/pigeonposse/env-ai/releases).
+- 💬 **Real-Time Chat**: Interact with the AI assistant directly from your terminal.
+- 🎨 **Extensive Customization**: Configure themes and outputs to your liking.
+- 📄 **Configuration File Support**: Compatible with multiple formats, including `.mjs`, `.js`, `.json`, `.yml`, `.yaml`, `.toml`, and `.tml`.
+- 🌐 **Multiple Environments**:
+  - 📦 **JavaScript Library**: Easily integrable into your projects.
+  - 💻 **Command Line Interface (CLI)**: Works in:
+    - 🟢 **Node.js**
+    - 🦕 **Deno**
+    - 🍞 **Bun**
+  - 🚀 **Binary**: Available for all operating systems and architectures via [GitHub Releases](https://github.com/pigeonposse/env-ai/releases).
 
 ## 📦 Installation
 
