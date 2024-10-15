@@ -108,11 +108,11 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 			debug        : `Debug Error`,
 			debugFlag    : ( flag: string ) => `You can debug the error with flag: ${flag}`,
 			debugContact : ( url: string ) => `Or contact developers at: ${url}`,
-			unexpected   : 'Unexpected error: ',
+			unexpected   : 'Unexpected error',
 		},
 		...coreMessages,
 	}
-	
+
 	bugsUrl = this._const.bugsUrl
 
 	constructor( argv: CliParams['argv'] ){

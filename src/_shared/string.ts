@@ -1,4 +1,5 @@
 import sanitizeHtml from 'sanitize-html'
+import { isPath } from './sys'
 
 // eslint-disable-next-line no-unused-vars
 type CustomParams = Record<string, ( ( arg: string ) => Promise<string> ) | string>
@@ -149,4 +150,4 @@ export const isUrl = ( value: string ): boolean => {
 	}
 
 }
-export const isPath = ( str: string ) => /^(\.|\/|\\|[a-zA-Z]:\\|[^:]+\/)/.test( str )
+

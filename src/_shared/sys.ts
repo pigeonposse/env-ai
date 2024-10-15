@@ -3,18 +3,47 @@ import {
 	writeFile, readFile, stat,
 } from "node:fs/promises"
 import {
-	resolve, extname, 
+	resolve, extname,  isAbsolute, join,
 } from "node:path"
 import { globby } from 'globby'
 import yaml from 'yaml'
 import toml from 'toml'
 import { pathToFileURL } from "node:url"
 
+export const isPath = ( str: string ) => {
+
+	if ( isAbsolute( str ) || /^(\.\/|\.\.\/|[A-Za-z]:\\|\/)/.test( str ) ) {
+
+		if ( isAbsolute( str ) || /^(\.\/|\.\.\/|[A-Za-z]:\\|\/)/.test( str ) ) {
+
+			if ( /\s(?!\\)/.test( str ) && !/\\\s/.test( str ) )
+				return false 
+			
+			try {
+
+				const normalizedPath = join( str )
+				return normalizedPath !== ''
+			
+			} catch {
+
+				return false
+			
+			}
+		
+		}
+	
+	}
+	return false
+
+}
 export default class Sys {
 
 	path = { resolve: resolve }
 	readFile = readFile
 	writeFile = writeFile
+	isAbsolute = isAbsolute
+	join = join
+	isPath = isPath
 	getPaths = globby
 	extname = extname
 	async existsFile( filePath: string ): Promise<boolean> {
