@@ -1,6 +1,6 @@
 {
   "name": "env-ai",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "AI Assistant for Your Local Environment",
   "license": "GPL-3.0",
   "keywords": [
@@ -62,9 +62,9 @@
     "preview": "node dist/cli.mjs",
     "preview:deno": "deno run -A --unstable-fs dist/cli.mjs",
     "preview:bun": "bun dist/cli.mjs",
-    "test": "pnpm test:src && pnpm test:bin",
-    "test:src": "vitest src",
-    "test:bin": "vitest test",
+    "test": "pnpm test:lib && pnpm test:bin",
+    "test:lib": "vitest run src",
+    "test:bin": "vitest run tests",
     "example-cli": "tsx examples/cli.ts",
     "example-lib": "tsx examples/lib.ts",
     "update-version": "changeset && changeset version",

@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.2.3
+
+### Patch Changes
+
+- No input is required now. Path verification is more robust than in previous versions. Tests are added
+
 ## 0.2.2
 
 ### Patch Changes
