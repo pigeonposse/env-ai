@@ -153,7 +153,7 @@ output: 'README.md',
 });
 ```
 
-### CLI With config file [js]
+### CLI With `js` config file 
 
 ```bash
 env-ai ask --config dovenv.config.js
@@ -168,7 +168,7 @@ output: 'README.md',
 });
 ```
 
-### CLI With config file [json]
+### CLI With `json` config file 
 
 ```bash
 env-ai ask --config dovenv.config.json
@@ -181,7 +181,7 @@ env-ai ask --config dovenv.config.json
 }
 ```
 
-### CLI With config file [toml]
+### CLI With `toml` config file 
 
 ```bash
 env-ai ask --config documentation-context.toml
@@ -198,7 +198,7 @@ The content for the following code library:
 """
 ```
 
-### CLI With config file [yaml]
+### CLI With `yaml` config file 
 
 ```bash
 env-ai ask --config dovenv.config.yaml
