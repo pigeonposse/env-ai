@@ -43,7 +43,7 @@
 - Real-time chat with the AI assistant from the terminal.
 - Extensive theme and output customization.
 - Configuration file support (`.mjs`, `.js`, `.json`, `.yml`, `.yaml`, `.toml`, `.tml`).
-- Available for all operating systems and architectures via [GitHub Releases](https://github.com/your-repository/env-ai/releases).
+- Available for all operating systems and architectures via [GitHub Releases](https://github.com/pigeonposse/env-ai/releases).
 
 ## 📦 Installation
 
@@ -183,7 +183,7 @@ env-ai ask --config dovenv.config.json
 
 ## 🌍 Compatibility and Download
 
-The CLI is available for all operating systems and architectures. Download it directly from the [GitHub Releases](https://github.com/your-repository/env-ai/releases).
+The CLI is available for all operating systems and architectures. Download it directly from the [GitHub Releases](https://github.com/pigeonposse/env-ai/releases).
  
 
 ## 👨‍💻 Development
