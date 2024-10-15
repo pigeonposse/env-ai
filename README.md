@@ -16,11 +16,11 @@
 **env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. 
 
 - 📦 **JavaScript Library**: Available as a library to integrate into your projects.
-- 💻 **Runnable CLI**: Works as a command line interface in:
-- **Node.js** 🟢
-- **Deno** 🦕
-- **Bun** 🍞
-- 🚀 **Binary**: Also available as a binary for easy installation and use. [dowload](https://github.com/pigeonposse/env-ai/releases)
+- 💻 **CLI**: Works as a command line interface in:
+    - 🟢 **Node.js**
+    - 🦕 **Deno**
+    - 🍞 **Bun**
+- 🚀 **Binary**: Also available as a binary for easy installation and use. [download](https://github.com/pigeonposse/env-ai/releases)
 
 
 > **Requirement:** **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
