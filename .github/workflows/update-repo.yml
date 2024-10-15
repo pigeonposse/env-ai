@@ -1,0 +1,49 @@
+###############################################################################
+# UPDATE REPO INFO
+###############################################################################
+
+name: 🚀ℹ️ Update repo info
+
+on: workflow_dispatch
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
+###############################################################################
+# JOBS
+###############################################################################
+
+jobs:
+  update_info:
+    runs-on: ubuntu-latest
+    steps:
+
+      #########################################################################
+      # INIT
+      #########################################################################
+
+      - name: ⬇️🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+      - name: ⬇️🛎 Checkout
+        uses: actions/checkout@v4
+      - name: ⬇️🥡 Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: ⬇️🟢 Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: ⬇️📦 Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      #########################################################################
+      # UPDATE
+      #########################################################################
+
+      - name: ⬇️🧩 Update GitHub info
+        run: pnpm update-gh
+        env:
+            GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+
+###############################################################################
