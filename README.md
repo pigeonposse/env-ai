@@ -180,6 +180,34 @@ env-ai ask --config dovenv.config.json
     "system": "./examples/config/system.txt"
 }
 ```
+
+### CLI With config file [toml]
+
+```bash
+env-ai ask --config documentation-context.toml
+```
+
+```toml
+theme = "docs"
+include = ["./docs", "./src"]
+system = """
+You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
+The content for the following code library:
+
+{{content}}
+"""
+```
+
+### CLI With config file [yaml]
+
+```bash
+env-ai ask --config dovenv.config.yaml
+```
+
+```yaml
+theme: custom
+system: ./examples/config/system.txt
+```
  
 ## 👨‍💻 Development
 
