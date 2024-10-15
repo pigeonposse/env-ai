@@ -13,7 +13,15 @@
 [![Core](https://img.shields.io/npm/v/env-ai?color=blue&style=for-the-badge&logoColor=white)](https://www.npmjs.com/package/env-ai)
 
 
-**env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. It is available both as a JavaScript library and as a CLI runnable in `Node`, `Deno`, and `Bun`.
+**env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. 
+
+- 📦 **JavaScript Library**: Available as a library to integrate into your projects.
+- 💻 **Runnable CLI**: Works as a command line interface in:
+- **Node.js** 🟢
+- **Deno** 🦕
+- **Bun** 🍞
+- 🚀 **Binary**: Also available as a binary for easy installation and use. [dowload](https://github.com/pigeonposse/env-ai/releases)
+
 
 > **Requirement:** **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
 
@@ -31,12 +39,10 @@
    - [Import Example](#import-example)
    - [Defined Configuration](#defined-configuration)
 6. [🔍 Examples](#-examples)
-7. [🛠️ Technologies Used](#️-technologies-used)
-8. [🌍 Compatibility and Download](#-compatibility-and-download)
-9. [👨‍💻 Development](#-development)
-10. [☕ Donate](#-donate)
-11. [📜 License](#-license)
-12. [🐦 About Us](#-about-us)
+7. [👨‍💻 Development](#-development)
+8. [☕ Donate](#-donate)
+9. [📜 License](#-license)
+10. [🐦 About Us](#-about-us)
 
 ## 🚀 Features
 
@@ -176,16 +182,7 @@ env-ai ask --config dovenv.config.json
     "system": "./examples/config/system.txt"
 }
 ```
-
-## 🛠️ Technologies Used
-
-**env-ai** relies on **Ollama** to provide advanced natural language processing capabilities, so Ollama is a prerequisite for it to work.
-
-## 🌍 Compatibility and Download
-
-The CLI is available for all operating systems and architectures. Download it directly from the [GitHub Releases](https://github.com/pigeonposse/env-ai/releases).
  
-
 ## 👨‍💻 Development
 
 **env-ai** is an open-source project and its development is open to anyone who wants to participate.
