@@ -33,6 +33,13 @@ export const cli = async () => {
 		.alias( 'v', 'version' )
 
 	return { 
+        
+		/**
+		 * Checks for available updates for the cli and notifies the user
+		 * if one is available.
+         * 
+         * @important not use if you want build a binary of the cli
+		 */
 		updater : async () => {
             
 			const { notifier } = await import( './_shared/updater' )
