@@ -25,6 +25,10 @@
   "bin": {
     "env-ai": "dist/cli.mjs"
   },
+  "publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
   "packageManager": "pnpm@8.15.9",
   "engines": {
     "node": ">=20.0.0",
