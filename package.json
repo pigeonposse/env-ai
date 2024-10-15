@@ -1,6 +1,6 @@
 {
   "name": "env-ai",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": " ",
   "license": "GPL-3.0",
   "keywords": [
@@ -62,7 +62,7 @@
     "example-cli": "tsx examples/cli.ts",
     "example-lib": "tsx examples/lib.ts",
     "update-version": "changeset && changeset version",
-		"push": "git add . && cz && git push -f origin $@"
+    "push": "git add . && cz && git push -f origin $@"
   },
   "dependencies": {
     "@clack/prompts": "0.7.0",
@@ -78,12 +78,12 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.5.0",
-		"@changesets/cli": "2.27.9",
+    "@changesets/cli": "2.27.9",
     "@commitlint/cli": "19.5.0",
     "commitizen": "4.3.1",
-		"commitlint-config-gitmoji": "2.3.1",
-		"cz-customizable": "7.2.1",
-		"cz-emoji": "1.3.2-canary.2",
+    "commitlint-config-gitmoji": "2.3.1",
+    "cz-customizable": "7.2.1",
+    "cz-emoji": "1.3.2-canary.2",
     "@eslint/js": "9.12.0",
     "@stylistic/eslint-plugin": "2.9.0",
     "@types/eslint__js": "8.42.3",
@@ -101,38 +101,38 @@
     "vitest": "2.1.3"
   },
   "commitlint": {
-		"extends": [
-			"gitmoji"
-		],
-		"rules": {
-			"header-max-length": [
-				0,
-				"always",
-				100
-			]
-		}
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-customizable"
-		},
-		"cz-customizable": {
-			"config": ".dev/cz-config.cjs"
-		}
-	},
+    "extends": [
+      "gitmoji"
+    ],
+    "rules": {
+      "header-max-length": [
+        0,
+        "always",
+        100
+      ]
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": ".dev/cz-config.cjs"
+    }
+  },
   "extra": {
-		"id": "personality",
-		"productName": "Personality",
-		"scopes": [
-			{
-				"name": "core"
-			},
-			{
-				"name": "env"
-			},
-			{
-				"name": "all"
-			}
-		]
-	}
+    "id": "personality",
+    "productName": "Personality",
+    "scopes": [
+      {
+        "name": "core"
+      },
+      {
+        "name": "env"
+      },
+      {
+        "name": "all"
+      }
+    ]
+  }
 }
