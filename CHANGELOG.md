@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.2.0
+
+### Minor Changes
+
+- add version to cli
+
 ## 0.1.1
 
 ### Patch Changes
