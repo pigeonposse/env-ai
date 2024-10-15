@@ -110,9 +110,9 @@ env-ai ask
 import { run } from 'env-ai';
 
 run({
-include: ['./src/**', 'https://example.com'],
-theme: 'docs',
-output: 'README.md',
+    include: ['./src/**', 'https://example.com'],
+    theme: 'docs',
+    output: 'README.md',
 });
 ```
 
@@ -124,9 +124,9 @@ Use `defineConfig` to define a reusable configuration:
 import { defineConfig } from 'env-ai';
 
 export default defineConfig({
-include: ['./src/**', 'https://example.com'],
-theme: 'docs',
-output: 'README.md',
+    include: ['./src/**', 'https://example.com'],
+    theme: 'docs',
+    output: 'README.md',
 });
 ```
 
@@ -147,9 +147,9 @@ env-ai ask -i "./src/**" -t "docs" -o "output.md"
 import { run } from 'env-ai';
 
 run({
-include: ['./src/**', 'https://example.com'],
-theme: 'docs',
-output: 'README.md',
+    include: ['./src/**', 'https://example.com'],
+    theme: 'docs',
+    output: 'README.md',
 });
 ```
 
@@ -162,9 +162,9 @@ env-ai ask --config dovenv.config.js
 import { defineConfig } from 'env-ai';
 
 export default defineConfig({
-include: ['./src/**', 'https://example.com'],
-theme: 'docs',
-output: 'README.md',
+    include: ['./src/**', 'https://example.com'],
+    theme: 'docs',
+    output: 'README.md',
 });
 ```
 
@@ -177,7 +177,7 @@ env-ai ask --config dovenv.config.json
 ```json
 {
     "theme": "custom",
-    "system": "./examples/config/system.txt"
+    "system": "./your-system-content.txt"
 }
 ```
 
@@ -206,7 +206,7 @@ env-ai ask --config dovenv.config.yaml
 
 ```yaml
 theme: custom
-system: ./examples/config/system.txt
+system: ./your-system-content.md
 ```
  
 ## 👨‍💻 Development
