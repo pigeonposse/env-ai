@@ -15,7 +15,8 @@
 
 **env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. 
 
-> **Requirement:** **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
+> [!IMPORTANT]  
+> **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
 
 
 ## 📑 Index
