@@ -95,7 +95,7 @@ jobs:
       - name: Get updated versions if exists
         id: updated
         run: |
-          core_version=$(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r 'map(select(.name == "create-personality")) | .[0].version // empty' )
+          core_version=$(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r 'map(select(.name == "env-ai")) | .[0].version // empty' )
           core_version_major=${core_version%%.*}
           echo Set changesets outputs
           echo '${{ steps.changesets.outputs }}'
