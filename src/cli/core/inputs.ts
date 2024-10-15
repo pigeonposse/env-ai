@@ -9,6 +9,8 @@ type Input = {
 export class CoreInputs extends CoreSuper {
 
 	title = 'Input'
+	description = 'Inputs to add context to your chat.'
+
 	errorTitle = this._c.error( this.title )
 
 	async getContent( inputs?: Input ): Promise<string> {

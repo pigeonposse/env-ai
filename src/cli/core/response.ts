@@ -2,7 +2,9 @@ import { CoreSuper } from "./super"
 
 export class CoreResponse extends CoreSuper {
 
-	title = 'OUTPUT'
+	title = 'Output'
+	description : string | undefined = 'Output configuration for save the generated content.'
+
 	#chat : Awaited<ReturnType<CoreSuper['_ai']['chat']>> | undefined
     
 	async getOverwrite( ) {
@@ -80,10 +82,10 @@ export class CoreResponse extends CoreSuper {
 		} ) : undefined
 	
 	}
-
+	line = '──────────────────────────────────────────────────────────'
 	async #setChatResponse( prompt: string ) {
 
-		const line = '──────────────────────────────────────────────────────────'
+		const line = this.line
 		const lastLine = ( ) =>( console.log( '\n\n\n' ), this._p.intro( line ) )
 		const firstLine = () =>( this._p.log.info( 'Assistant:' ), this._p.outro( line ), console.log( '\n' ) )
 		let output = ''
@@ -142,8 +144,8 @@ export class CoreResponse extends CoreSuper {
 				model,
 				
 			} )
-			spin.stop( 'Chat generated!' )
-	   
+			spin.stop( 'Chat successfully generated! ✨' )
+			this._p.log.message( '' )
 			const res = this.#setChatResponse( prompt )
 			return res
 		
@@ -253,9 +255,10 @@ export class CoreResponse extends CoreSuper {
 		const output = await this.getOutput()
 		const single = await this.getSingle()
 		
-		if ( !output && !single ) this._p.log.message( 'No output path provided' )
+		if ( !output && !single ) this._p.log.success( 'No output path provided' )
 
-		this.title = 'CHAT'
+		this.title = 'Chat'
+		this.description = undefined
 		this._setTitle()
 
 		const content = await this.generate( prompt, system, model )

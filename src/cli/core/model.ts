@@ -3,6 +3,7 @@ import { CoreSuper } from "./super"
 export class CoreModel extends CoreSuper {
 
 	title = 'Model'
+	description = 'LLM model to use for your chat.'
 
 	async get (): Promise<string> {
 

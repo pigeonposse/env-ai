@@ -5,6 +5,8 @@ type ThemeTypes = Exclude<CoreSuper['_argv']['theme'], undefined>
 export class CorePrompt extends CoreSuper {
 
 	title = 'Prompt'
+	description = 'The prompt configuration for your chat.'
+
 	defaults = prompts
 	async setPrompt( value?: string, type: 'system' | 'user' = 'system', placeholder?: string ): Promise<string> {
 

@@ -4,6 +4,7 @@ import { CoreSuper } from "./super"
 export class CoreOutput extends CoreSuper {
 
 	title = 'Output'
+	description = 'Output configuration for save the generated content.'
 
 	async #choiceOverwrite( ) {
 

@@ -40,7 +40,7 @@ export class CoreSuper {
 		RESPONSE_CANCELLED : 'RESPONSE_CANCELLED', 
 	}
 	title = 'core'
-	
+	description : string | undefined
 	argvSceham = argvSchema
 
 	constructor( {
@@ -75,7 +75,8 @@ export class CoreSuper {
 
 	protected _setTitle( ) {
 
-		this._p.log.info( this._c.section( this.title ) )
+		const description = this.description ? ( '\n\n' + this._c.gray( this.description ) ) : ''
+		this._p.log.info( this._c.section( this.title.toUpperCase() ) + description )
 	
 	}
 	protected _setErrorMessage( e: unknown, unknownMessage = 'Unexpected error' ): string {

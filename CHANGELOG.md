@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.2.4
+
+### Patch Changes
+
+- add descriptions to prompt parts
+
 ## 0.2.3
 
 ### Patch Changes
