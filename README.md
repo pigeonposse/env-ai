@@ -20,21 +20,20 @@
 
 ## 📑 Index
 
-1. [env-ai](#env-ai---ai-assistant-for-your-local-environment)
-2. [🌟 Features](#-features)
-3. [📦 Installation](#-installation)
-4. [📖 Using the CLI](#-using-the-cli)
+- [🌟 Features](#-features)
+- [📦 Installation](#-installation)
+- [📖 Using the CLI](#-using-the-cli)
    - [Main Commands](#main-commands)
    - [Options](#options)
    - [Usage Example](#usage-example)
-5. [📚 Using the Library](#-using-the-library)
+- [📚 Using the Library](#-using-the-library)
    - [Import Example](#import-example)
    - [Defined Configuration](#defined-configuration)
-6. [🔍 Examples](#-examples)
-7. [👨‍💻 Development](#-development)
-8. [☕ Donate](#-donate)
-9. [📜 License](#-license)
-10. [🐦 About Us](#-about-us)
+- [🔍 Examples](#-examples)
+- [👨‍💻 Development](#-development)
+- [☕ Donate](#-donate)
+- [📜 License](#-license)
+- [🐦 About Us](#-about-us)
 
 ## 🌟 Features
 
@@ -103,7 +102,7 @@ env-ai ask
 
 ## 📚 Using the Library
 
-**env-ai** can also be integrated as a library into your JavaScript or TypeScript project.
+**env-ai** can also be integrated as a library into your `JavaScript` or `TypeScript` project.
 ### Import Example
 
 ```javascript
