@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.2.2
+
+### Patch Changes
+
+- fix bin build
+
 ## 0.2.1
 
 ### Patch Changes

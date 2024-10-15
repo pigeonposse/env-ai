@@ -1,7 +1,6 @@
 import {
-	name, version, bugs, description } from '../../package.json' assert {type: 'json'
-}
-
+	name, version, bugs, description, 
+} from '../../package.json'
 export { version }
 export const projectDesc = description
 export const bugsUrl = bugs.url
