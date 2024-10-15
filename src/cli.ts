@@ -26,6 +26,7 @@ const run = async () => {
 	
 	cli
 		.scriptName( name )
+		.version( version )
 		.usage( `${desc}\n\nUsage: $0 <command> [options]` )
 		.command( ask.run() )
 		.showHelpOnFail( false )
