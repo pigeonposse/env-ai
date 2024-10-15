@@ -45,6 +45,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - name: 🟢 Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: 🟢 Setup Deno
+        uses: denoland/setup-deno@v2
+        # with:
+        #   deno-version: v1.34.0 
 
       - name: 🥡 Install pnpm
         uses: pnpm/action-setup@v3
@@ -75,6 +81,10 @@ jobs:
         run: |
           pnpm build
 
+      - name: ✅ tests
+        run: |
+          pnpm test
+  
       #########################################################################
       # PUBLISH
       #########################################################################

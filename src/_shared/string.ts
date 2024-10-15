@@ -136,7 +136,7 @@ export const getStringType = ( value: string ): 'text' | 'url' | 'path' => {
 	return 'text'
 
 }
-export const isUrl = ( value: string ): boolean => {
+const isUrl = ( value: string ): boolean => {
 
 	try {
 
