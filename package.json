@@ -1,6 +1,6 @@
 {
   "name": "env-ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": " ",
   "license": "GPL-3.0",
   "keywords": [
@@ -26,9 +26,9 @@
     "env-ai": "dist/cli.mjs"
   },
   "publishConfig": {
-		"access": "public",
-		"registry": "https://registry.npmjs.org/"
-	},
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "packageManager": "pnpm@8.15.9",
   "engines": {
     "node": ">=20.0.0",
@@ -58,7 +58,7 @@
     "dev:bun": "bun src/cli.ts",
     "build": "pnpm build:lib && pnpm build:bin",
     "build:lib": "unbuild",
-    "build:bin": "binarium --input=dist/cli.mjs --name=env-ai --onlyOs",
+    "build:bin": "binarium --input=dist/cli.mjs --name=env-ai",
     "preview": "node dist/cli.mjs",
     "preview:deno": "deno run -A --unstable-fs dist/cli.mjs",
     "preview:bun": "bun dist/cli.mjs",
