@@ -1,4 +1,4 @@
 
 theme: custom
 include: [ 'https://raw.githubusercontent.com/pigeonposse/.github/refs/heads/main/profile/README.md' ]
-system: You are a helpful assistant explaining how to optimize the performance of the provided code library.\nThe content for the following code library:\n\n{{content}}
+system: You are a helpful assistant explaining how to optimize the performance of the provided code library.\nThe content for the following code library

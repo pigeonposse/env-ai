@@ -1,10 +1,15 @@
 import { CoreSuper } from "./super"
 
-type Input = {
+type Inputs = {
 	urls : URL[]
 
 	paths : string[]; 
 }
+type Docs = {
+	content : string,
+	
+	path : string 
+}[]
 
 export class CoreInputs extends CoreSuper {
 
@@ -13,7 +18,87 @@ export class CoreInputs extends CoreSuper {
 
 	errorTitle = this._c.error( this.title )
 
-	async getContent( inputs?: Input ): Promise<string> {
+	protected async _getDataContent<T extends 'url' | 'path' = 'path'>( inputs: T extends 'url' ? URL[] : string[], type?: T ) {
+
+		type = type ?? 'path' as T
+        
+		const load = this._p.spinner()
+
+		const sanitize = ( content: string ) => this._string.sanitizeContent( content )
+
+		load.start( 'Preparing inputs...' )
+		let res: Docs = []
+		if ( type === 'url' ){
+
+			load.message( 'Reading and sanitizing url...' )
+
+			const urlContents: Record<string, string> = {}
+        
+			for ( const input of inputs ) {
+
+				try {
+
+					load.message( 'Reading ' + input )
+					const content = await this._string.getTextPlainFromURL( input.toString() )
+					urlContents[input.toString()] = sanitize( content )
+			
+				} catch ( e ){
+
+					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ), 1 )
+					throw e
+			
+				}
+		
+			}
+
+			load.message( 'Getting source for all urls...' )
+
+			res = [
+				...res,
+				...Object.entries( urlContents )
+					.map( ( [ id, content ] ) => ( {
+						content : content,
+						path    : id, 
+					} ) ),
+			]
+			
+			load.stop( 'Source urls obtained!' )
+		
+		}
+
+		if ( type === 'path' ) {
+
+			load.message( 'Reading and sanitizing files...' )
+    
+			const fileContents: Record<string, string> = {}
+    
+			for ( const file of inputs ) {
+
+				load.message( 'Reading ' + file )
+				const content = await this._sys.readFile( file, 'utf-8' )
+				fileContents[file.toString()] = sanitize( content )
+        
+			}
+    
+			load.message( 'Getting source for all files...' )
+
+			res = [
+				...res,
+				...Object.entries( fileContents )
+					.map( ( [ id, content ] ) => ( {
+						content : content,
+						path    : id, 
+					} ) ),
+			]
+			load.stop( 'Source files obtained!' )
+		
+		}
+
+		return res
+	
+	}
+
+	async getContent( inputs?: Inputs ): Promise<Docs> {
 
 		// console.log( { inputs } )
 		const setError = () => this._errorRes( this.errorTitle, 'Unexpected error! Missing required arguments. Please provide all required arguments.' )
@@ -30,10 +115,10 @@ export class CoreInputs extends CoreSuper {
 			const urlContent = !( !inputs.urls || !inputs.urls.length ) ? await this._getDataContent( inputs.urls, 'url' ) : undefined
 			const fileContent = !( !inputs.paths || !inputs.paths.length ) ? await this._getDataContent( inputs.paths, 'path' ) : undefined
 
-			if ( urlContent && fileContent ) return urlContent.sanitize( urlContent.content + fileContent.content )
-			else if ( urlContent ) return urlContent.content
-			else if ( fileContent ) return fileContent.content
-			else return 'NO CONTEXT FOUND'
+			if ( urlContent && fileContent ) return [ ...urlContent, ...fileContent ]
+			else if ( urlContent ) return urlContent
+			else if ( fileContent ) return fileContent
+			else return []
 			// setError()
 			// throw new this.Error( 'No content found.' )
 
@@ -46,10 +131,10 @@ export class CoreInputs extends CoreSuper {
 	
 	}
 
-	#separateInputs ( inputs: string[] ): Input | undefined {
+	#separateInputs ( inputs: string[] ): Inputs | undefined {
 
-		const urls: Input['urls'] = []
-		const paths: Input['paths'] = []
+		const urls: Inputs['urls'] = []
+		const paths: Inputs['paths'] = []
 		// const text: string[] = []
       
 		for ( const input of inputs ) {
@@ -105,7 +190,7 @@ export class CoreInputs extends CoreSuper {
 	
 	}
 
-	async getInputs( includesPaths?: string[], excludesPaths?: string[], includePlaceholder?: string, excludePlaceholder?: string ): Promise<Input> {
+	async getInputs( includesPaths?: string[], excludesPaths?: string[], includePlaceholder?: string, excludePlaceholder?: string ): Promise<Inputs> {
 
 		const input = includesPaths
 			? ( this._successRes( `Inputs selected:`, includesPaths.length ? includesPaths.join( ', ' ) : 'none' ), includesPaths )
@@ -148,7 +233,7 @@ export class CoreInputs extends CoreSuper {
     
 	}
 
-	async get(): Promise<string> {
+	async get(): Promise<Docs> {
 
 		this._setTitle( ) 
 		// const defaults = {
@@ -157,7 +242,7 @@ export class CoreInputs extends CoreSuper {
 		// }
 		const inputs = await this.getInputs( this._argv.include || [ ], this._argv.exclude || [ ] )
 		const res = await this.getContent( inputs )
-		this._setDebug( res )
+		this._setDebug( JSON.stringify( res, null, 2 ) )
 	
 		return res
 	

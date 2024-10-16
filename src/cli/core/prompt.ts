@@ -38,13 +38,6 @@ export class CorePrompt extends CoreSuper {
 				}
 			
 			}
-	
-			const contentPlaceholderPattern = new RegExp( `\\{\\{\\s*${this._const.PROMPT_VARS.CONTENT}\\s*\\}\\}` )
-			if ( type === 'system' && !contentPlaceholderPattern.test( content ) ) {
-
-				throw new this.Error( `${errorTitle} prompt returned from [${stringType}] must include "{{${this._const.PROMPT_VARS.CONTENT}}}".\n${this._c.gray( 'Content variable is where the code will be rendered.' )}` )
-			
-			}
     
 			return content
 		
@@ -58,7 +51,7 @@ export class CorePrompt extends CoreSuper {
 				prompt = await this._p.text( {
 					message     : `${errorTitle} Enter path to file content or direct content:`,
 					placeholder : placeholder ? placeholder : type === 'system' 
-						? 'You are an expert code programmer with extensive knowledge of the content of this library: {{content}}' 
+						? 'You are an expert code programmer with extensive knowledge of the content of this library' 
 						: 'Tell me some kind of improvement that I could implement to my code',
 					validate( v ) {
 						
@@ -107,14 +100,14 @@ export class CorePrompt extends CoreSuper {
 	
 	}
 
-	async #choiceSystem( content: string, defaultValue?: string ): Promise<string> {
+	async #choiceSystem( defaultValue?: string ): Promise<string> {
 		
 		const argv = this._argv.system 
 		const res = argv
 			? ( this._successRes( `System prompt selected:`, argv ), await this.setPrompt( argv, 'system' ) )
 			: defaultValue ? defaultValue : await this.setPrompt( undefined, 'system' )
 
-		const response = await this._replacePlaceholders( res, content )
+		const response = await this._replacePlaceholders( res )
 		
 		return response
 	
@@ -145,11 +138,11 @@ export class CorePrompt extends CoreSuper {
 	
 	}
 
-	async get( content: string ) {
+	async get( ) {
 
 		this._setTitle()
 		const theme = await this.getTheme()
-		const system = await this.#choiceSystem( content, theme !== 'custom' ? this.defaults[theme].system : undefined )
+		const system = await this.#choiceSystem( theme !== 'custom' ? this.defaults[theme].system : undefined )
 		const user = await this.#choiceUser( theme !== 'custom' ? this.defaults[theme].user : undefined )
 		// console.log( theme, user )
 		const res = {

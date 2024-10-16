@@ -1,11 +1,22 @@
 import { CoreSuper } from "./super"
 
+type Chat = CoreSuper['_ai']['chatVectored']
+type ChatReturnedData = Awaited<ReturnType<Chat>>
+type ChatDocs = Parameters<Chat>[0]['docs']
+type ChatParams = {
+	prompt : string,
+	system : string,
+
+	model : string,
+	
+	docs : ChatDocs 
+}
 export class CoreResponse extends CoreSuper {
 
 	title = 'Output'
 	description : string | undefined = 'Output configuration for save the generated content.'
 
-	#chat : Awaited<ReturnType<CoreSuper['_ai']['chat']>> | undefined
+	#chat : ChatReturnedData | undefined
     
 	async getOverwrite( ) {
 
@@ -94,7 +105,7 @@ export class CoreResponse extends CoreSuper {
 			
 		const response = await this.#chat.send( prompt )
  
-		if ( response[Symbol.asyncIterator] ) { // Si es un iterable asíncrono
+		if ( response && response[Symbol.asyncIterator] ) { // Si es un iterable asíncrono
 
 			firstLine()
 			this._process.onSIGNIT( () => {
@@ -108,8 +119,8 @@ export class CoreResponse extends CoreSuper {
 			} )
 
 			for await ( const part of response ) {
-				
-				this._process.stdout.write( part.message.content )
+
+				this._process.stdout.write( part.message.content.toString() )
 				output += part.message.content
         
 			}
@@ -118,17 +129,19 @@ export class CoreResponse extends CoreSuper {
         
 		} else {
 
-			throw new this.Error( 'Response is not iterable' )
+			throw new this.Error( 'Chat unexpeted error' )
         
 		}
 
-		this.#chat.addAssistantMessage( output )
+		// this.#chat.addAssistantMessage( output )
 
 		return output
 	
 	}
 
-	async generate( prompt: string, system: string, model: string ) {
+	async generate( {
+		prompt, system, model, docs,
+	}:ChatParams ) {
 
 		const spin = this._p.spinner()
 		spin.start( 'starting...' )
@@ -139,10 +152,10 @@ export class CoreResponse extends CoreSuper {
 			// 	system,
 			// 	model, 
 			// } )
-			this.#chat = await this._ai.chat( {
+			this.#chat = await this._ai.chatVectored( {
 				system,
 				model,
-				
+				docs,
 			} )
 			spin.stop( 'Chat successfully generated! ✨' )
 			this._p.log.message( '' )
@@ -248,7 +261,9 @@ export class CoreResponse extends CoreSuper {
 	
 	}
 
-	async get( prompt: string, system: string, model: string ){
+	async get( {
+		prompt, system, model, docs, 
+	}:ChatParams ){
 
 		this._setTitle()
 
@@ -261,7 +276,12 @@ export class CoreResponse extends CoreSuper {
 		this.description = undefined
 		this._setTitle()
 
-		const content = await this.generate( prompt, system, model )
+		const content = await this.generate( {
+			prompt,
+			system,
+			model, 
+			docs,
+		} )
 		if ( output ) await this.write( output.path, content, output.overwrite )
 		
 		if ( !single ) await this.#recursiveReply( output?.path, output?.overwrite )

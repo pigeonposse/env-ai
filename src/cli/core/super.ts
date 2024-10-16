@@ -69,7 +69,7 @@ export class CoreSuper {
 	}
 	protected _setDebug( msg: string ) {
 
-		this._p.log.debug( this._c.section( this.title ), msg )
+		this._p.log.debug( this._c.section( this.title.toUpperCase() ), msg )
 	
 	}
 
@@ -101,85 +101,10 @@ export class CoreSuper {
 
 	}
 
-	protected async _getDataContent<T extends 'url' | 'path' = 'path'>( inputs: T extends 'url' ? URL[] : string[], type?: T ) {
-
-		type = type ?? 'path' as T
-        
-		const load = this._p.spinner()
-		const pageSeparator = '---\n\n'
-		const sanitize = ( content: string ) => this._string.sanitizeContent( content )
-
-		load.start( 'Preparing inputs...' )
-		let res = ''
-		if ( type === 'url' ){
-
-			load.message( 'Reading and sanitizing url...' )
-
-			const urlContents: Record<string, string> = {}
-        
-			for ( const input of inputs ) {
-
-				try {
-
-					load.message( 'Reading ' + input )
-					const content = await this._string.getTextPlainFromURL( input.toString() )
-					urlContents[input.toString()] = sanitize( content )
-			
-				} catch ( e ){
-
-					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ), 1 )
-					throw e
-			
-				}
-		
-			}
-
-			load.message( 'Getting source for all urls...' )
-
-			res = Object.entries( urlContents )
-				.map( ( [ id, content ] ) => `${pageSeparator}URL: ${id}\n\n${pageSeparator}\n${content}\n\n` )
-				.join()
-			load.stop( 'Source urls obtained!' )
-		
-		}
-
-		if ( type === 'path' ) {
-
-			load.message( 'Reading and sanitizing files...' )
-    
-			const fileContents: Record<string, string> = {}
-    
-			for ( const file of inputs ) {
-
-				load.message( 'Reading ' + file )
-				const content = await this._sys.readFile( file, 'utf-8' )
-				fileContents[file.toString()] = sanitize( content )
-        
-			}
-    
-			load.message( 'Getting source for all files...' )
-
-			res = Object.entries( fileContents )
-				.map( ( [ id, content ] ) => `${pageSeparator}FILE: ${id}\n\n${pageSeparator}\n${content}\n\n` )
-				.join( )
-
-			load.stop( 'Source files obtained!' )
-		
-		}
-
-		return {
-			content   : res,
-			sanitize  : sanitize,
-			separator : pageSeparator,
-		}
-	
-	}
-
-	protected async _replacePlaceholders( value: string, content?: string ) {
+	protected async _replacePlaceholders( value: string ) {
 
 		const res = await this._string.replacePlaceholders( value, {
-			content : content ?? '',
-			url     : async v => {
+			url : async v => {
 
 				let res
 				try {

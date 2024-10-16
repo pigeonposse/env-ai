@@ -73,6 +73,15 @@ pnpm add -g env-ai
 yarn global add env-ai
 ```
 
+### without Installation
+
+```bash
+## npm
+npx env-ai
+## pnpm
+pnpx env-ai
+```
+
 ## 📖 Using the CLI
 
 The **env-ai** CLI allows you to easily interact with the AI assistant. Here are some useful commands and options:
@@ -162,6 +171,7 @@ env-ai ask --config dovenv.config.js
 import { defineConfig } from 'env-ai';
 
 export default defineConfig({
+    model: 'llama3.2:latest',
     include: ['./src/**', 'https://example.com'],
     theme: 'docs',
     output: 'README.md',

@@ -3,7 +3,11 @@
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import ASK from './ask/main'
-import { argv } from './_shared/process'
+import {
+	argv, rmDeprecationAlerts, 
+} from './_shared/process'
+
+rmDeprecationAlerts()
 
 const args = hideBin( argv )
 export const cli = async () => {

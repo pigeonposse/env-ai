@@ -170,7 +170,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 				const errorMsg = ( error instanceof Error ) ? error.message : typeof error === 'string' ? error : this.message.error.unexpected
 				const isDebug = argv.debug
 
-				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v ) ), p.log.step( '' ), p.cancel( d ) )
+				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v.toUpperCase() ) ), p.log.step( '' ), p.cancel( d ) )
 				
 				if ( isCoreError ) {
 
@@ -198,31 +198,25 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		type AiResponse = Awaited<ReturnType<typeof core.prompt.get>>
 
 		await list( {
-			intro   : async () => p.intro( c.introColor( this.message.intro ) ),
-			config  : async() => await core.config.set(),
-			model   : async() => await core.model.get(),
-			content : async(): Promise<string | undefined> => await core.inputs.get(),
-			ai      : async ( { results } ): Promise<AiResponse> => {
-
-				const content = results.content
-				if ( !content || typeof results.content !== 'string' ) throw UnexpectedError
-
-				const res = await core.prompt.get( content )
-
-				return res 
-			
-			},
+			intro    : async () => p.intro( c.introColor( this.message.intro.toUpperCase() ) ),
+			config   : async() => await core.config.set(),
+			model    : async() => await core.model.get(),
+			content  : async()=> await core.inputs.get(),
+			ai       : async ( ): Promise<AiResponse> => await core.prompt.get( ),
 			response : async ( { results } ) => {
 
-				if ( !results.ai || !results.model ) throw UnexpectedError
+				if ( !results.ai || !results.model || !results.content ) throw UnexpectedError
 
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const res = await core.response.get( results.ai.user, results.ai.system, results.model )
+				const res = await core.response.get( {
+					prompt : results.ai.user,
+					system : results.ai.system,
+					model  : results.model, 
+					docs   : results.content,
+				} )
 				return res
 			
 			},
-			outro : async () => ( p.log.step( '' ), p.outro( c.success( this.message.outro ) ) ),
+			outro : async () => ( p.log.step( '' ), p.outro( c.success( this.message.outro.toUpperCase() ) ) ),
 		} )
 	
 	}

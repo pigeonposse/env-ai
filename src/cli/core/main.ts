@@ -35,7 +35,7 @@ export class Core {
 		this.response = new CoreResponse( args )
 		this.Error = this.inputs.Error
 		this.ERROR_ID = this.inputs.ERROR_ID
-		this.exit = this.inputs.exit
+		this.exit = this.inputs.exit.bind( this.inputs )
 		this.cancel = this.inputs.cancel.bind( this.inputs )
 	
 	}
