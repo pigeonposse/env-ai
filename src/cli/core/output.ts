@@ -1,85 +1,97 @@
 
 import { CoreSuper } from "./super"
 
+export type OutputType = {
+	path? : string
+
+	overwrite? : "always" | "last"	
+
+	single : boolean
+}
+
 export class CoreOutput extends CoreSuper {
 
 	title = 'Output'
 	description = 'Output configuration for save the generated content.'
-
-	async #choiceOverwrite( ) {
-
-		const {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			ask, ...values
-		} = this._const.overwrite
-		const prompt = await this._p.select( {
-			message : 'Select overwrite type:',
-			options : Object.entries( values ).map( ( [ k, v ] ) => ( {
-				value : k,
-				label : v, 
-			} ) ),
-		} ) as string
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-		return prompt
-	
-	}
     
 	async getOverwrite( ) {
 
 		const argv = this._argv.overwrite
-		const { ask } = this._const.overwrite
+		const {
+			ask, ...values 
+		} = this._const.overwrite
+		
+		const title = 'Select overwrite type:'
 
-		if ( argv !== ask ) return argv
-		return await this.#choiceOverwrite()
-	
-	}
+		if ( argv && argv !== ask ) {
 
-	async #choiceOutput( placeholder?: string ){
+			if ( argv === 'always' || argv === 'last' ) {
 
-		const prompt = await this._p.text( {
-			message : 'Enter output path:',
-			placeholder,
-			validate( value ) {
+				this._successRes( title, argv )
+				return argv
+			
+			} else this._errorRes( 'Invalid overwrite type: ', argv )
+		
+		}
 
-				if ( !value || value.trim() === '' ) return 'Please provide at least one file path.'
-            
-			}, 
-		} )
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+		const prompt = await this._selectPrompt( {
+			message : title,
+			opts    : Object.values( values ).map( v => ( {
+				value : v,
+				title : v, 
+			} ) ),
+		} ) as OutputType['overwrite']
 
 		return prompt
 	
 	}
+	
+	async getSingle( ): Promise<boolean> {
 
-	async get(): Promise<string | undefined> {
+		const argv = this._argv.single
+		if ( !argv || argv !== true ) return false 
+		this._successRes( `Response type:`, 'Single' )
+		return argv
+	
+	}
+
+	async getPath() {
 		
 		const set = async ( initValue?: string, placeholder?: string ) => {
 
-			this._setTitle()
-			//let res: string
 			const value = initValue
 				? ( this._successRes( `Output path:`, initValue ), initValue as string )
-				: ( await this.#choiceOutput( placeholder ) )
+				: ( await this._textPrompt( {
+					message : 'Enter output path:',
+					placeholder,
+				} ) )
 
 			const res = this._sys.path.resolve( this._process.cwd(), value )
-
-			// const exist = await this._sys.existsFile( res )
-
-			// if ( exist ) {
-
-			// 	this._errorRes( 'File already exists.', res )
-			// 	res = await set( initValue, res )
-			
-			// }
 
 			return res
 		
 		}
 
 		const argv = this._argv.output
-		const res = argv ? await set( argv ) : undefined
+		return argv ? await set( argv ) : undefined
+	
+	}
 
-		this._setDebug( res || 'undefined' )
+	async get(): Promise<OutputType> {
+
+		this._setTitle()
+		const path = await this.getPath()
+		const single = await this.getSingle()
+		const overwrite = path ? await this.getOverwrite() : undefined
+		const res = {
+			path,
+			overwrite,
+			single,
+		}
+
+		if ( !path && !single ) this._p.log.success( 'No output path provided' )
+
+		this._setDebug( JSON.stringify( res, null, 2 ) )
 
 		return res
 	

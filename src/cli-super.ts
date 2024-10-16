@@ -2,7 +2,7 @@
 
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import ASK from './ask/main'
+import CHAT from './chat/main'
 import {
 	argv, rmDeprecationAlerts, 
 } from './_shared/process'
@@ -14,22 +14,16 @@ export const cli = async () => {
 
 	const cli = yargs( args )
 
-	const ask = new ASK( cli )
+	const chat = new CHAT( cli )
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	const name = ask._const.projectName
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	const desc = ask._const.projectDesc
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	const version = ask._const.version
+	const consts = chat._const
 	
 	cli
-		.scriptName( name )
-		.version( version )
-		.usage( `${desc}\n\nUsage: $0 <command> [options]` )
-		.command( ask.run() )
+		.scriptName( consts.projectName )
+		.version( consts.version )
+		.usage( `${consts.projectDesc}\n\nUsage: $0 <command> [options]` )
+		.command( chat.run() )
 		.showHelpOnFail( false )
 		.locale( 'en' )
 		.help()
@@ -48,7 +42,7 @@ export const cli = async () => {
             
 			const { notifier } = await import( './_shared/updater' )
 
-			notifier( name, version ).notify()
+			notifier( consts.projectName, consts.version ).notify()
 		
 		},
 		run : async () => {

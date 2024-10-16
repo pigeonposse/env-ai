@@ -3,6 +3,7 @@ import { CoreConfig } from "./config"
 import { CoreInputs } from "./inputs"
 import { CoreModel } from "./model"
 import { CorePrompt } from "./prompt"
+import { CoreOutput } from "./output"
 import { CoreResponse } from "./response"
 
 export const coreMessages = {}
@@ -14,9 +15,11 @@ export class Core {
 
 	config : CoreConfig
 
-	inputs : CoreInputs
+	input : CoreInputs
 
 	response : CoreResponse
+
+	output : CoreOutput
 
 	Error : CoreResponse['Error']
 
@@ -31,12 +34,14 @@ export class Core {
 		this.config = new CoreConfig( args )
 		this.prompt = new CorePrompt( args )
 		this.model = new CoreModel( args )
-		this.inputs = new CoreInputs( args )
+		this.input = new CoreInputs( args )
+		this.output = new CoreOutput( args )
+
 		this.response = new CoreResponse( args )
-		this.Error = this.inputs.Error
-		this.ERROR_ID = this.inputs.ERROR_ID
-		this.exit = this.inputs.exit.bind( this.inputs )
-		this.cancel = this.inputs.cancel.bind( this.inputs )
+		this.Error = this.input.Error
+		this.ERROR_ID = this.input.ERROR_ID
+		this.exit = this.input.exit.bind( this.input )
+		this.cancel = this.input.cancel.bind( this.input )
 	
 	}
 

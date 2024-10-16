@@ -29,37 +29,30 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 	// Not default values for options
 	options: CliInterface<C>['options'] = {
 		// inputs
-		include : {
+		input : {
 			alias    : 'i',
-			describe : 'Glob patterns to include files and URLs',
+			describe : 'Glob patterns to input files and URLs',
 			type     : 'array',
-			// default  : [ '**/*.{js,ts,jsx,tsx}' ],
-		},
-		exclude : {
-			alias    : 'e',
-			describe : 'Glob patterns to exclude files and URLs',
-			type     : 'array',
-			// default  : [ '**/node_modules/**', '**/dist/**' ],
 		},
 		// ai
 		model : {
 			alias    : 'm',
-			describe : 'Ollama model name',
-			type     : 'string',
-		},
-		prompt : {
-			alias    : 'p',
-			describe : 'Custom prompt text string or path',
+			describe : 'Ollama LLM model name',
 			type     : 'string',
 		},
 		system : {
 			alias    : 's',
-			describe : 'Custom system text string or path',
+			describe : 'System message (text, path or url)',
+			type     : 'string',
+		},
+		prompt : {
+			alias    : 'p',
+			describe : 'Fist prompt to generate a response (text, path or url)',
 			type     : 'string',
 		},
 		theme : {
 			alias    : 't',
-			describe : 'Theme',
+			describe : 'Theme for chat',
 			choices  : Object.values( consts.theme ),
 			// default  : theme.custom,
 		},
@@ -82,7 +75,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		// others
 		config : {
 			alias    : 'c',
-			describe : 'Path to config file. files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]',
+			describe : 'Path to config file. Files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]',
 			type     : 'string',
 		},
 		// 'non-interactive' : {
@@ -112,8 +105,6 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		},
 		...coreMessages,
 	}
-
-	bugsUrl = this._const.bugsUrl
 
 	constructor( argv: CliParams['argv'] ){
 
@@ -171,7 +162,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 				const isDebug = argv.debug
 
 				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v.toUpperCase() ) ), p.log.step( '' ), p.cancel( d ) )
-				
+
 				if ( isCoreError ) {
 
 					if ( error.message === core.ERROR_ID.CANCELLED ) cancel()
@@ -182,7 +173,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 				else 
 					set( 
 						this.message.error.general,
-						`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this.bugsUrl ) )}`,
+						`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this._const.bugsUrl ) )}`,
 					)
 					
 				// console.log( {
@@ -201,17 +192,18 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 			intro    : async () => p.intro( c.introColor( this.message.intro.toUpperCase() ) ),
 			config   : async() => await core.config.set(),
 			model    : async() => await core.model.get(),
-			content  : async()=> await core.inputs.get(),
+			content  : async()=> await core.input.get(),
 			ai       : async ( ): Promise<AiResponse> => await core.prompt.get( ),
+			output   : async ( ) => await core.output.get( ),
 			response : async ( { results } ) => {
 
-				if ( !results.ai || !results.model || !results.content ) throw UnexpectedError
+				if ( !results.ai || !results.output || !results.model || !results.content ) throw UnexpectedError
 
 				const res = await core.response.get( {
-					prompt : results.ai.user,
 					system : results.ai.system,
 					model  : results.model, 
 					docs   : results.content,
+					output : results.output,
 				} )
 				return res
 			

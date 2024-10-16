@@ -6,18 +6,12 @@ import * as string from '../../_shared/string'
 import * as process from '../../_shared/process'
 import * as consts from '../const'
 import { argvSchema } from '../schema'
+import {
+	TypedError, catchError, 
+} from '../../_shared/error'
 
-class CoreError extends Error {
-
-	constructor( message: string ) {
-
-		super( message ) // Llama al constructor de la clase padre (Error)
-		this.name = this.constructor.name // Establece el nombre de la clase como el nombre del error
-		Error.captureStackTrace( this, this.constructor ) // Captura el stack trace
-	
-	}
-
-}
+// se tiene que definir aqui para que acepte instaceof luego
+const ErroClass = class CoreError extends TypedError {}
 
 export class CoreSuper {
 
@@ -32,8 +26,9 @@ export class CoreSuper {
 	protected _string = string
 	protected _const = consts
 	protected _process = process
-	
-	Error = CoreError 
+	protected _catchError = catchError
+
+	Error = ErroClass
 
 	ERROR_ID = {
 		CANCELLED          : 'CANCELLED',
@@ -100,10 +95,88 @@ export class CoreSuper {
 		else this._process.exit( code )
 
 	}
+	async _textPrompt( args:{
+		message : string
 
-	protected async _replacePlaceholders( value: string ) {
+		placeholder? : string 
+	} ) {
 
-		const res = await this._string.replacePlaceholders( value, {
+		const prompt = await this._p.text( {
+			message     : args.message,
+			placeholder : args.placeholder,
+			validate( value ) {
+
+				if ( !value || value.trim() === '' ) return 'No empty value is allowed.'
+        
+			},
+		} )
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+
+		return prompt
+	
+	}
+
+	async _confirmPrompt( args: { message: string } ) {
+
+		const prompt = await this._p.confirm( { message: args.message } )
+
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+		return prompt
+	
+	}
+
+	async _selectPrompt<Opts extends {
+		title : string,
+		value : string,
+		desc? : string 
+	}[] >( args: {
+		message : string,
+
+		opts : Opts
+	} ): Promise<Opts[number]["value"]> {
+
+		const maxTitleLength = Math.max( ...args.opts.map( opt => opt.title.length ) ) + 2
+
+		const padding = ( length: number ) => ' '.repeat( maxTitleLength - length )
+		const prompt = await this._p.select( {
+			message : args.message,
+			options : args.opts.map( opt => ( {
+				value : opt.value,
+				label : opt.title + ( opt.desc ? ( this._c.gray( padding( opt.title.length ) + '(' + opt.desc + ')' ) ) : '' ), 
+			} ) ),
+		} ) 
+
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+		return prompt as Promise<Opts[number]["value"]>
+	
+	}
+
+	async _validateContent( v: string ) {
+
+		let content: string = v
+		const stringType = this._string.getStringType( v ) 
+
+		if ( stringType === 'path' ) {
+
+			const exist = await this._sys.existsFile( v )
+			if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
+			content = await this._sys.readFile( v, 'utf-8' )
+	
+		} else if ( stringType === 'url' ) {
+
+			try {
+
+				content = await this._string.getTextPlainFromURL( v )
+		
+			} catch ( e ) {
+
+				throw new this.Error( `${this._setErrorMessage( e, 'Failed to fetch URL' )}` )
+		
+			}
+	
+		}
+
+		const res = await this._string.replacePlaceholders( content, {
 			url : async v => {
 
 				let res
@@ -139,8 +212,6 @@ export class CoreSuper {
                 
 			},
 		} )
-
-		// console.log( { res } )
 
 		return res
 	

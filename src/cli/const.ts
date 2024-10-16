@@ -22,4 +22,14 @@ export const theme = {
 	test        : 'tests',
 } as const
 
+export const themeDesc = {
+	custom      : 'Adapt the system to your needs.',
+	explain     : 'Provide clear explanations of code and functionality.',
+	docs        : 'Generate user guides and technical documentation.',
+	fix         : 'Identify and resolve bugs for accurate output.',
+	performance : 'Improve the efficiency of your code and reduce response times.',
+	refactor    : 'Improve code structure for better readability and maintainability.',
+	test        : 'Create tests and ensure quality.',
+} as const satisfies Record<keyof typeof theme, string> 
+  
 export const PROMPT_VARS = { CONTENT: 'content' } as const

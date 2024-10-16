@@ -1,102 +1,31 @@
+import { OutputType } from "./output"
 import { CoreSuper } from "./super"
 
 type Chat = CoreSuper['_ai']['chatVectored']
 type ChatReturnedData = Awaited<ReturnType<Chat>>
 type ChatDocs = Parameters<Chat>[0]['docs']
+
 type ChatParams = {
-	prompt : string,
 	system : string,
 
 	model : string,
 	
 	docs : ChatDocs 
+
+	output : OutputType
 }
+
 export class CoreResponse extends CoreSuper {
 
-	title = 'Output'
-	description : string | undefined = 'Output configuration for save the generated content.'
+	title = 'Chat'
 
 	#chat : ChatReturnedData | undefined
-    
-	async getOverwrite( ) {
 
-		const argv = this._argv.overwrite
-		const {
-			ask, ...values
-		} = this._const.overwrite
-
-		if ( argv && argv !== ask ) return argv
-        
-		const prompt = await this._p.select( {
-			message : 'How do you want the output to be overwritten?',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			options : Object.entries( values ).map( ( [ k, v ] ) => ( {
-				value : k,
-				label : v, 
-			} ) ),
-		} ) as typeof values[keyof typeof values]
-
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-		return prompt
+	#line = '──────────────────────────────────────────────────────────'
 	
-	}
-	async getSingle( ): Promise<boolean> {
-
-		const argv = this._argv.single
-		if ( !argv || argv !== true ) return false 
-		this._successRes( `Response type:`, 'Single' )
-		return argv
-	
-	}
-
-	async #choiceOutput( placeholder?: string ) {
-
-		const prompt = await this._p.text( {
-			message : 'Enter output path:',
-			placeholder,
-			validate( value ) {
-
-				if ( !value || value.trim() === '' ) return 'Please provide at least one file path.'
-            
-			}, 
-		} )
-
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-		return prompt
-	
-	}
-
-	async getOutput(): Promise<{
-		// eslint-disable-next-line @stylistic/key-spacing
-		path : string,
-		overwrite : 'last' | 'always',
-	} | undefined> {
-		
-		const set = async ( initValue?: string, placeholder?: string ) => {
-
-			const value = initValue
-				? ( this._successRes( `Output path:`, initValue ), initValue as string )
-				: ( await this.#choiceOutput( placeholder ) )
-
-			const res = this._sys.path.resolve( this._process.cwd(), value )
-
-			return res
-		
-		}
-
-		const argv = this._argv.output
-		return argv ? ( {
-			path      : await set( argv ), 
-			overwrite : await this.getOverwrite(),
-		} ) : undefined
-	
-	}
-	line = '──────────────────────────────────────────────────────────'
 	async #setChatResponse( prompt: string ) {
 
-		const line = this.line
+		const line = this.#line
 		const lastLine = ( ) =>( console.log( '\n\n\n' ), this._p.intro( line ) )
 		const firstLine = () =>( this._p.log.info( 'Assistant:' ), this._p.outro( line ), console.log( '\n' ) )
 		let output = ''
@@ -133,34 +62,29 @@ export class CoreResponse extends CoreSuper {
         
 		}
 
-		// this.#chat.addAssistantMessage( output )
-
 		return output
 	
 	}
 
-	async generate( {
-		prompt, system, model, docs,
-	}:ChatParams ) {
+	async #generate( {
+		system, model, docs,
+	}: Omit<ChatParams, 'output'> ) {
 
 		const spin = this._p.spinner()
 		spin.start( 'starting...' )
+		
 		try {
 			
 			spin.message( 'Generating chat...' )
-			// console.log( {
-			// 	system,
-			// 	model, 
-			// } )
+
 			this.#chat = await this._ai.chatVectored( {
 				system,
 				model,
 				docs,
 			} )
+
 			spin.stop( 'Chat successfully generated! ✨' )
-			this._p.log.message( '' )
-			const res = this.#setChatResponse( prompt )
-			return res
+			this._p.log.message( this.#line )
 		
 		} catch ( e ) {
 		
@@ -171,54 +95,24 @@ export class CoreResponse extends CoreSuper {
 	
 	}
     
-	async reply(){
+	async #reply( args: {
+		first? : boolean,
 
+		prompt? : string 
+	} | undefined = undefined ) {
+
+		const first = args?.first
 		let res = ''
 		try {
 
-			const validate = async ( v: string ) => {
+			const prompt = args?.prompt && first
+				? ( this._successRes( `You:`, args.prompt ), args.prompt ) 
+				: await this._textPrompt( {
+					message     : `You:`,
+					placeholder : first ? 'Write your first prompt here' : 'Write your next prompt here',
+				} )
 
-				let content: string = v
-				const stringType = this._string.getStringType( v ) 
-
-				if ( stringType === 'path' ) {
-
-					const exist = await this._sys.existsFile( v )
-					if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
-					content = await this._sys.readFile( v, 'utf-8' )
-			
-				} else if ( stringType === 'url' ) {
-
-					try {
-
-						content = await this._string.getTextPlainFromURL( v )
-				
-					} catch ( e ) {
-
-						throw new this.Error( `${this._setErrorMessage( e, 'Failed to fetch URL' )}` )
-				
-					}
-			
-				}
-
-				return content
-	
-			}
-
-			const prompt = await this._p.text( {
-				message : `You:`,
-				validate( v ) {
-                
-					if ( !v ) return 'Please provide valid path or content.'
-        
-				},
-            
-			} ) as string
-
-			if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-			res = await validate( prompt )
-			res = await this._replacePlaceholders( res )
+			res = await this._validateContent( prompt )
 			res = await this.#setChatResponse( res )
         
 		} catch ( e ) {
@@ -226,7 +120,7 @@ export class CoreResponse extends CoreSuper {
 			if ( e instanceof this.Error && e.message === this.ERROR_ID.CANCELLED ) 
 				throw new this.Error( this.ERROR_ID.CANCELLED )
 			this._errorRes( this.title, this._setErrorMessage( e ) )
-			res = await this.reply()
+			res = await this.#reply()
 		
 		}
 
@@ -234,7 +128,7 @@ export class CoreResponse extends CoreSuper {
 	
 	}
 
-	async write( outputPath: string, content: string, overrides: 'last' | 'always' ): Promise<void> {
+	async #write( outputPath: string, content: string, overrides: NonNullable<OutputType['overwrite']> ): Promise<void> {
 
 		if ( overrides === 'last' ) {
 
@@ -249,42 +143,40 @@ export class CoreResponse extends CoreSuper {
 		}
 
 		await this._sys.writeFile( outputPath, content )
-		this._successRes( `Response generated in:`, outputPath )
+		this._successRes( `Response saved in:`, outputPath )
 	
 	}
 
-	async #recursiveReply( outputPath?: string, overrides?: 'last' | 'always' ): Promise<void> {
+	async #recursiveReply( outputPath?: string, overrides?: OutputType['overwrite'] ): Promise<void> {
 
-		const content = await this.reply()
-		if ( outputPath ) await this.write( outputPath, content, overrides || 'last' )
+		const response = await this.#reply()
+		if ( outputPath ) await this.#write( outputPath, response, overrides || 'last' )
 		await this.#recursiveReply( outputPath, overrides )
 	
 	}
 
 	async get( {
-		prompt, system, model, docs, 
-	}:ChatParams ){
-
+		system, model, docs, output,
+	}: ChatParams ){
+	
 		this._setTitle()
 
-		const output = await this.getOutput()
-		const single = await this.getSingle()
-		
-		if ( !output && !single ) this._p.log.success( 'No output path provided' )
-
-		this.title = 'Chat'
-		this.description = undefined
-		this._setTitle()
-
-		const content = await this.generate( {
-			prompt,
+		await this.#generate( {
 			system,
 			model, 
 			docs,
 		} )
-		if ( output ) await this.write( output.path, content, output.overwrite )
+
+		const prompt = this._argv.prompt
+
+		const response = await this.#reply( {
+			first : true,
+			prompt, 
+		} )
+
+		if ( output.path && output.overwrite ) await this.#write( output.path, response, output.overwrite )
 		
-		if ( !single ) await this.#recursiveReply( output?.path, output?.overwrite )
+		if ( !output.single ) await this.#recursiveReply( output?.path, output?.overwrite )
 	
 	}
 

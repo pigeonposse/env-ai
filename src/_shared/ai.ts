@@ -20,20 +20,6 @@ export default class Ai {
 	
 	}
 
-	// async generateStreamResponse( {
-	// 	system, prompt, model, 
-	// }: AiOptions ) {
-
-	// 	const response = await this.#ollama.generate( {
-	// 		system,
-	// 		prompt,
-	// 		model,
-	// 		stream : true,
-	// 	} )
-	// 	return response
-	
-	// }
-
 	async getModels () {
 
 		const output = await this.#ollama.list()
@@ -50,6 +36,7 @@ export default class Ai {
 		} )
 	
 	}
+
 	async chatVectored( opts: Omit<AiOptions, 'prompt'> & { docs: Parameters<AiVectored['generateChat']>[0] } ) {
 
 		const vectored = new AiVectored( {
@@ -65,6 +52,7 @@ export default class Ai {
 		}
 	
 	}
+
 	async chat( opts: Omit<AiOptions, 'prompt'> ) {
 
 		// console.log( opts )

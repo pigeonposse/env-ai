@@ -14,7 +14,7 @@ type Docs = {
 export class CoreInputs extends CoreSuper {
 
 	title = 'Input'
-	description = 'Inputs to add context to your chat.'
+	description = 'Inputs to add context to your chat. This in not required.'
 
 	errorTitle = this._c.error( this.title )
 
@@ -36,18 +36,21 @@ export class CoreInputs extends CoreSuper {
         
 			for ( const input of inputs ) {
 
-				try {
+				const [ error, data ] = await this._catchError( ( async () => {
 
 					load.message( 'Reading ' + input )
 					const content = await this._string.getTextPlainFromURL( input.toString() )
-					urlContents[input.toString()] = sanitize( content )
-			
-				} catch ( e ){
+					return sanitize( content )
+				
+				} )() )
+
+				if ( error ){
 
 					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ), 1 )
-					throw e
-			
-				}
+					throw error
+				
+				} else 
+					urlContents[input.toString()] = data
 		
 			}
 
@@ -110,6 +113,7 @@ export class CoreInputs extends CoreSuper {
 			return this.getContent( inputs )
 		
 		}
+		
 		try {
 
 			const urlContent = !( !inputs.urls || !inputs.urls.length ) ? await this._getDataContent( inputs.urls, 'url' ) : undefined
@@ -158,47 +162,20 @@ export class CoreInputs extends CoreSuper {
 
 	async #choiceIncludes( placeholder?: string ): Promise<string[]> {
 
-		const prompt = await this._p.text( {
+		const prompt = await this._textPrompt( {
 			message     : 'Enter input paths or urls to be processed (comma-separated):',
 			placeholder : placeholder,
-			validate( value ) {
-
-				if ( !value ) return 'Please provide at least one file path or url.'
-        
-			},
 		} )
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
 
 		return prompt.split( ',' ).map( path => path.trim() )
 	
 	}
 
-	async #choiceExcludes( placeholder?: string ): Promise<string[]> {
-
-		const prompt = await this._p.text( {
-			message     : 'Enter paths to exclude (comma-separated):',
-			placeholder : placeholder,
-			validate( value ) {
-
-				if ( !value ) return 'Please provide at least one exclude path.'
-        
-			},
-		} )
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-		return prompt.split( ',' ).map( path => path.trim() )
-	
-	}
-
-	async getInputs( includesPaths?: string[], excludesPaths?: string[], includePlaceholder?: string, excludePlaceholder?: string ): Promise<Inputs> {
+	async getInputs( includesPaths?: string[], includePlaceholder?: string ): Promise<Inputs> {
 
 		const input = includesPaths
 			? ( this._successRes( `Inputs selected:`, includesPaths.length ? includesPaths.join( ', ' ) : 'none' ), includesPaths )
 			: ( await this.#choiceIncludes( includePlaceholder ) )
-            
-		const ignore = excludesPaths
-			? ( this._successRes( 'Inputs (excluded paths):', excludesPaths.length ? excludesPaths.join( ', ' ) : 'none' ), excludesPaths )
-			: ( await this.#choiceExcludes( excludePlaceholder ) )
 
 		let i = this.#separateInputs( input )
 
@@ -209,21 +186,15 @@ export class CoreInputs extends CoreSuper {
 				urls  : [],
 				paths : [],
 			}
-			// errorMsg()
-			// i = await this.getInputs( undefined, undefined, input.join( ', ' ), ignore.join( ', ' ) )
         
 		}
 		else {
 
-			i.paths = await this._sys.getPaths( i.paths, {
-				ignore,
-				gitignore : true,
-           
-			} )
+			i.paths = await this._sys.getPaths( i.paths )
 			if ( !i || ( !i.paths.length && !i.urls.length ) ) {
 
 				errorMsg()
-				i = await this.getInputs( undefined, undefined, input.join( ', ' ), ignore.join( ', ' ) )
+				i = await this.getInputs( undefined, input.join( ', ' ) )
             
 			}
         
@@ -236,11 +207,7 @@ export class CoreInputs extends CoreSuper {
 	async get(): Promise<Docs> {
 
 		this._setTitle( ) 
-		// const defaults = {
-		// 	i : [ "**/*.{js,ts,jsx,tsx}" ],
-		// 	e : [ "**/node_modules/**", "**/dist/**" ],
-		// }
-		const inputs = await this.getInputs( this._argv.include || [ ], this._argv.exclude || [ ] )
+		const inputs = await this.getInputs( this._argv.input || [ ] )
 		const res = await this.getContent( inputs )
 		this._setDebug( JSON.stringify( res, null, 2 ) )
 	

@@ -38,7 +38,7 @@ export default class AiVectored {
 			model   : args.model,
 			options : { temperature: 0.50 },
 		} )
-        
+
 		this.#chatEngine = undefined
 	
 	}

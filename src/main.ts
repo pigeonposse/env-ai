@@ -1,4 +1,4 @@
-import CLI from "./ask/main"
+import CLI from "./chat/main"
 
 export { CLI }
 
