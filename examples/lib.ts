@@ -1,3 +1,3 @@
-import { run } from "../src/main"
+import { run } from "../dist/main"
 
-await run( {} )
+await run( { debug: true } )

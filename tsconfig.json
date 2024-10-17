@@ -34,5 +34,7 @@
 		"allowSyntheticDefaultImports": true, 
 		"outDir": "./dist",
 		"baseUrl": "./src"
-	}
+	},
+	/**Important for vscode*/
+	"exclude": ["./build", "./dist"]
 }

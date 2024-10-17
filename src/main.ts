@@ -1,4 +1,4 @@
-import CLI from "./ask/main"
+import CLI from "./chat/main"
 
 export { CLI }
 
@@ -15,7 +15,7 @@ export type Config = Parameters<CLI['fn']>[0]
  * import { run } from 'env-ai'
  *
  * run({
- *   include: ['./src/**', 'https://example.com'],
+ *   input: ['./src/*', '!src/../*', 'https://example.com'],
  *   theme: 'docs',
  *   output: 'README.md',
  * })
@@ -38,7 +38,7 @@ export const run = async ( config: Config ) => {
  * import { defineConfig } from 'env-ai'
  *
  * export default defineConfig({
- *   include: ['./src/**', 'https://example.com'],
+ *   input: ['./src/*', '!src/../*', 'https://example.com'],
  *   theme: 'docs',
  *   output: 'README.md',
  * })

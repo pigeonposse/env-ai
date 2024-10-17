@@ -29,60 +29,50 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 	// Not default values for options
 	options: CliInterface<C>['options'] = {
 		// inputs
-		include : {
+		input : {
 			alias    : 'i',
-			describe : 'Glob patterns to include files and URLs',
+			describe : 'Path patterns or URLs to be processed',
 			type     : 'array',
-			// default  : [ '**/*.{js,ts,jsx,tsx}' ],
-		},
-		exclude : {
-			alias    : 'e',
-			describe : 'Glob patterns to exclude files and URLs',
-			type     : 'array',
-			// default  : [ '**/node_modules/**', '**/dist/**' ],
 		},
 		// ai
 		model : {
 			alias    : 'm',
-			describe : 'Ollama model name',
-			type     : 'string',
-		},
-		prompt : {
-			alias    : 'p',
-			describe : 'Custom prompt text string or path',
+			describe : 'Ollama LLM model name',
 			type     : 'string',
 		},
 		system : {
 			alias    : 's',
-			describe : 'Custom system text string or path',
+			describe : 'System message (text, path or url)',
+			type     : 'string',
+		},
+		prompt : {
+			alias    : 'p',
+			describe : 'Fist prompt to generate a response (text, path or url)',
 			type     : 'string',
 		},
 		theme : {
 			alias    : 't',
-			describe : 'Theme',
+			describe : 'Set a theme for your chat.',
 			choices  : Object.values( consts.theme ),
-			// default  : theme.custom,
 		},
 		// response
 		output : {
 			alias    : 'o',
-			describe : 'Output path for generated response',
+			describe : 'Output path for the generated response',
 			type     : 'string',
 		},
 		overwrite : {
 			describe : "Behavior when output file exists",
 			choices  : Object.values( consts.overwrite ),
-			// default  : overwrite.ask,
 		},
 		single : {
 			describe : 'Only one response',
 			type     : 'boolean',
-			// default  : false,
 		},
 		// others
 		config : {
 			alias    : 'c',
-			describe : 'Path to config file. files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]',
+			describe : 'Path to config file. Files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]',
 			type     : 'string',
 		},
 		// 'non-interactive' : {
@@ -94,8 +84,6 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		debug : {
 			describe : 'Debug mode',
 			type     : 'boolean',
-			// default  : false,
-            
 		},
 	}
 
@@ -112,8 +100,6 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		},
 		...coreMessages,
 	}
-
-	bugsUrl = this._const.bugsUrl
 
 	constructor( argv: CliParams['argv'] ){
 
@@ -170,8 +156,8 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 				const errorMsg = ( error instanceof Error ) ? error.message : typeof error === 'string' ? error : this.message.error.unexpected
 				const isDebug = argv.debug
 
-				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v ) ), p.log.step( '' ), p.cancel( d ) )
-				
+				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v.toUpperCase() ) ), p.log.step( '' ), p.cancel( d ) )
+
 				if ( isCoreError ) {
 
 					if ( error.message === core.ERROR_ID.CANCELLED ) cancel()
@@ -182,7 +168,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 				else 
 					set( 
 						this.message.error.general,
-						`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this.bugsUrl ) )}`,
+						`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this._const.bugsUrl ) )}`,
 					)
 					
 				// console.log( {
@@ -198,31 +184,26 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		type AiResponse = Awaited<ReturnType<typeof core.prompt.get>>
 
 		await list( {
-			intro   : async () => p.intro( c.introColor( this.message.intro ) ),
-			config  : async() => await core.config.set(),
-			model   : async() => await core.model.get(),
-			content : async(): Promise<string | undefined> => await core.inputs.get(),
-			ai      : async ( { results } ): Promise<AiResponse> => {
-
-				const content = results.content
-				if ( !content || typeof results.content !== 'string' ) throw UnexpectedError
-
-				const res = await core.prompt.get( content )
-
-				return res 
-			
-			},
+			intro    : async () => p.intro( c.introColor( this.message.intro.toUpperCase() ) ),
+			config   : async() => await core.config.set(),
+			model    : async() => await core.model.get(),
+			content  : async()=> await core.input.get(),
+			ai       : async ( ): Promise<AiResponse> => await core.prompt.get( ),
+			output   : async ( ) => await core.output.get( ),
 			response : async ( { results } ) => {
 
-				if ( !results.ai || !results.model ) throw UnexpectedError
+				if ( !results.ai || !results.output || !results.model || !results.content ) throw UnexpectedError
 
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const res = await core.response.get( results.ai.user, results.ai.system, results.model )
+				const res = await core.response.get( {
+					system : results.ai.system,
+					model  : results.model, 
+					docs   : results.content,
+					output : results.output,
+				} )
 				return res
 			
 			},
-			outro : async () => ( p.log.step( '' ), p.outro( c.success( this.message.outro ) ) ),
+			outro : async () => ( p.log.step( '' ), p.outro( c.success( this.message.outro.toUpperCase() ) ) ),
 		} )
 	
 	}

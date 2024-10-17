@@ -1,153 +1,118 @@
+import { OutputType } from "./output"
 import { CoreSuper } from "./super"
+
+type Chat = CoreSuper['_ai']['chatVectored']
+type ChatReturnedData = Awaited<ReturnType<Chat>>
+type ChatDocs = Parameters<Chat>[0]['docs']
+
+type ChatParams = {
+	system : string,
+
+	model : string,
+	
+	docs : ChatDocs 
+
+	output : OutputType
+}
 
 export class CoreResponse extends CoreSuper {
 
-	title = 'Output'
-	description : string | undefined = 'Output configuration for save the generated content.'
+	title = 'Chat'
 
-	#chat : Awaited<ReturnType<CoreSuper['_ai']['chat']>> | undefined
-    
-	async getOverwrite( ) {
+	#chat : ChatReturnedData | undefined
 
-		const argv = this._argv.overwrite
-		const {
-			ask, ...values
-		} = this._const.overwrite
-
-		if ( argv && argv !== ask ) return argv
-        
-		const prompt = await this._p.select( {
-			message : 'How do you want the output to be overwritten?',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			options : Object.entries( values ).map( ( [ k, v ] ) => ( {
-				value : k,
-				label : v, 
-			} ) ),
-		} ) as typeof values[keyof typeof values]
-
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-		return prompt
+	#line = '──────────────────────────────────────────────────────────'
 	
-	}
-	async getSingle( ): Promise<boolean> {
-
-		const argv = this._argv.single
-		if ( !argv || argv !== true ) return false 
-		this._successRes( `Response type:`, 'Single' )
-		return argv
-	
-	}
-
-	async #choiceOutput( placeholder?: string ) {
-
-		const prompt = await this._p.text( {
-			message : 'Enter output path:',
-			placeholder,
-			validate( value ) {
-
-				if ( !value || value.trim() === '' ) return 'Please provide at least one file path.'
-            
-			}, 
-		} )
-
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-		return prompt
-	
-	}
-
-	async getOutput(): Promise<{
-		// eslint-disable-next-line @stylistic/key-spacing
-		path : string,
-		overwrite : 'last' | 'always',
-	} | undefined> {
-		
-		const set = async ( initValue?: string, placeholder?: string ) => {
-
-			const value = initValue
-				? ( this._successRes( `Output path:`, initValue ), initValue as string )
-				: ( await this.#choiceOutput( placeholder ) )
-
-			const res = this._sys.path.resolve( this._process.cwd(), value )
-
-			return res
-		
-		}
-
-		const argv = this._argv.output
-		return argv ? ( {
-			path      : await set( argv ), 
-			overwrite : await this.getOverwrite(),
-		} ) : undefined
-	
-	}
-	line = '──────────────────────────────────────────────────────────'
 	async #setChatResponse( prompt: string ) {
+		
+		this._setDebug( prompt )
 
-		const line = this.line
+		const line = this.#line
+		const chatName = 'Assistant'
+		const title = chatName + ':'
 		const lastLine = ( ) =>( console.log( '\n\n\n' ), this._p.intro( line ) )
-		const firstLine = () =>( this._p.log.info( 'Assistant:' ), this._p.outro( line ), console.log( '\n' ) )
-		let output = ''
+		const firstLine = () =>( this._p.outro( line ), console.log( '\n' ) )
+		const spin = this._p.spinnerCustom()
+		let output = '',
+			exitResponse = false
 
 		if ( !this.#chat ) throw new this.Error( 'Chat not initialized' )
-			
+		spin.start( title + ' Thinking...' )	
 		const response = await this.#chat.send( prompt )
- 
-		if ( response[Symbol.asyncIterator] ) { // Si es un iterable asíncrono
+		
+		spin.message( title + ' Thinking...' )	
 
+		if ( response && response[Symbol.asyncIterator] ) { 
+
+			spin.stop( title )	
 			firstLine()
-			this._process.onSIGNIT( () => {
-
-				this._process.stdout.write( '\n' )
-				lastLine( )
-
-				// TODO Hacer q aborte pero solo la respuesta, que continue la linea de chat. asi es util para cancelar una respuesta
-				this.cancel( 'Exit from assistant response' )
-            
-			} )
+			
+			this._process.onSIGNIT( async () => ( exitResponse = true ) )
 
 			for await ( const part of response ) {
+
+				if ( exitResponse ){
+ 
+					this._process.stdout.write( '\n' )
+					lastLine( )
+					throw new this.Error( this.ERROR_ID.RESPONSE_CANCELLED )
 				
-				this._process.stdout.write( part.message.content )
-				output += part.message.content
-        
+				}
+				else {
+
+					this._process.stdout.write( part.message.content.toString() )
+					output += part.message.content
+				
+				}
+			
 			}
 
 			lastLine()
         
 		} else {
 
-			throw new this.Error( 'Response is not iterable' )
+			spin.stop( title + 'There has been an error in the chat process' )	
+			throw new this.Error( 'Chat unexpeted error' )
         
 		}
-
-		this.#chat.addAssistantMessage( output )
 
 		return output
 	
 	}
 
-	async generate( prompt: string, system: string, model: string ) {
+	async #generate( {
+		system, model, docs,
+	}: Omit<ChatParams, 'output'> ) {
 
 		const spin = this._p.spinner()
 		spin.start( 'starting...' )
+		
 		try {
-			
-			spin.message( 'Generating chat...' )
-			// console.log( {
-			// 	system,
-			// 	model, 
-			// } )
-			this.#chat = await this._ai.chat( {
-				system,
-				model,
+
+			const spinMsg = 'Generating chat'
+			spin.message( spinMsg )
+
+			const capturedMessages: string[] = []
+
+			this.#chat = await this._process.onOutputWrite( {
+				fn : async ( ) => await this._ai.chatVectored( {
+					system,
+					model,
+					docs,
+				} ),
+				on : async value => {
+
+					if ( !value.includes( spinMsg ) && !value.includes( '\x1B[999D' ) && !value.includes( '\x1B[J' ) ) 
+						capturedMessages.push( value )
+					else return value
 				
+				},
 			} )
+
 			spin.stop( 'Chat successfully generated! ✨' )
-			this._p.log.message( '' )
-			const res = this.#setChatResponse( prompt )
-			return res
+	
+			if ( capturedMessages.length ) this._p.note( capturedMessages.join( '\n' ), 'Notifications' )
+			else this._p.log.message( this.#line )
 		
 		} catch ( e ) {
 		
@@ -158,62 +123,34 @@ export class CoreResponse extends CoreSuper {
 	
 	}
     
-	async reply(){
+	async #reply( args: {
+		first? : boolean,
 
+		prompt? : string 
+	} | undefined = undefined ) {
+
+		const first = args?.first
 		let res = ''
 		try {
 
-			const validate = async ( v: string ) => {
+			const prompt = args?.prompt && first
+				? ( this._successRes( `You:`, args.prompt ), args.prompt ) 
+				: await this._textPrompt( {
+					message     : `You:`,
+					placeholder : first ? 'Write your first prompt here' : 'Write your next prompt here',
+				} )
 
-				let content: string = v
-				const stringType = this._string.getStringType( v ) 
-
-				if ( stringType === 'path' ) {
-
-					const exist = await this._sys.existsFile( v )
-					if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
-					content = await this._sys.readFile( v, 'utf-8' )
-			
-				} else if ( stringType === 'url' ) {
-
-					try {
-
-						content = await this._string.getTextPlainFromURL( v )
-				
-					} catch ( e ) {
-
-						throw new this.Error( `${this._setErrorMessage( e, 'Failed to fetch URL' )}` )
-				
-					}
-			
-				}
-
-				return content
-	
-			}
-
-			const prompt = await this._p.text( {
-				message : `You:`,
-				validate( v ) {
-                
-					if ( !v ) return 'Please provide valid path or content.'
-        
-				},
-            
-			} ) as string
-
-			if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-			res = await validate( prompt )
-			res = await this._replacePlaceholders( res )
+			res = await this._validateContent( prompt )
 			res = await this.#setChatResponse( res )
         
 		} catch ( e ) {
 
 			if ( e instanceof this.Error && e.message === this.ERROR_ID.CANCELLED ) 
 				throw new this.Error( this.ERROR_ID.CANCELLED )
+			else if ( e instanceof this.Error && e.message === this.ERROR_ID.RESPONSE_CANCELLED )
+				await this.#reply()
 			this._errorRes( this.title, this._setErrorMessage( e ) )
-			res = await this.reply()
+			res = await this.#reply()
 		
 		}
 
@@ -221,7 +158,7 @@ export class CoreResponse extends CoreSuper {
 	
 	}
 
-	async write( outputPath: string, content: string, overrides: 'last' | 'always' ): Promise<void> {
+	async #write( outputPath: string, content: string, overrides: NonNullable<OutputType['overwrite']> ): Promise<void> {
 
 		if ( overrides === 'last' ) {
 
@@ -236,35 +173,40 @@ export class CoreResponse extends CoreSuper {
 		}
 
 		await this._sys.writeFile( outputPath, content )
-		this._successRes( `Response generated in:`, outputPath )
+		this._successRes( `Response saved in:`, outputPath )
 	
 	}
 
-	async #recursiveReply( outputPath?: string, overrides?: 'last' | 'always' ): Promise<void> {
+	async #recursiveReply( outputPath?: string, overrides?: OutputType['overwrite'] ): Promise<void> {
 
-		const content = await this.reply()
-		if ( outputPath ) await this.write( outputPath, content, overrides || 'last' )
+		const response = await this.#reply()
+		if ( outputPath ) await this.#write( outputPath, response, overrides || 'last' )
 		await this.#recursiveReply( outputPath, overrides )
 	
 	}
 
-	async get( prompt: string, system: string, model: string ){
-
+	async get( {
+		system, model, docs, output,
+	}: ChatParams ){
+	
 		this._setTitle()
 
-		const output = await this.getOutput()
-		const single = await this.getSingle()
-		
-		if ( !output && !single ) this._p.log.success( 'No output path provided' )
+		await this.#generate( {
+			system,
+			model, 
+			docs,
+		} )
 
-		this.title = 'Chat'
-		this.description = undefined
-		this._setTitle()
+		const prompt = this._argv.prompt
 
-		const content = await this.generate( prompt, system, model )
-		if ( output ) await this.write( output.path, content, output.overwrite )
+		const response = await this.#reply( {
+			first : true,
+			prompt, 
+		} )
+
+		if ( output.path && output.overwrite ) await this.#write( output.path, response, output.overwrite )
 		
-		if ( !single ) await this.#recursiveReply( output?.path, output?.overwrite )
+		if ( !output.single ) await this.#recursiveReply( output?.path, output?.overwrite )
 	
 	}
 

@@ -38,20 +38,16 @@ type SetArgv<Opts> = Exact<Opts, ArgvSchema>
   
 export type CoreParams = {
 	argv : SetArgv<{
+		
 		/** 
 		 * Output path for generated response.
 		 */
 		output? : ArgvSchema['output']
 
 		/** 
-		 * Glob patterns to include files and URLs.
+		 * Glob patterns to input files and URLs.
 		 */
-		include? : ArgvSchema['include']
-
-		/** 
-		 * Glob patterns to exclude files and URLs.
-		 */
-		exclude? : ArgvSchema['exclude']
+		input? : ArgvSchema['input']
 
 		/** 
 		 * Behavior when output file exists.

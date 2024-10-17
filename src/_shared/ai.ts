@@ -1,4 +1,5 @@
 import ollama from 'ollama' 
+import AiVectored from './ai-vector'
 
 type AiOptions = {
 	system : string,
@@ -6,6 +7,7 @@ type AiOptions = {
      
 	model : string 
 } 
+
 export default class Ai {
 
 	#ollama : typeof ollama
@@ -18,24 +20,36 @@ export default class Ai {
 	
 	}
 
-	async generateStreamResponse( {
-		system, prompt, model, 
-	}: AiOptions ) {
-
-		const response = await this.#ollama.generate( {
-			system,
-			prompt,
-			model,
-			stream : true,
-		} )
-		return response
-	
-	}
 	async getModels () {
 
 		const output = await this.#ollama.list()
 		if ( !output.models || output.models.length === 0 ) throw new Error( this.error.NO_MODELS )
 		return output.models.map( model => model.name )
+	
+	}
+
+	async installModel( name: string ) {
+
+		return await ollama.pull( {
+			model  : name,
+			stream : true, 
+		} )
+	
+	}
+
+	async chatVectored( opts: Omit<AiOptions, 'prompt'> & { docs: Parameters<AiVectored['generateChat']>[0] } ) {
+
+		const vectored = new AiVectored( {
+			model  : opts.model,
+			system : opts.system, 
+		} )
+
+		await vectored.generateChat( opts.docs )
+		
+		return {
+			send  : vectored.chat.bind( vectored ),
+			reset : vectored.resetChatEngine.bind( vectored ), 
+		}
 	
 	}
 

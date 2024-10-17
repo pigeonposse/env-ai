@@ -14,6 +14,22 @@
 		"source.fixAll.eslint": "explicit",
 		"source.fixAll.stylelint": "explicit"
 	},
+	"editor.largeFileOptimizations": true,
+	"files.watcherExclude": {
+   		"**/build/**": true,
+		"**/dist/**": true,
+		"**/node_modules/**": true
+	},
+	"files.associations": {
+   		"**/build/**": "plaintext",
+		"**/*.log": "plaintext",
+		"**/*.data": "plaintext"
+	},
+	// "files.exclude": {
+	// 	"**/build/**": true,
+	// 	"**/dist/**": true,
+	// 	"**/node_modules/**": true
+	// },
 	"eslint.useFlatConfig": true,
 	"stylelint.validate": [
 		"css",

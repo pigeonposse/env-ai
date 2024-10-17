@@ -6,18 +6,12 @@ import * as string from '../../_shared/string'
 import * as process from '../../_shared/process'
 import * as consts from '../const'
 import { argvSchema } from '../schema'
+import {
+	TypedError, catchError, 
+} from '../../_shared/error'
 
-class CoreError extends Error {
-
-	constructor( message: string ) {
-
-		super( message ) // Llama al constructor de la clase padre (Error)
-		this.name = this.constructor.name // Establece el nombre de la clase como el nombre del error
-		Error.captureStackTrace( this, this.constructor ) // Captura el stack trace
-	
-	}
-
-}
+// se tiene que definir aqui para que acepte instaceof luego
+const ErroClass = class CoreError extends TypedError {}
 
 export class CoreSuper {
 
@@ -32,8 +26,9 @@ export class CoreSuper {
 	protected _string = string
 	protected _const = consts
 	protected _process = process
-	
-	Error = CoreError 
+	protected _catchError = catchError
+
+	Error = ErroClass
 
 	ERROR_ID = {
 		CANCELLED          : 'CANCELLED',
@@ -69,7 +64,7 @@ export class CoreSuper {
 	}
 	protected _setDebug( msg: string ) {
 
-		this._p.log.debug( this._c.section( this.title ), msg )
+		this._p.log.debug( this._c.section( this.title.toUpperCase() ), msg )
 	
 	}
 
@@ -100,122 +95,107 @@ export class CoreSuper {
 		else this._process.exit( code )
 
 	}
+	async _textPrompt( args:{
+		message : string
 
-	protected async _getDataContent<T extends 'url' | 'path' = 'path'>( inputs: T extends 'url' ? URL[] : string[], type?: T ) {
+		placeholder? : string 
+	} ) {
 
-		type = type ?? 'path' as T
+		const prompt = await this._p.text( {
+			message     : args.message,
+			placeholder : args.placeholder,
+			validate( value ) {
+
+				if ( !value || value.trim() === '' ) return 'No empty value is allowed.'
         
-		const load = this._p.spinner()
-		const pageSeparator = '---\n\n'
-		const sanitize = ( content: string ) => this._string.sanitizeContent( content )
+			},
+		} )
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
 
-		load.start( 'Preparing inputs...' )
-		let res = ''
-		if ( type === 'url' ){
-
-			load.message( 'Reading and sanitizing url...' )
-
-			const urlContents: Record<string, string> = {}
-        
-			for ( const input of inputs ) {
-
-				try {
-
-					load.message( 'Reading ' + input )
-					const content = await this._string.getTextPlainFromURL( input.toString() )
-					urlContents[input.toString()] = sanitize( content )
-			
-				} catch ( e ){
-
-					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ), 1 )
-					throw e
-			
-				}
-		
-			}
-
-			load.message( 'Getting source for all urls...' )
-
-			res = Object.entries( urlContents )
-				.map( ( [ id, content ] ) => `${pageSeparator}URL: ${id}\n\n${pageSeparator}\n${content}\n\n` )
-				.join()
-			load.stop( 'Source urls obtained!' )
-		
-		}
-
-		if ( type === 'path' ) {
-
-			load.message( 'Reading and sanitizing files...' )
-    
-			const fileContents: Record<string, string> = {}
-    
-			for ( const file of inputs ) {
-
-				load.message( 'Reading ' + file )
-				const content = await this._sys.readFile( file, 'utf-8' )
-				fileContents[file.toString()] = sanitize( content )
-        
-			}
-    
-			load.message( 'Getting source for all files...' )
-
-			res = Object.entries( fileContents )
-				.map( ( [ id, content ] ) => `${pageSeparator}FILE: ${id}\n\n${pageSeparator}\n${content}\n\n` )
-				.join( )
-
-			load.stop( 'Source files obtained!' )
-		
-		}
-
-		return {
-			content   : res,
-			sanitize  : sanitize,
-			separator : pageSeparator,
-		}
+		return prompt
 	
 	}
 
-	protected async _replacePlaceholders( value: string, content?: string ) {
+	async _confirmPrompt( args: { message: string } ) {
 
-		const res = await this._string.replacePlaceholders( value, {
-			content : content ?? '',
-			url     : async v => {
+		const prompt = await this._p.confirm( { message: args.message } )
 
-				let res
-				try {
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+		return prompt
+	
+	}
 
-					res = await this._string.getTextPlainFromURL( v )
-				
-				} catch ( e ){
+	async _selectPrompt<Opts extends {
+		title : string,
+		value : string,
+		desc? : string 
+	}[] >( args: {
+		message : string,
 
-					this._p.log.warn( this._setErrorMessage( e ) )
-				
-				}
-				if ( res && typeof res === 'string' ) return res
-				return 'Not found or invalid URL.'
-			
-			},
-			path : async v => {
+		opts : Opts
+	} ): Promise<Opts[number]["value"]> {
 
-				let res
-				try {
+		const prompt = await this._p.select( {
+			message : args.message,
+			options : args.opts.map( opt => ( {
+				value  : opt.value,
+				label  : opt.title, 
+				'hint' : opt.desc,				
+			} ) ),
+		} ) 
 
-					const exist = await this._sys.existsFile( v )
-					if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
-					res = await this._sys.getPaths( v )
-				
-				} catch ( e ){
+		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
+		return prompt as Promise<Opts[number]["value"]>
+	
+	}
+	_setProcessPath( path: string ) {
 
-					this._p.log.warn( this._setErrorMessage( e ) )
-				
-				}
-				if ( res && typeof res === 'string' ) return res
-				return 'Not found or invalid path.'
-                
-			},
-		} )
+		return this._sys.path.resolve( this._process.cwd(), path )
+	
+	}
 
-		// console.log( { res } )
+	async _validateContent( v: string ) {
+
+		const validatePath = async ( v: string ) => {
+
+			const path = this._setProcessPath( v )
+			const exist = await this._sys.existsFile( path )
+			if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist or is not found.` )
+			const res = await this._sys.readFile( path, 'utf-8' )
+			if ( res && typeof res === 'string' ) return res
+			throw new this.Error( `Path "${v}" has unexpected content type: ${typeof res}` )
+		
+		}
+		const validateURL = async ( v: string ) => {
+
+			const res = await this._string.getTextPlainFromURL( v )
+			if ( res && typeof res === 'string' ) return res
+			throw new this.Error( `URL "${v}" has unexpected content type: ${typeof res}` )
+		
+		}
+
+		const convertString = async ( value: string ) => {
+
+			const stringType = this._string.getStringType( value ) 
+	
+			return stringType === 'path' 
+				? await validatePath( value )
+				: stringType === 'url'
+					? await validateURL( value )
+					: value
+		
+		}
+
+		const content = await convertString( v )
+
+		const res = await this._string.replacePlaceholders( 
+			content, 
+			{
+				url  : async v => await validateURL( v ),
+				path : async v => await validatePath( v ),
+			}, 
+			async v => await convertString( v ), 
+		)
 
 		return res
 	

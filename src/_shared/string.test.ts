@@ -1,5 +1,3 @@
-// test/replacePlaceholders.test.ts
-
 import {
 	describe, it, expect, 
 } from 'vitest'
@@ -9,7 +7,7 @@ describe( 'replacePlaceholders', () => {
 
 	it( 'should replace multiple placeholders with provided values', async () => {
 
-		const content = `Hello {{ name  }} {{secondName}}! Today is {{ day('short') }} ({{day( "long"  ) }}).`
+		const content = `Hello {{ name  }} {{secondName}}! Today is {{ day('short') }} ({{day( "long"  ) }}). Your url is {{ https://example.com }}`
 		const params = {
 			name       : "Alice",
 			secondName : "Copper",
@@ -23,9 +21,15 @@ describe( 'replacePlaceholders', () => {
 			
 			},
 		}
+		const customParams = async ( v: string ) => {
 
-		const result = await replacePlaceholders( content, params )
-		expect( result ).toBe( "Hello Alice Copper! Today is Mon (Monday)." )
+			if ( v === "https://example.com" ) return "https://alice.example.com"
+			return v
+		
+		}
+		const result = await replacePlaceholders( content, params, customParams )
+		expect( result ).toBe( "Hello Alice Copper! Today is Mon (Monday). Your url is https://alice.example.com" )
+		expect( result ).not.toBe( "Hello Alice Copper! Today is Mon (Monday). Your url is {{ https://example.com }}" )
 	
 	} )
 
@@ -33,8 +37,13 @@ describe( 'replacePlaceholders', () => {
 
 		const content = "No placeholders here."
 		const params = {}
+		const customParams = async ( v: string ) => {
 
-		const result = await replacePlaceholders( content, params )
+			if ( v === "url" ) return "https://example.com"
+			return v
+		
+		}
+		const result = await replacePlaceholders( content, params, customParams )
 		expect( result ).toBe( "No placeholders here." )
 	
 	} )

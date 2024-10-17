@@ -6,158 +6,91 @@ export class CorePrompt extends CoreSuper {
 
 	title = 'Prompt'
 	description = 'The prompt configuration for your chat.'
-
 	defaults = prompts
-	async setPrompt( value?: string, type: 'system' | 'user' = 'system', placeholder?: string ): Promise<string> {
 
-		let res: string | undefined, 
-			prompt: string | undefined
-            
-		const errorTitle = `[${type} prompt]`
+	async #getSystem( defaultValue?: string ): Promise<string> {
 
-		const validate = async ( v: string ) => {
+		const message = `System prompt ${ this._c.italic( '(Enter text path or url)' )}:`
 
-			let content: string = v
-			const stringType = this._string.getStringType( v ) 
-			if ( stringType === 'path' ) {
+		const setPrompt = async ( value?: string, placeholder?: string ): Promise<string> =>{
 
-				const exist = await this._sys.existsFile( v )
-				if ( !exist ) throw new this.Error( `${errorTitle} Path "${v}" doesn't exist.` )
-				content = await this._sys.readFile( v, 'utf-8' )
+			let res: string | undefined, 
+				prompt: string | undefined
 			
-			} else if ( stringType === 'url' ) {
-
-				try {
-
-					content = await this._string.getTextPlainFromURL( v )
-				
-				} catch ( e ) {
-
-					throw new this.Error( `${errorTitle} ${this._setErrorMessage( e, 'Failed to fetch URL' )}` )
+			try {
+	
+				if ( value ) res = await this._validateContent( value )
+				else {
+	
+					prompt = await this._textPrompt( {
+						message,
+						placeholder : placeholder 
+							? placeholder 
+							: 'You are an expert code programmer with extensive knowledge of the content of this library',
+						
+					} ) as string
+	
+					res = await this._validateContent( prompt )
 				
 				}
-			
-			}
 	
-			const contentPlaceholderPattern = new RegExp( `\\{\\{\\s*${this._const.PROMPT_VARS.CONTENT}\\s*\\}\\}` )
-			if ( type === 'system' && !contentPlaceholderPattern.test( content ) ) {
-
-				throw new this.Error( `${errorTitle} prompt returned from [${stringType}] must include "{{${this._const.PROMPT_VARS.CONTENT}}}".\n${this._c.gray( 'Content variable is where the code will be rendered.' )}` )
+				if ( !res ) throw new Error()
 			
-			}
-    
-			return content
+			} catch ( e ){
+	
+				if ( e instanceof this.Error && e.message === this.ERROR_ID.CANCELLED ) 
+					throw new this.Error( this.ERROR_ID.CANCELLED )
+	
+				else this._errorRes( `System prompt error:`, this._setErrorMessage( e ) )
+				res = await setPrompt( undefined, res || prompt )
+		
+			} 
+
+			return res
 		
 		}
 
-		try {
-
-			if ( value ) res = await validate( value )
-			else {
-
-				prompt = await this._p.text( {
-					message     : `${errorTitle} Enter path to file content or direct content:`,
-					placeholder : placeholder ? placeholder : type === 'system' 
-						? 'You are an expert code programmer with extensive knowledge of the content of this library: {{content}}' 
-						: 'Tell me some kind of improvement that I could implement to my code',
-					validate( v ) {
-						
-						if ( !v ) return 'Please provide valid path or content.'
-                
-					},
-                    
-				} ) as string
-
-				if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-
-				res = await validate( prompt )
-			
-			}
-			if ( !res ) throw new Error()
-		
-		} catch ( e ){
-
-			if ( e instanceof this.Error ) {
-
-				if ( e.message === this.ERROR_ID.CANCELLED ) throw new this.Error( this.ERROR_ID.CANCELLED )
-				else this._errorRes( e.message, '' )
-			
-			}
-
-			else this._errorRes( `${errorTitle} File or content not found or invalid. Value:`, value || 'not defined' )
-			res = await this.setPrompt( undefined, type, res || prompt )
-    
-		} 
+		const argv = this._argv.system 
+		const res = argv
+			? ( this._successRes( message, argv ), await setPrompt( argv ) )
+			: defaultValue 
+				? defaultValue 
+				: await setPrompt( undefined )
 
 		return res
 	
 	}
 
-	async #choiceUser( defaultValue?: string ){
-
-		const argv = this._argv.prompt 
-
-		const res = argv
-			? ( this._successRes( `User prompt selected:`, argv ), await this.setPrompt( argv, 'user' ) )
-			: defaultValue ? defaultValue : await this.setPrompt( undefined, 'user' )
-
-		const response = await this._replacePlaceholders( res )
-
-		return response
-	
-	}
-
-	async #choiceSystem( content: string, defaultValue?: string ): Promise<string> {
-		
-		const argv = this._argv.system 
-		const res = argv
-			? ( this._successRes( `System prompt selected:`, argv ), await this.setPrompt( argv, 'system' ) )
-			: defaultValue ? defaultValue : await this.setPrompt( undefined, 'system' )
-
-		const response = await this._replacePlaceholders( res, content )
-		
-		return response
-	
-	}
-
-	async #choiceTheme( ){
-
-		const prompt = await this._p.select( {
-			message : 'Select theme:',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			options : Object.entries( this._const.theme ).map( ( [ k, v ] ) => ( {
-				value : k,
-				label : v, 
-			} ) ),
-		} ) as ThemeTypes
-		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-		return prompt
-	
-	}
 	async getTheme(): Promise<ThemeTypes> {
 
 		const theme = this._argv.theme 
+		const message = `Select theme:`
 		const res = theme
-			? ( this._successRes( `Selected theme:`, theme ), theme )
-			: ( await this.#choiceTheme() )
-		return res as ThemeTypes
+			? ( this._successRes( message, theme ), theme )
+			: ( await this._selectPrompt( {
+				message : message,
+				opts    : Object.entries( this._const.theme ).map( ( [ k, v ] ) => ( {
+					value : v,
+					title : v, 
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					desc  : this._const.themeDesc[k] || undefined,
+				} ) ),
+			} ) )
+		return res 
 	
 	}
 
-	async get( content: string ) {
+	async get( ) {
 
 		this._setTitle()
 		const theme = await this.getTheme()
-		const system = await this.#choiceSystem( content, theme !== 'custom' ? this.defaults[theme].system : undefined )
-		const user = await this.#choiceUser( theme !== 'custom' ? this.defaults[theme].user : undefined )
-		// console.log( theme, user )
+		const system = await this.#getSystem( theme !== 'custom' ? this.defaults[theme].system : undefined )
 		const res = {
-			theme,
-			system,
-			user,
+			theme  : theme,
+			system : system,
 		}
-		this._setDebug( 'SET THEME: ' + res.theme + '\nSET SYSTEM PROMPT: ' + res.system + '\nSET USER PROMPT: ' + res.user )
+		this._setDebug( JSON.stringify( res, null, 2 ) )
 		return res
 	
 	}

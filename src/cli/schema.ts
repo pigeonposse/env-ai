@@ -5,14 +5,13 @@ import {
 import {
 	overwrite, theme, 
 } from './const'
-// Crear los tipos `OverwriteTypes` y `ThemeTypes` utilizando `createEnum`
+
 const OverwriteTypes = createLiteralUnion( Object.values( overwrite ) )
 const ThemeTypes = createLiteralUnion( Object.values( theme ) )
 
 export const argvSchema = validate.object( {
 	output    : validate.string().optional(),
-	include   : validate.array( validate.string() ).optional(),
-	exclude   : validate.array( validate.string() ).optional(),
+	input     : validate.array( validate.string() ).optional(),
 	overwrite : OverwriteTypes.optional(),
 	model     : validate.string().optional(),
 	prompt    : validate.string().optional(),
