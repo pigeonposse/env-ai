@@ -8,6 +8,5 @@
 		"jacano.vscode-pnpm",
 		"redhat.vscode-yaml",
 		"github.vscode-github-actions",
-		"stylelint.vscode-stylelint"
 	]
 }

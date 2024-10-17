@@ -12,6 +12,7 @@ import {
 	magenta,
 	red, 
 } from './color'
+import process from "node:process"
 
 const unicode = isUnicodeSupported()
 const s = ( c: string, fallback: string ) => ( unicode ? c : fallback )

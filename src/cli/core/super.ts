@@ -181,7 +181,7 @@ export class CoreSuper {
 			return stringType === 'path' 
 				? await validatePath( value )
 				: stringType === 'url'
-					? await this._string.getTextPlainFromURL( value )
+					? await validateURL( value )
 					: value
 		
 		}

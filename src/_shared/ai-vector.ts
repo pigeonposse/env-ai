@@ -9,6 +9,7 @@ import {
 	JSONReader,
 } from "llamaindex"
 import Sys from "./sys"
+import { getStringType } from "./string"
 
 type AiVectoredDOC = {
 	content : string
@@ -71,18 +72,40 @@ export default class AiVectored {
 			} )
 		
 		}
+		const isJSON = ( str: string ) =>{
+
+			try {
+
+				const parsed = JSON.parse( str )
+				return typeof parsed === 'object' && parsed !== null
+			
+			} catch {
+
+				return false
+			
+			}
 		
+		}
+
 		const docsPromise = lcDocs.map( async lcDoc => {
 
+			const is_url = getStringType( lcDoc.path ) === 'url'
+			
+			const isJSONUrl = is_url && isJSON( lcDoc.content )
+			const is_JSON_content = lcDoc.path.endsWith( '.json' ) || isJSONUrl
+			
 			const sharedProps = {
 				id_      : lcDoc.path,
 				metadata : {
-					file_path : lcDoc.path.startsWith( 'https://' ) ? lcDoc.path : this.#sys.path.resolve( lcDoc.path ),
-					file_name : lcDoc.path.startsWith( 'https://' ) ? lcDoc.path : this.#sys.path.basename( lcDoc.path ),
+					is_url,
+					is_JSON_content,
+					is_local_path : !is_url,
+					file_path     : is_url ? lcDoc.path : this.#sys.path.resolve( lcDoc.path ),
+					file_name     : is_url ? lcDoc.path : this.#sys.path.basename( lcDoc.path ),
 				},
 			}
 
-			if ( lcDoc.path.endsWith( '.json' ) ) {
+			if ( is_JSON_content ) {
 
 				const data = await this.#createContentFromJSONContent( lcDoc.content ) 
 				const res = {
@@ -105,21 +128,22 @@ export default class AiVectored {
 		} )
 
 		const docs = await Promise.all( docsPromise )
-		// console.log( docs )
+
 		const index = await VectorStoreIndex.fromDocuments( docs, { serviceContext : serviceContextFromDefaults( {
 			chunkSize    : 300,
 			chunkOverlap : 20,
 			embedModel   : this.#embedModel,
 			llm          : this.#llm,
 		} ) } )
-		const retriever = index.asRetriever( { similarityTopK: 2 } )
+		const retriever = index.asRetriever( { similarityTopK: 3 } )
 		if ( this.#chatEngine ) this.#chatEngine.reset()
 		this.#chatEngine = new ContextChatEngine( {
 			retriever,
 			chatModel    : this.#llm,
 			systemPrompt : this.#systemPrompt,
+			
 		} )
-	
+
 	}
 
 	async chat( query: string ) {

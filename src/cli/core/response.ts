@@ -28,41 +28,50 @@ export class CoreResponse extends CoreSuper {
 		this._setDebug( prompt )
 
 		const line = this.#line
+		const chatName = 'Assistant'
+		const title = chatName + ':'
 		const lastLine = ( ) =>( console.log( '\n\n\n' ), this._p.intro( line ) )
 		const firstLine = () =>( this._p.outro( line ), console.log( '\n' ) )
 		const spin = this._p.spinnerCustom()
-		let output = ''
+		let output = '',
+			exitResponse = false
 
 		if ( !this.#chat ) throw new this.Error( 'Chat not initialized' )
-		spin.start( 'Assistant: Processing...' )	
+		spin.start( title + ' Thinking...' )	
 		const response = await this.#chat.send( prompt )
-		spin.message( 'Assistant: Thinking...' )	
+		
+		spin.message( title + ' Thinking...' )	
+
 		if ( response && response[Symbol.asyncIterator] ) { 
 
-			spin.stop( 'Assistant:' )	
+			spin.stop( title )	
 			firstLine()
-			this._process.onSIGNIT( () => {
-
-				this._process.stdout.write( '\n' )
-				lastLine( )
-
-				// TODO Hacer q aborte pero solo la respuesta, que continue la linea de chat. asi es util para cancelar una respuesta
-				this.cancel( 'Exit from assistant response' )
-            
-			} )
+			
+			this._process.onSIGNIT( async () => ( exitResponse = true ) )
 
 			for await ( const part of response ) {
 
-				this._process.stdout.write( part.message.content.toString() )
-				output += part.message.content
-        
+				if ( exitResponse ){
+ 
+					this._process.stdout.write( '\n' )
+					lastLine( )
+					throw new this.Error( this.ERROR_ID.RESPONSE_CANCELLED )
+				
+				}
+				else {
+
+					this._process.stdout.write( part.message.content.toString() )
+					output += part.message.content
+				
+				}
+			
 			}
 
 			lastLine()
         
 		} else {
 
-			spin.stop( 'Chat error' )	
+			spin.stop( title + 'There has been an error in the chat process' )	
 			throw new this.Error( 'Chat unexpeted error' )
         
 		}
@@ -79,17 +88,31 @@ export class CoreResponse extends CoreSuper {
 		spin.start( 'starting...' )
 		
 		try {
-			
-			spin.message( 'Generating chat...' )
 
-			this.#chat = await this._ai.chatVectored( {
-				system,
-				model,
-				docs,
+			const spinMsg = 'Generating chat'
+			spin.message( spinMsg )
+
+			const capturedMessages: string[] = []
+
+			this.#chat = await this._process.onOutputWrite( {
+				fn : async ( ) => await this._ai.chatVectored( {
+					system,
+					model,
+					docs,
+				} ),
+				on : async value => {
+
+					if ( !value.includes( spinMsg ) && !value.includes( '\x1B[999D' ) && !value.includes( '\x1B[J' ) ) 
+						capturedMessages.push( value )
+					else return value
+				
+				},
 			} )
 
 			spin.stop( 'Chat successfully generated! ✨' )
-			this._p.log.message( this.#line )
+	
+			if ( capturedMessages.length ) this._p.note( capturedMessages.join( '\n' ), 'Notifications' )
+			else this._p.log.message( this.#line )
 		
 		} catch ( e ) {
 		
@@ -124,6 +147,8 @@ export class CoreResponse extends CoreSuper {
 
 			if ( e instanceof this.Error && e.message === this.ERROR_ID.CANCELLED ) 
 				throw new this.Error( this.ERROR_ID.CANCELLED )
+			else if ( e instanceof this.Error && e.message === this.ERROR_ID.RESPONSE_CANCELLED )
+				await this.#reply()
 			this._errorRes( this.title, this._setErrorMessage( e ) )
 			res = await this.#reply()
 		
