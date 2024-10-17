@@ -66,7 +66,7 @@ export class CoreOutput extends CoreSuper {
 					placeholder,
 				} ) )
 
-			const res = this._sys.path.resolve( this._process.cwd(), value )
+			const res = this._setProcessPath( value )
 
 			return res
 		
@@ -83,6 +83,7 @@ export class CoreOutput extends CoreSuper {
 		const path = await this.getPath()
 		const single = await this.getSingle()
 		const overwrite = path ? await this.getOverwrite() : undefined
+
 		const res = {
 			path,
 			overwrite,

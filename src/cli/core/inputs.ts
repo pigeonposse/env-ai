@@ -123,8 +123,6 @@ export class CoreInputs extends CoreSuper {
 			else if ( urlContent ) return urlContent
 			else if ( fileContent ) return fileContent
 			else return []
-			// setError()
-			// throw new this.Error( 'No content found.' )
 
 		} catch {
 
@@ -139,14 +137,12 @@ export class CoreInputs extends CoreSuper {
 
 		const urls: Inputs['urls'] = []
 		const paths: Inputs['paths'] = []
-		// const text: string[] = []
       
 		for ( const input of inputs ) {
 
 			const type = this._string.getStringType( input )
 			if ( type === 'url' ) urls.push( new URL( input ) )
 			else paths.push( input )
-			// else if ( type === 'text' ) text.push( input )
 		
 		}
 
@@ -163,7 +159,7 @@ export class CoreInputs extends CoreSuper {
 	async #choiceIncludes( placeholder?: string ): Promise<string[]> {
 
 		const prompt = await this._textPrompt( {
-			message     : 'Enter input paths or urls to be processed (comma-separated):',
+			message     : 'Enter path patterns or URLs to be processed (comma-separated):',
 			placeholder : placeholder,
 		} )
 

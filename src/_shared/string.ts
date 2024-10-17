@@ -2,23 +2,24 @@ import sanitizeHtml from 'sanitize-html'
 import { isPath } from './sys'
 
 // eslint-disable-next-line no-unused-vars
-type CustomParams = Record<string, ( ( arg: string ) => Promise<string> ) | string>
-
+type Params = Record<string, ( ( arg: string ) => Promise<string> ) | string>
+// eslint-disable-next-line no-unused-vars
+type CustomParams = ( arg: string ) => Promise<string>
 export async function replacePlaceholders(
 	content: string,
-	params: CustomParams,
+	params: Params,
+	customParams?: CustomParams,
 ) {
 
-	// Regular expression to capture {{ key }} | {{ key('argument') }} | {{ key("argument") }}
-	const regex = /{{\s*(\w+)\s*(?:\(\s*['"]([^'"]+)['"]\s*\))?\s*}}/g
+	const regex = /{{\s*([\w:/.-]+)\s*(?:\(\s*['"]([^'"]+)['"]\s*\))?\s*}}/g
 
 	// Store the matches to resolve later
 	const matches: {
-		placeholder : string,
+		placeholder : string;
 
-		key : string,
+		key : string;
 
-		arg? : string 
+		arg? : string;
 	}[] = []
 	let match
 
@@ -47,6 +48,7 @@ export async function replacePlaceholders(
 
 		// Determine replacement value
 		let replacement = ''
+
 		if ( typeof value === 'function' ) {
 
 			replacement = await value( arg || '' )
@@ -54,6 +56,11 @@ export async function replacePlaceholders(
 		} else if ( value !== undefined ) {
 
 			replacement = value
+		
+		} else if ( customParams ) {
+
+			// Use customParams as a fallback if the key is not found in params
+			replacement = await customParams( key )
 		
 		} else {
 
@@ -108,6 +115,7 @@ export const sanitizeContent = ( content: string ): string => {
 	} )
 
 }
+
 export const getTextPlainFromURL = async ( url: string ): Promise<string> => {
 
 	try {
@@ -123,7 +131,7 @@ export const getTextPlainFromURL = async ( url: string ): Promise<string> => {
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore
-		throw new Error( `Failed to fetch URL: ${error?.message || 'Unexpected error'}` )
+		throw new Error( `Failed to fetch URL [${url}]: ${error?.message || 'Unexpected error'}` )
 	
 	}
 

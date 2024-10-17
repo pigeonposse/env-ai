@@ -1,10 +1,10 @@
 import { defineConfig } from "../../src/main"
 
 export default defineConfig( {
-	theme   : 'custom',
-	include : [ 'https://raw.githubusercontent.com/pigeonposse/.github/refs/heads/main/profile/README.md', 'https://api.github.com/orgs/pigeonposse/repos' ],
+	theme  : 'custom',
+	input  : [ 'https://raw.githubusercontent.com/pigeonposse/.github/refs/heads/main/profile/README.md', 'https://api.github.com/orgs/pigeonposse/repos' ],
 	// excude  : [ 'nothing' ],
-	system  : `
+	system : `
 You are an expert on the PigeonPosse developer collective.
 
 Make sure to share accurate and relevant information about PigeonPosse, including details about their projects, mission, and examples of repositories.

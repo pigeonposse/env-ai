@@ -31,7 +31,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		// inputs
 		input : {
 			alias    : 'i',
-			describe : 'Glob patterns to input files and URLs',
+			describe : 'Path patterns or URLs to be processed',
 			type     : 'array',
 		},
 		// ai
@@ -52,25 +52,22 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		},
 		theme : {
 			alias    : 't',
-			describe : 'Theme for chat',
+			describe : 'Set a theme for your chat.',
 			choices  : Object.values( consts.theme ),
-			// default  : theme.custom,
 		},
 		// response
 		output : {
 			alias    : 'o',
-			describe : 'Output path for generated response',
+			describe : 'Output path for the generated response',
 			type     : 'string',
 		},
 		overwrite : {
 			describe : "Behavior when output file exists",
 			choices  : Object.values( consts.overwrite ),
-			// default  : overwrite.ask,
 		},
 		single : {
 			describe : 'Only one response',
 			type     : 'boolean',
-			// default  : false,
 		},
 		// others
 		config : {
@@ -87,8 +84,6 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 		debug : {
 			describe : 'Debug mode',
 			type     : 'boolean',
-			// default  : false,
-            
 		},
 	}
 

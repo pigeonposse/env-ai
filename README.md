@@ -39,8 +39,10 @@
 ## 🌟 Features
 
 - 💬 **Real-Time Chat**: Interact with the AI assistant directly from your terminal.
-- 🎨 **Extensive Customization**: Configure themes and outputs to your liking.
-- 📄 **Configuration File Support**: Compatible with multiple formats, including `.mjs`, `.js`, `.json`, `.yml`, `.yaml`, `.toml`, and `.tml`.
+- 🗃️ **Robust context**: Accepts URL and local file inputs so the wizard has more precise context of what to do.
+- 🎨 **Extensive Customization**: Configure themes, inputs and outputs to your liking.
+- 📄 **Configuration File Support**: Make your chat systems portable. Compatible with multiple formats, including `.mjs`, `.js`, `.json`, `.yml`, `.yaml`, `.toml`, and `.tml`.
+- ✈️ **Portable**: Create a chat system, save it in a configuration file and use it for other projects.
 - 🌐 **Multiple Environments**:
   - 📦 **JavaScript Library**: Easily integrable into your projects.
   - 💻 **Command Line Interface (CLI)**: Works in:
@@ -90,13 +92,12 @@ The **env-ai** CLI allows you to easily interact with the AI assistant. Here are
 
 ```bash
 # Start a chat with the AI assistant
-env-ai ask
+env-ai chat
 ```
 
 ### Options
 
-- `-i, --include` - Files or URLs to include using glob patterns. *(array)*
-- `-e, --exclude` - Files or URLs to exclude using glob patterns. *(array)*
+- `-i, --input` - Files or URLs to include using glob patterns. *(array)*
 - `-m, --model` - Name of the Ollama model to use. *(string)*
 - `-p, --prompt` - Custom text or path for the prompt. *(string)*
 - `-s, --system` - Custom system text or path. *(string)*
@@ -119,7 +120,7 @@ env-ai ask
 import { run } from 'env-ai';
 
 run({
-    include: ['./src/**', 'https://example.com'],
+    input: ['./src/**', 'https://example.com'],
     theme: 'docs',
     output: 'README.md',
 });
@@ -133,7 +134,7 @@ Use `defineConfig` to define a reusable configuration:
 import { defineConfig } from 'env-ai';
 
 export default defineConfig({
-    include: ['./src/**', 'https://example.com'],
+    input: ['./src/**', 'https://example.com'],
     theme: 'docs',
     output: 'README.md',
 });
@@ -147,7 +148,7 @@ You can see more examples [here](./examples).
 ### CLI
 
 ```bash
-env-ai ask -i "./src/**" -t "docs" -o "output.md"
+env-ai chat -i "./src/**" -t "docs" -o "output.md"
 ```
 
 ### Library
@@ -156,7 +157,7 @@ env-ai ask -i "./src/**" -t "docs" -o "output.md"
 import { run } from 'env-ai';
 
 run({
-    include: ['./src/**', 'https://example.com'],
+    input: ['./src/**', 'https://example.com'],
     theme: 'docs',
     output: 'README.md',
 });
@@ -165,14 +166,14 @@ run({
 ### CLI With `js` config file 
 
 ```bash
-env-ai ask --config dovenv.config.js
+env-ai chat --config dovenv.config.js
 ```
 ```js
 import { defineConfig } from 'env-ai';
 
 export default defineConfig({
     model: 'llama3.2:latest',
-    include: ['./src/**', 'https://example.com'],
+    input: ['./src/**', 'https://example.com'],
     theme: 'docs',
     output: 'README.md',
 });
@@ -181,7 +182,7 @@ export default defineConfig({
 ### CLI With `json` config file 
 
 ```bash
-env-ai ask --config dovenv.config.json
+env-ai chat --config dovenv.config.json
 ```
 
 ```json
@@ -194,12 +195,12 @@ env-ai ask --config dovenv.config.json
 ### CLI With `toml` config file 
 
 ```bash
-env-ai ask --config documentation-context.toml
+env-ai chat --config documentation-context.toml
 ```
 
 ```toml
 theme = "docs"
-include = ["./docs", "./src"]
+input = ["./docs", "./src"]
 system = """
 You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
 The content for the following code library:
@@ -211,14 +212,21 @@ The content for the following code library:
 ### CLI With `yaml` config file 
 
 ```bash
-env-ai ask --config dovenv.config.yaml
+env-ai chat --config dovenv.config.yaml
 ```
 
 ```yaml
 theme: custom
 system: ./your-system-content.md
 ```
- 
+### CLI - Input with excluded files
+
+It includes all SRC files that are at the upper level.
+
+```bash
+env-ai chat -i 'src/*' '!src/../*' -t 'docs' -o 'output.md'
+```
+
 ## 👨‍💻 Development
 
 **env-ai** is an open-source project and its development is open to anyone who wants to participate.

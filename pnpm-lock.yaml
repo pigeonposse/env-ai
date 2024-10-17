@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@clack/core':
+        specifier: ^0.3.4
+        version: 0.3.4
       '@clack/prompts':
         specifier: 0.7.0
         version: 0.7.0
       globby:
         specifier: 14.0.2
         version: 14.0.2
+      is-unicode-supported:
+        specifier: ^2.1.0
+        version: 2.1.0
       llamaindex:
         specifier: ^0.6.22
         version: 0.6.22(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/credential-providers@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0)))(@notionhq/client@2.2.15(encoding@0.1.13))(encoding@0.1.13)(typescript@5.6.3)
@@ -26,6 +32,9 @@ importers:
       sanitize-html:
         specifier: 2.13.1
         version: 2.13.1
+      sisteransi:
+        specifier: ^1.0.5
+        version: 1.0.5
       toml:
         specifier: 3.0.0
         version: 3.0.0
@@ -3392,6 +3401,10 @@ packages:
   is-unicode-supported@0.1.0:
     resolution: {integrity: sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==}
     engines: {node: '>=10'}
+
+  is-unicode-supported@2.1.0:
+    resolution: {integrity: sha512-mE00Gnza5EEB3Ds0HfMyllZzbBrmLOX3vfWoj9A9PEnTfratQ/BcaJOuMhnkhjXvb2+FkY3VuHqtAGpTPmglFQ==}
+    engines: {node: '>=18'}
 
   is-utf8@0.2.1:
     resolution: {integrity: sha512-rMYPYvCzsXywIsldgLaSoPlw5PfoB/ssr7hY4pLfcodrA5M/eArza1a9VmTiNIBNMjOGr1Ow9mTyU2o69U6U9Q==}
@@ -9397,6 +9410,8 @@ snapshots:
       text-extensions: 2.4.0
 
   is-unicode-supported@0.1.0: {}
+
+  is-unicode-supported@2.1.0: {}
 
   is-utf8@0.2.1: {}
 

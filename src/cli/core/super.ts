@@ -135,14 +135,12 @@ export class CoreSuper {
 		opts : Opts
 	} ): Promise<Opts[number]["value"]> {
 
-		const maxTitleLength = Math.max( ...args.opts.map( opt => opt.title.length ) ) + 2
-
-		const padding = ( length: number ) => ' '.repeat( maxTitleLength - length )
 		const prompt = await this._p.select( {
 			message : args.message,
 			options : args.opts.map( opt => ( {
-				value : opt.value,
-				label : opt.title + ( opt.desc ? ( this._c.gray( padding( opt.title.length ) + '(' + opt.desc + ')' ) ) : '' ), 
+				value  : opt.value,
+				label  : opt.title, 
+				'hint' : opt.desc,				
 			} ) ),
 		} ) 
 
@@ -150,68 +148,54 @@ export class CoreSuper {
 		return prompt as Promise<Opts[number]["value"]>
 	
 	}
+	_setProcessPath( path: string ) {
+
+		return this._sys.path.resolve( this._process.cwd(), path )
+	
+	}
 
 	async _validateContent( v: string ) {
 
-		let content: string = v
-		const stringType = this._string.getStringType( v ) 
+		const validatePath = async ( v: string ) => {
 
-		if ( stringType === 'path' ) {
-
-			const exist = await this._sys.existsFile( v )
-			if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
-			content = await this._sys.readFile( v, 'utf-8' )
-	
-		} else if ( stringType === 'url' ) {
-
-			try {
-
-				content = await this._string.getTextPlainFromURL( v )
+			const path = this._setProcessPath( v )
+			const exist = await this._sys.existsFile( path )
+			if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist or is not found.` )
+			const res = await this._sys.readFile( path, 'utf-8' )
+			if ( res && typeof res === 'string' ) return res
+			throw new this.Error( `Path "${v}" has unexpected content type: ${typeof res}` )
 		
-			} catch ( e ) {
+		}
+		const validateURL = async ( v: string ) => {
 
-				throw new this.Error( `${this._setErrorMessage( e, 'Failed to fetch URL' )}` )
+			const res = await this._string.getTextPlainFromURL( v )
+			if ( res && typeof res === 'string' ) return res
+			throw new this.Error( `URL "${v}" has unexpected content type: ${typeof res}` )
 		
-			}
-	
 		}
 
-		const res = await this._string.replacePlaceholders( content, {
-			url : async v => {
+		const convertString = async ( value: string ) => {
 
-				let res
-				try {
+			const stringType = this._string.getStringType( value ) 
+	
+			return stringType === 'path' 
+				? await validatePath( value )
+				: stringType === 'url'
+					? await this._string.getTextPlainFromURL( value )
+					: value
+		
+		}
 
-					res = await this._string.getTextPlainFromURL( v )
-				
-				} catch ( e ){
+		const content = await convertString( v )
 
-					this._p.log.warn( this._setErrorMessage( e ) )
-				
-				}
-				if ( res && typeof res === 'string' ) return res
-				return 'Not found or invalid URL.'
-			
-			},
-			path : async v => {
-
-				let res
-				try {
-
-					const exist = await this._sys.existsFile( v )
-					if ( !exist ) throw new this.Error( `Path "${v}" doesn't exist.` )
-					res = await this._sys.getPaths( v )
-				
-				} catch ( e ){
-
-					this._p.log.warn( this._setErrorMessage( e ) )
-				
-				}
-				if ( res && typeof res === 'string' ) return res
-				return 'Not found or invalid path.'
-                
-			},
-		} )
+		const res = await this._string.replacePlaceholders( 
+			content, 
+			{
+				url  : async v => await validateURL( v ),
+				path : async v => await validatePath( v ),
+			}, 
+			async v => await convertString( v ), 
+		)
 
 		return res
 	

@@ -24,18 +24,22 @@ export class CoreResponse extends CoreSuper {
 	#line = '──────────────────────────────────────────────────────────'
 	
 	async #setChatResponse( prompt: string ) {
+		
+		this._setDebug( prompt )
 
 		const line = this.#line
 		const lastLine = ( ) =>( console.log( '\n\n\n' ), this._p.intro( line ) )
-		const firstLine = () =>( this._p.log.info( 'Assistant:' ), this._p.outro( line ), console.log( '\n' ) )
+		const firstLine = () =>( this._p.outro( line ), console.log( '\n' ) )
+		const spin = this._p.spinnerCustom()
 		let output = ''
 
 		if ( !this.#chat ) throw new this.Error( 'Chat not initialized' )
-			
+		spin.start( 'Assistant: Processing...' )	
 		const response = await this.#chat.send( prompt )
- 
-		if ( response && response[Symbol.asyncIterator] ) { // Si es un iterable asíncrono
+		spin.message( 'Assistant: Thinking...' )	
+		if ( response && response[Symbol.asyncIterator] ) { 
 
+			spin.stop( 'Assistant:' )	
 			firstLine()
 			this._process.onSIGNIT( () => {
 
@@ -58,6 +62,7 @@ export class CoreResponse extends CoreSuper {
         
 		} else {
 
+			spin.stop( 'Chat error' )	
 			throw new this.Error( 'Chat unexpeted error' )
         
 		}
