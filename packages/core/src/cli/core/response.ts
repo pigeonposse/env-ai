@@ -110,8 +110,12 @@ export class CoreResponse extends CoreSuper {
 			} )
 
 			spin.stop( 'Chat successfully generated! ✨' )
-	
-			if ( capturedMessages.length ) this._p.note( capturedMessages.join( '\n' ), 'Notifications' )
+			// console.log( {
+			// 	trim : capturedMessages.join( '\n' ).trim(),
+			// 	capturedMessages, 
+			// } )
+			if ( capturedMessages.length || capturedMessages.join( '\n' ).trim() !== '' ) 
+				this._p.note( capturedMessages.join( '\n' ), 'Notifications' )
 			else this._p.log.message( this.#line )
 		
 		} catch ( e ) {

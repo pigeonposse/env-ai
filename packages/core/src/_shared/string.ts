@@ -1,4 +1,5 @@
-import sanitizeHtml from 'sanitize-html'
+import DOMPurify from 'dompurify'
+
 import { isPath } from './sys'
 
 // eslint-disable-next-line no-unused-vars
@@ -103,16 +104,7 @@ export const setErrorString = ( error: Error ) =>{
 
 export const sanitizeContent = ( content: string ): string => {
 
-	return sanitizeHtml( content, {
-		allowedTags       : [],
-		allowedAttributes : {},
-
-		textFilter : function( text ) {
-
-			return text.replace( /&nbsp;/g, ' ' )
-        
-		},
-	} )
+	return DOMPurify.sanitize( content )
 
 }
 

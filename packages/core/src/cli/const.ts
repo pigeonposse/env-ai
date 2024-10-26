@@ -1,6 +1,6 @@
 import {
 	name, version, bugs, description, 
-} from '../../package.json'
+} from '../../package.json' 
 export { version }
 export const projectDesc = description
 export const bugsUrl = bugs.url

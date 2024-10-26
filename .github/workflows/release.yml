@@ -122,7 +122,7 @@ jobs:
           draft: false
           prerelease: false
           allowUpdates: true
-          artifacts: "build/zip/*"
+          artifacts: "packages/core/build/compress/*"
           omitBodyDuringUpdate: true
 
 

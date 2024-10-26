@@ -14,8 +14,10 @@ async function loadAndProcessDocsFromDir( paths: string[] ) {
 	try {
 
 		const {
-			getPaths, readFile, 
+			getPaths, 
+			readFile, 
 		} = sys
+		
 		const files = await getPaths( paths, { gitignore: false } )
 
 		// const file = "./package.json" 

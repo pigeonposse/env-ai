@@ -1,13 +1,22 @@
 /* eslint-disable camelcase */
-import {
+import { 
 	Document, 
 	VectorStoreIndex, 
 	ContextChatEngine, 
-	OllamaEmbedding, 
 	serviceContextFromDefaults, 
+	OllamaEmbedding, 
 	Ollama,
 	JSONReader,
 } from "llamaindex"
+
+// import { Document } from "llamaindex/Node"
+// import { Ollama } from "llamaindex/llm/ollama"
+// import { JSONReader } from "llamaindex/readers/JSONReader"
+// import { OllamaEmbedding } from "llamaindex/embeddings/OllamaEmbedding"
+// import { serviceContextFromDefaults } from 'llamaindex/ServiceContext'
+// import { ContextChatEngine } from 'llamaindex/engines/chat/ContextChatEngine'
+// import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index"
+
 import Sys from "./sys"
 import { getStringType } from "./string"
 
@@ -16,7 +25,7 @@ type AiVectoredDOC = {
 
 	path : string
 }
-  
+
 export default class AiVectored {
     
 	#embedModel

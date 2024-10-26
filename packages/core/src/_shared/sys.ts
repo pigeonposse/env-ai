@@ -36,6 +36,7 @@ export const isPath = ( str: string ) => {
 	return false
 
 }
+
 export default class Sys {
 
 	path = {
