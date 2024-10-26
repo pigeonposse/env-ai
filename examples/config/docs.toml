@@ -1,8 +1,0 @@
-theme = "docs"
-include = ["./docs"]
-system = """
-You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
-The content for the following code library:
-
-{{content}}
-"""
