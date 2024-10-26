@@ -1,0 +1,16 @@
+###############################################################################
+# FOR PIGEONPOSSE USAGE
+###############################################################################
+
+web:
+  - id: "env-ai"
+    name: "ENV AI"
+    type: 
+      - library
+      - cli
+      - ai
+    docs: "https://env-ai.pigeonposse.com/guide/getting-started"
+    license: "https://raw.githubusercontent.com/pigeonposse/env-ai/main/LICENSE"
+    status: "active"
+
+###############################################################################
