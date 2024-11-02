@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.4.0
+
+### Minor Changes
+
+- fix sanitizeContent function
+
 ## 0.3.0
 
 ### Minor Changes

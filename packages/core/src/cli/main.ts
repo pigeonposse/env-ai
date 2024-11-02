@@ -191,7 +191,7 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 			ai       : async ( ): Promise<AiResponse> => await core.prompt.get( ),
 			output   : async ( ) => await core.output.get( ),
 			response : async ( { results } ) => {
-
+				
 				if ( !results.ai || !results.output || !results.model || !results.content ) throw UnexpectedError
 
 				const res = await core.response.get( {

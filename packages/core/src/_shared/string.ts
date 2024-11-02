@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify'
+// import DOMPurify from 'dompurify'
 
 import { isPath } from './sys'
 
@@ -104,7 +104,7 @@ export const setErrorString = ( error: Error ) =>{
 
 export const sanitizeContent = ( content: string ): string => {
 
-	return DOMPurify.sanitize( content )
+	return content // At some point this should be sanitized. at the moment with llamaindex seems not necessary.
 
 }
 

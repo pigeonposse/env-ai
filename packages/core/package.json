@@ -1,6 +1,6 @@
 {
   "name": "env-ai",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "AI Assistant for Your Local Environment",
   "license": "GPL-3.0",
   "keywords": [
@@ -72,7 +72,6 @@
   "dependencies": {
     "@clack/core": "0.3.4",
     "@clack/prompts": "0.7.0",
-    "dompurify": "3.1.7",
     "globby": "14.0.2",
     "is-unicode-supported": "2.1.0",
     "llamaindex": "0.6.22",
@@ -86,7 +85,6 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@types/dompurify": "3.0.5",
     "@types/update-notifier": "6.0.8",
     "@types/yargs": "17.0.33"
   }

@@ -15,7 +15,6 @@ export class CoreInputs extends CoreSuper {
 
 	title = 'Input'
 	description = 'Inputs to add context to your chat. This in not required.'
-
 	errorTitle = this._c.error( this.title )
 
 	protected async _getDataContent<T extends 'url' | 'path' = 'path'>( inputs: T extends 'url' ? URL[] : string[], type?: T ) {
@@ -24,10 +23,9 @@ export class CoreInputs extends CoreSuper {
         
 		const load = this._p.spinner()
 
-		const sanitize = ( content: string ) => this._string.sanitizeContent( content )
-
 		load.start( 'Preparing inputs...' )
 		let res: Docs = []
+
 		if ( type === 'url' ){
 
 			load.message( 'Reading and sanitizing url...' )
@@ -40,7 +38,7 @@ export class CoreInputs extends CoreSuper {
 
 					load.message( 'Reading ' + input )
 					const content = await this._string.getTextPlainFromURL( input.toString() )
-					return sanitize( content )
+					return this._string.sanitizeContent( content )
 				
 				} )() )
 
@@ -79,8 +77,13 @@ export class CoreInputs extends CoreSuper {
 
 				load.message( 'Reading ' + file )
 				const content = await this._sys.readFile( file, 'utf-8' )
-				fileContents[file.toString()] = sanitize( content )
-        
+				// console.log( {
+				// 	content,
+				// 	file, 
+				// 	sn : this._string.sanitizeContent( content ),
+				// } )
+				fileContents[file.toString()] = this._string.sanitizeContent( content )
+			
 			}
     
 			load.message( 'Getting source for all files...' )
@@ -103,14 +106,13 @@ export class CoreInputs extends CoreSuper {
 
 	async getContent( inputs?: Inputs ): Promise<Docs> {
 
-		// console.log( { inputs } )
 		const setError = () => this._errorRes( this.errorTitle, 'Unexpected error! Missing required arguments. Please provide all required arguments.' )
 
 		if ( !inputs ) {
 
 			setError()
 			inputs = await this.getInputs( undefined, undefined )
-			return this.getContent( inputs )
+			return await this.getContent( inputs )
 		
 		}
 		
@@ -118,7 +120,10 @@ export class CoreInputs extends CoreSuper {
 
 			const urlContent = !( !inputs.urls || !inputs.urls.length ) ? await this._getDataContent( inputs.urls, 'url' ) : undefined
 			const fileContent = !( !inputs.paths || !inputs.paths.length ) ? await this._getDataContent( inputs.paths, 'path' ) : undefined
-
+			// console.log( {
+			// 	urlContent,
+			// 	fileContent, 
+			// } )
 			if ( urlContent && fileContent ) return [ ...urlContent, ...fileContent ]
 			else if ( urlContent ) return urlContent
 			else if ( fileContent ) return fileContent
@@ -127,7 +132,7 @@ export class CoreInputs extends CoreSuper {
 		} catch {
 
 			inputs = await this.getInputs( undefined, undefined )
-			return this.getContent( inputs )
+			return await this.getContent( inputs )
 		
 		}
 	
@@ -172,7 +177,7 @@ export class CoreInputs extends CoreSuper {
 		const input = includesPaths
 			? ( this._successRes( `Inputs selected:`, includesPaths.length ? includesPaths.join( ', ' ) : 'none' ), includesPaths )
 			: ( await this.#choiceIncludes( includePlaceholder ) )
-
+		
 		let i = this.#separateInputs( input )
 
 		const errorMsg = () => this._errorRes( 'No files or urls were found matching the inclusion patterns in:', input.join( ', ' ) )
@@ -204,7 +209,9 @@ export class CoreInputs extends CoreSuper {
 
 		this._setTitle( ) 
 		const inputs = await this.getInputs( this._argv.input || [ ] )
+	
 		const res = await this.getContent( inputs )
+	
 		this._setDebug( JSON.stringify( res, null, 2 ) )
 	
 		return res
