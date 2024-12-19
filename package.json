@@ -95,8 +95,8 @@
     }
   },
   "extra": {
-    "id": "personality",
-    "productName": "Personality",
+    "id": "env-ai",
+    "productName": "Env AI",
     "scopes": [
       {
         "name": "core"
