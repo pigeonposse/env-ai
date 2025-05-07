@@ -5,4 +5,5 @@ onlyBuiltDependencies:
   - esbuild
   - protobufjs
   - sharp
+  - tree-sitter
   - unrs-resolver

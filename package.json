@@ -44,6 +44,8 @@
 		"build": "pnpm --parallel build",
 		"core": "pnpm --filter env-ai $@",
 		"lint": "pnpm --parallel /^lint/",
+		"lint:pub": "pnpm --parallel /lint:pub/",
+		"prepare": "dovenv git husky",
 		"test": "pnpm --parallel test"
 	},
 	"devDependencies": {
@@ -51,8 +53,8 @@
 		"@dovenv/core": "1.4.7",
 		"@dovenv/theme-pigeonposse": "1.4.7",
 		"@playwright/test": "1.52.0",
-		"@types/node": "22.15.14",
-		"binarium": "2.0.6",
+		"@types/node": "22.15.15",
+		"binarium": "2.0.9",
 		"eslint": "9.26.0",
 		"publint": "0.3.12",
 		"tsx": "4.19.4",

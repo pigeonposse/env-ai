@@ -1,21 +1,15 @@
 /* eslint-disable camelcase */
 import {
-	Document,
-	VectorStoreIndex,
-	ContextChatEngine,
-	serviceContextFromDefaults,
 	OllamaEmbedding,
 	Ollama,
-	JSONReader,
+} from '@llamaindex/ollama'
+import { JSONReader } from '@llamaindex/readers/json'
+import {
+	Document,
+	Settings,
+	VectorStoreIndex,
+	ContextChatEngine,
 } from 'llamaindex'
-
-// import { Document } from "llamaindex/Node"
-// import { Ollama } from "llamaindex/llm/ollama"
-// import { JSONReader } from "llamaindex/readers/JSONReader"
-// import { OllamaEmbedding } from "llamaindex/embeddings/OllamaEmbedding"
-// import { serviceContextFromDefaults } from 'llamaindex/ServiceContext'
-// import { ContextChatEngine } from 'llamaindex/engines/chat/ContextChatEngine'
-// import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index"
 
 import { getStringType } from './string'
 import Sys               from './sys'
@@ -50,6 +44,11 @@ export default class AiVectored {
 		} )
 
 		this.#chatEngine = undefined
+
+		Settings.embedModel   = this.#embedModel
+		Settings.llm          = this.#llm
+		Settings.chunkSize    = 300
+		Settings.chunkOverlap = 20
 
 	}
 
@@ -140,19 +139,21 @@ export default class AiVectored {
 
 		const docs = await Promise.all( docsPromise )
 
-		const index     = await VectorStoreIndex.fromDocuments( docs, { serviceContext : serviceContextFromDefaults( {
-			chunkSize    : 300,
-			chunkOverlap : 20,
-			embedModel   : this.#embedModel,
-			llm          : this.#llm,
-		} ) } )
+		// const index     = await VectorStoreIndex.fromDocuments( docs, { serviceContext : serviceContextFromDefaults( {
+		// 	chunkSize    : 300,
+		// 	chunkOverlap : 20,
+		// 	embedModel   : this.#embedModel,
+		// 	llm          : this.#llm,
+		// } ) } )
+
+		const index     = await VectorStoreIndex.fromDocuments( docs )
 		const retriever = index.asRetriever( { similarityTopK: 3 } )
 		if ( this.#chatEngine ) this.#chatEngine.reset()
+
 		this.#chatEngine = new ContextChatEngine( {
 			retriever,
 			chatModel    : this.#llm,
 			systemPrompt : this.#systemPrompt,
-
 		} )
 
 	}

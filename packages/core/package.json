@@ -40,8 +40,14 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/main.d.ts",
-			"import": "./dist/main.mjs"
+			"import": {
+				"types": "./dist/main.d.mts",
+				"default": "./dist/main.mjs"
+			},
+			"require": {
+				"types": "./dist/main.d.cts",
+				"default": "./dist/main.cjs"
+			}
 		}
 	},
 	"main": "dist/main.mjs",
@@ -55,7 +61,7 @@
 	],
 	"scripts": {
 		"build": "node --run build:lib && node --run build:bin",
-		"build:bin": "binarium deno -c bin.config.js",
+		"build:bin": "binarium node -c bin.config.js",
 		"build:lib": "unbuild",
 		"dev": "tsx src/cli.ts",
 		"dev:bun": "bun src/cli.ts",
@@ -74,15 +80,17 @@
 	"dependencies": {
 		"@clack/core": "0.4.2",
 		"@clack/prompts": "0.10.1",
+		"@llamaindex/ollama": "0.1.3",
+		"@llamaindex/readers": "3.1.1",
 		"globby": "14.1.0",
 		"is-unicode-supported": "2.1.0",
-		"llamaindex": "0.6.22",
+		"llamaindex": "0.10.4",
 		"ollama": "0.5.15",
 		"picocolors": "1.1.1",
 		"sisteransi": "1.0.5",
+		"smol-toml": "1.3.4",
 		"tiny-updater": "3.5.3",
-		"toml": "3.0.0",
-		"yaml": "2.7.1",
+		"yaml": "^2.7.1",
 		"yargs": "17.7.2",
 		"zod": "3.24.4"
 	},

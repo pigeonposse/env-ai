@@ -152,7 +152,7 @@ export class CoreSuper {
 		} )
 
 		if ( this._p.isCancel( prompt ) ) throw new this.Error( this.ERROR_ID.CANCELLED )
-		return prompt as Promise<Opts[number]['value']>
+		return prompt as unknown as Promise<Opts[number]['value']>
 
 	}
 

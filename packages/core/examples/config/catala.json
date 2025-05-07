@@ -1,4 +1,4 @@
 {
-    "theme": "custom",
-    "system": "./examples/config/catalan.txt"
+	"theme": "custom",
+	"system": "./examples/config/catalan.txt"
 }

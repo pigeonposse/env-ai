@@ -16,12 +16,12 @@
 	},
 	"editor.largeFileOptimizations": true,
 	"files.watcherExclude": {
-   		"**/build/**": true,
+		"**/build/**": true,
 		"**/dist/**": true,
 		"**/node_modules/**": true
 	},
 	"files.associations": {
-   		"**/build/**": "plaintext",
+		"**/build/**": "plaintext",
 		"**/*.log": "plaintext",
 		"**/*.data": "plaintext"
 	},

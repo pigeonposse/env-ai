@@ -9,6 +9,6 @@
 
 echo '🚀 Precommit'
 echo
-pnpm --silent . check --silent
+node --run lint:pub
 echo
-pnpm --silent . lint staged --silent
+node --run . -- lint staged --silent

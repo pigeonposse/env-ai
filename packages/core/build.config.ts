@@ -6,9 +6,13 @@ export default defineBuildConfig( [
 		sourcemap   : false,
 		declaration : true,
 		failOnWarn  : true,
-		rollup      : { esbuild : {
-			minify : true,
-			target : 'node20',
-		} },
+		rollup      : {
+			emitCJS            : true,
+			inlineDependencies : true,
+			esbuild            : {
+				minify : true,
+				target : 'node20',
+			},
+		},
 	},
 ] )

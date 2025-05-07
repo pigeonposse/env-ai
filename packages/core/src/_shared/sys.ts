@@ -12,9 +12,9 @@ import {
 	join,
 	basename,
 } from 'node:path'
-import { pathToFileURL } from 'node:url'
-import toml              from 'toml'
-import yaml              from 'yaml'
+import { pathToFileURL }      from 'node:url'
+import { parse as tomlparse } from 'smol-toml'
+import yaml                   from 'yaml'
 
 export const isPath = ( str: string ) => {
 
@@ -103,7 +103,7 @@ export default class Sys {
 		}
 		else if ( ext === '.toml' || ext === '.tml' ) {
 
-			res = toml.parse( content )
+			res = tomlparse( content )
 
 		}
 		else if ( ext === '.js' || ext === '.mjs' ) {
