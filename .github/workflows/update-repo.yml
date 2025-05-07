@@ -42,7 +42,7 @@ jobs:
       #########################################################################
 
       - name: ⬇️🧩 Update GitHub info
-        run: pnpm update-gh
+        run: pnpm . gh info update
         env:
             GH_TOKEN: ${{ env.GITHUB_TOKEN }}
 

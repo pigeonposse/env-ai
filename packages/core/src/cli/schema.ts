@@ -1,13 +1,14 @@
-
 import {
-	createLiteralUnion, validate, 
-} from '../_shared/validate'
-import {
-	overwrite, theme, 
+	overwrite,
+	theme,
 } from './const'
+import {
+	createLiteralUnion,
+	validate,
+} from '../_shared/validate'
 
 const OverwriteTypes = createLiteralUnion( Object.values( overwrite ) )
-const ThemeTypes = createLiteralUnion( Object.values( theme ) )
+const ThemeTypes     = createLiteralUnion( Object.values( theme ) )
 
 export const argvSchema = validate.object( {
 	output    : validate.string().optional(),
@@ -21,4 +22,4 @@ export const argvSchema = validate.object( {
 	debug     : validate.boolean().optional(),
 	config    : validate.string().optional(),
 } )
-  
+

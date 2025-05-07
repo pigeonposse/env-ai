@@ -1,91 +1,96 @@
 {
-  "name": "env-ai",
-  "version": "0.4.0",
-  "description": "AI Assistant for Your Local Environment",
-  "license": "GPL-3.0",
-  "keywords": [
-    "ai",
-    "dev",
-    "env",
-    "enviroment",
-    "artificial-intelligence",
-    "documentation",
-    "refactor",
-    "fix",
-    "node",
-    "deno",
-    "bun"
-  ],
-  "type": "module",
-  "files": [
-    "dist"
-  ],
-  "main": "dist/main.mjs",
-  "types": "dist/main.d.ts",
-  "bin": {
-    "env-ai": "dist/cli.mjs"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "homepage": "https://github.com/pigeonposse/env-ai",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pigeonposse/env-ai"
-  },
-  "funding": {
-    "type": "individual",
-    "url": "https://pigeonposse.com/?popup=donate"
-  },
-  "bugs": {
-    "url": "https://github.com/pigeonposse/env-ai/issues",
-    "email": "dev@pigeonposse.com"
-  },
-  "author": {
-    "name": "Angelo",
-    "email": "angelo@pigeonposse.com",
-    "url": "https://github.com/angelespejo"
-  },
-  "scripts": {
-    "--d--": "----------------------- DEV ------------------------------",
-    "dev": "tsx src/cli.ts",
-    "dev:deno": "deno run -A --unstable-sloppy-imports src/cli.ts $@",
-    "dev:bun": "bun src/cli.ts",
-    "--b--": "----------------------- BUILD ----------------------------",
-    "build": "pnpm build:lib && pnpm build:bin",
-    "build:lib": "unbuild -c .dev/build.config.ts",
-    "build:bin": "binarium deno -c .dev/bin.config.js",
-    "--p--": "----------------------- PREVIEW --------------------------",
-    "preview": "node dist/cli.mjs",
-    "preview:deno": "deno run -A --unstable-fs dist/cli.mjs",
-    "preview:bun": "bun dist/cli.mjs",
-    "--t--": "----------------------- TESTS ----------------------------",
-    "test": "pnpm test:lib && pnpm test:bin",
-    "test:lib": "vitest run src",
-    "test:bin": "vitest run tests",
-    "test-watch:lib": "vitest src",
-    "--e--": "----------------------- EXAMPLES -------------------------",
-    "example-cli": "tsx examples/cli.ts",
-    "example-lib": "tsx examples/lib.ts"
-  },
-  "dependencies": {
-    "@clack/core": "0.3.4",
-    "@clack/prompts": "0.7.0",
-    "globby": "14.0.2",
-    "is-unicode-supported": "2.1.0",
-    "llamaindex": "0.6.22",
-    "ollama": "0.5.9",
-    "picocolors": "1.1.1",
-    "sisteransi": "1.0.5",
-    "toml": "3.0.0",
-    "update-notifier": "7.3.1",
-    "yaml": "2.6.0",
-    "yargs": "17.7.2",
-    "zod": "3.23.8"
-  },
-  "devDependencies": {
-    "@types/update-notifier": "6.0.8",
-    "@types/yargs": "17.0.33"
-  }
+	"name": "env-ai",
+	"version": "0.4.1",
+	"description": "AI Assistant for Your Local Environment",
+	"keywords": [
+		"ai",
+		"artificial-intelligence",
+		"bun",
+		"deno",
+		"dev",
+		"docs",
+		"documentation",
+		"env",
+		"enviroment",
+		"node",
+		"ollama",
+		"pigeonposse",
+		"pp"
+	],
+	"homepage": "https://github.com/pigeonposse/env-ai",
+	"bugs": {
+		"url": "https://github.com/pigeonposse/env-ai/issues",
+		"email": "dev@pigeonposse.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pigeonposse/env-ai.git",
+		"directory": "packages/core"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://pigeonposse.com/contribute"
+	},
+	"license": "GPL-3.0",
+	"author": {
+		"name": "Angelo",
+		"email": "angelo@pigeonposse.com",
+		"url": "https://github.com/angelespejo"
+	},
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/main.d.ts",
+			"import": "./dist/main.mjs"
+		}
+	},
+	"main": "dist/main.mjs",
+	"module": "./dist/main.mjs",
+	"types": "dist/main.d.ts",
+	"bin": {
+		"env-ai": "dist/cli.mjs"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "node --run build:lib && node --run build:bin",
+		"build:bin": "binarium deno -c bin.config.js",
+		"build:lib": "unbuild",
+		"dev": "tsx src/cli.ts",
+		"dev:bun": "bun src/cli.ts",
+		"dev:deno": "deno run -A --unstable-sloppy-imports src/cli.ts $@",
+		"example-cli": "tsx examples/cli.ts",
+		"example-lib": "tsx examples/lib.ts",
+		"lint:pub": "publint",
+		"preview": "node dist/cli.mjs",
+		"preview:bun": "bun dist/cli.mjs",
+		"preview:deno": "deno run -A --unstable-fs dist/cli.mjs",
+		"test": "node --run test:lib && node --run test:bin",
+		"test-watch:lib": "vitest src",
+		"test:bin": "vitest run tests",
+		"test:lib": "vitest run src"
+	},
+	"dependencies": {
+		"@clack/core": "0.4.2",
+		"@clack/prompts": "0.10.1",
+		"globby": "14.1.0",
+		"is-unicode-supported": "2.1.0",
+		"llamaindex": "0.6.22",
+		"ollama": "0.5.15",
+		"picocolors": "1.1.1",
+		"sisteransi": "1.0.5",
+		"tiny-updater": "3.5.3",
+		"toml": "3.0.0",
+		"yaml": "2.7.1",
+		"yargs": "17.7.2",
+		"zod": "3.24.4"
+	},
+	"devDependencies": {
+		"@types/yargs": "17.0.33"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
 }

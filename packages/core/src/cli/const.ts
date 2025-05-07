@@ -1,6 +1,10 @@
 import {
-	name, version, bugs, description, 
-} from '../../package.json' 
+	name,
+	version,
+	bugs,
+	description,
+} from '../../package.json'
+
 export { version }
 export const projectDesc = description
 export const bugsUrl = bugs.url
@@ -30,6 +34,6 @@ export const themeDesc = {
 	performance : 'Improve the efficiency of your code and reduce response times.',
 	refactor    : 'Improve code structure for better readability and maintainability.',
 	test        : 'Create tests and ensure quality.',
-} as const satisfies Record<keyof typeof theme, string> 
-  
+} as const satisfies Record<keyof typeof theme, string>
+
 export const PROMPT_VARS = { CONTENT: 'content' } as const

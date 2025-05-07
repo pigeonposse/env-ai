@@ -1,3 +1,3 @@
-import { run } from "../dist/main"
+import { run } from '../dist/main'
 
 await run( { debug: true } )

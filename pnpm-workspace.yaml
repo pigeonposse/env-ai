@@ -1,2 +1,8 @@
 packages:
-  - 'packages/*'
+  - packages/*
+onlyBuiltDependencies:
+  - canvas
+  - esbuild
+  - protobufjs
+  - sharp
+  - unrs-resolver

@@ -1,9 +1,9 @@
-import { theme } from "../const"
-import { CoreSuper } from "./super"
+import { theme }     from '../const'
+import { CoreSuper } from './super'
 
 type ThemeTypes = Exclude<CoreSuper['_argv']['theme'], undefined>
 
-const prompts: Record< Exclude<ThemeTypes, 'custom'>, { system: string }> = {
+const prompts: Record<Exclude<ThemeTypes, 'custom'>, { system: string }> = {
 	[theme.docs] : { system : `You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
 Generate a complete and user-oriented README in Markdown format for the provided code library. 
 Assume the documentation will be viewed by end-users who seek a clear understanding of how to install, configure, and use the library effectively. 

@@ -2,25 +2,25 @@
 
 import { isPath } from './sys'
 
-// eslint-disable-next-line no-unused-vars
 type Params = Record<string, ( ( arg: string ) => Promise<string> ) | string>
-// eslint-disable-next-line no-unused-vars
+
 type CustomParams = ( arg: string ) => Promise<string>
-export async function replacePlaceholders(
+
+export  const replacePlaceholders = async (
 	content: string,
 	params: Params,
 	customParams?: CustomParams,
-) {
+) => {
 
 	const regex = /{{\s*([\w:/.-]+)\s*(?:\(\s*['"]([^'"]+)['"]\s*\))?\s*}}/g
 
 	// Store the matches to resolve later
 	const matches: {
-		placeholder : string;
+		placeholder : string
 
-		key : string;
+		key : string
 
-		arg? : string;
+		arg? : string
 	}[] = []
 	let match
 
@@ -30,19 +30,19 @@ export async function replacePlaceholders(
 		const [
 			placeholder,
 			key,
-			arg, 
+			arg,
 		] = match
 		matches.push( {
 			placeholder,
 			key,
-			arg, 
+			arg,
 		} )
-	
+
 	}
 
 	// Replace placeholders with their values
 	for ( const {
-		placeholder, key, arg, 
+		placeholder, key, arg,
 	} of matches ) {
 
 		const value = params[key]
@@ -53,52 +53,55 @@ export async function replacePlaceholders(
 		if ( typeof value === 'function' ) {
 
 			replacement = await value( arg || '' )
-		
-		} else if ( value !== undefined ) {
+
+		}
+		else if ( value !== undefined ) {
 
 			replacement = value
-		
-		} else if ( customParams ) {
+
+		}
+		else if ( customParams ) {
 
 			// Use customParams as a fallback if the key is not found in params
 			replacement = await customParams( key )
-		
-		} else {
+
+		}
+		else {
 
 			// Keep the original placeholder if no replacement is possible
 			replacement = placeholder
-		
+
 		}
 
 		// Replace in the content
 		content = content.replace( placeholder, replacement )
-	
+
 	}
 
 	return content
 
 }
 
-export const setErrorString = ( error: Error ) =>{
+export const setErrorString = ( error: Error ) => {
 
 	const v = {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 		// @ts-ignore
-		code    : error?.code,
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		code : error?.code,
+
 		// @ts-ignore
-		name    : error?.name,
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		name : error?.name,
+
 		// @ts-ignore
 		message : error?.message,
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 		// @ts-ignore
-		stack   : error?.stack ? error.stack.split( '\n' ) : [],
+		stack : error?.stack ? error.stack.split( '\n' ) : [],
 		...( error instanceof Object ? error : {} ),
 	}
 
 	if ( Array.isArray( v.stack ) && v.stack.length > 0 ) return v.stack.map( line => `   ${line}` ).join( '\n' )
-	return JSON.stringify( v, null, '\t' ) 
+	return JSON.stringify( v, null, '\t' )
 
 }
 
@@ -113,19 +116,19 @@ export const getTextPlainFromURL = async ( url: string ): Promise<string> => {
 	try {
 
 		const response = await fetch( url )
-    
+
 		if ( !response.ok ) throw new Error( `HTTP error! Status: ${response.status}` )
-    
+
 		const data = await response.text()
 
 		return data
-    
-	} catch ( error ) {
 
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	}
+	catch ( error ) {
+
 		//@ts-ignore
 		throw new Error( `Failed to fetch URL [${url}]: ${error?.message || 'Unexpected error'}` )
-	
+
 	}
 
 }
@@ -141,13 +144,14 @@ const isUrl = ( value: string ): boolean => {
 
 	try {
 
-		new URL( value ) 
+		new URL( value )
 		return true
-	
-	} catch {
 
-		return false 
-	
+	}
+	catch {
+
+		return false
+
 	}
 
 }

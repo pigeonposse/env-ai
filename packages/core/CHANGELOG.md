@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.4.1
+
+### Patch Changes
+
+- change and up deps
+
 ## 0.4.0
 
 ### Minor Changes

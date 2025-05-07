@@ -1,10 +1,10 @@
 
-import { CoreSuper } from "./super"
+import { CoreSuper } from './super'
 
 export type OutputType = {
 	path? : string
 
-	overwrite? : "always" | "last"	
+	overwrite? : 'always' | 'last'
 
 	single : boolean
 }
@@ -13,14 +13,14 @@ export class CoreOutput extends CoreSuper {
 
 	title = 'Output'
 	description = 'Output configuration for save the generated content.'
-    
+
 	async getOverwrite( ) {
 
 		const argv = this._argv.overwrite
 		const {
-			ask, ...values 
+			ask, ...values
 		} = this._const.overwrite
-		
+
 		const title = 'Select overwrite type:'
 
 		if ( argv && argv !== ask ) {
@@ -29,34 +29,35 @@ export class CoreOutput extends CoreSuper {
 
 				this._successRes( title, argv )
 				return argv
-			
-			} else this._errorRes( 'Invalid overwrite type: ', argv )
-		
+
+			}
+			else this._errorRes( 'Invalid overwrite type: ', argv )
+
 		}
 
 		const prompt = await this._selectPrompt( {
 			message : title,
 			opts    : Object.values( values ).map( v => ( {
 				value : v,
-				title : v, 
+				title : v,
 			} ) ),
 		} ) as OutputType['overwrite']
 
 		return prompt
-	
+
 	}
-	
+
 	async getSingle( ): Promise<boolean> {
 
 		const argv = this._argv.single
-		if ( !argv || argv !== true ) return false 
+		if ( !argv || argv !== true ) return false
 		this._successRes( `Response type:`, 'Single' )
 		return argv
-	
+
 	}
 
 	async getPath() {
-		
+
 		const set = async ( initValue?: string, placeholder?: string ) => {
 
 			const value = initValue
@@ -69,19 +70,19 @@ export class CoreOutput extends CoreSuper {
 			const res = this._setProcessPath( value )
 
 			return res
-		
+
 		}
 
 		const argv = this._argv.output
 		return argv ? await set( argv ) : undefined
-	
+
 	}
 
 	async get(): Promise<OutputType> {
 
 		this._setTitle()
-		const path = await this.getPath()
-		const single = await this.getSingle()
+		const path      = await this.getPath()
+		const single    = await this.getSingle()
 		const overwrite = path ? await this.getOverwrite() : undefined
 
 		const res = {
@@ -95,7 +96,7 @@ export class CoreOutput extends CoreSuper {
 		this._setDebug( JSON.stringify( res, null, 2 ) )
 
 		return res
-	
+
 	}
 
 }

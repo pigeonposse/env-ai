@@ -1,112 +1,106 @@
 {
-  "name": "env-ai-monorepo",
-  "private": true,
-  "description": "AI Assistant for Your Local Environment",
-  "license": "GPL-3.0",
-  "keywords": [
-    "ai",
-    "dev",
-    "env",
-    "enviroment",
-    "artificial-intelligence",
-    "documentation",
-    "refactor",
-    "fix",
-    "node",
-    "deno",
-    "bun"
-  ],
-  "type": "module",
-  "packageManager": "pnpm@8.15.9",
-  "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=8.10.0"
-  },
-  "homepage": "https://github.com/pigeonposse/env-ai",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pigeonposse/env-ai"
-  },
-  "funding": {
-    "type": "individual",
-    "url": "https://pigeonposse.com/?popup=donate"
-  },
-  "bugs": {
-    "url": "https://github.com/pigeonposse/env-ai/issues",
-    "email": "dev@pigeonposse.com"
-  },
-  "author": {
-    "name": "Angelo",
-    "email": "angelo@pigeonposse.com",
-    "url": "https://github.com/angelespejo"
-  },
-  "workspaces": [
+	"name": "env-ai-monorepo",
+	"private": true,
+	"description": "AI Assistant for Your Local Environment",
+	"keywords": [
+		"ai",
+		"artificial-intelligence",
+		"bun",
+		"deno",
+		"dev",
+		"documentation",
+		"env",
+		"enviroment",
+		"node"
+	],
+	"homepage": "https://github.com/pigeonposse/env-ai",
+	"bugs": {
+		"url": "https://github.com/pigeonposse/env-ai/issues",
+		"email": "dev@pigeonposse.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pigeonposse/env-ai.git"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://pigeonposse.com/?popup=donate"
+	},
+	"license": "GPL-3.0",
+	"author": {
+		"name": "Angelo",
+		"email": "angelo@pigeonposse.com",
+		"url": "https://github.com/angelespejo"
+	},
+	"type": "module",
+	"workspaces": [
 		"packages/*"
 	],
-  "scripts": {
-    "core": "pnpm --filter env-ai $@",
-    "build": "pnpm run \"/^build:.*/\"",
-    "build:core": "pnpm --filter env-ai build",
-    "test": "pnpm run --sequential \"/^test:.*/\"",
-		"test:core": "pnpm --filter env-ai test",
-    "update-version": "changeset && changeset version",
-    "push": "git add . && cz && git push -f origin $@"
-  },
-  "devDependencies": {
-    "@changesets/changelog-github": "0.5.0",
-    "@changesets/cli": "2.27.9",
-    "@commitlint/cli": "19.5.0",
-    "@eslint/compat": "1.2.1",
-    "@eslint/js": "9.13.0",
-    "@stylistic/eslint-plugin": "2.9.0",
-    "@types/eslint__js": "8.42.3",
-    "@types/node": "22.8.1",
-    "binarium": "1.0.1",
-    "commitizen": "4.3.1",
-    "commitlint-config-gitmoji": "2.3.1",
-    "cz-customizable": "7.2.1",
-    "cz-emoji": "1.3.2-canary.2",
-    "eslint": "9.13.0",
-    "ts-node": "10.9.2",
-    "tsx": "4.19.1",
-    "typescript": "5.6.3",
-    "typescript-eslint": "8.11.0",
-    "unbuild": "2.0.0",
-    "vitest": "2.1.3"
-  },
-  "commitlint": {
-    "extends": [
-      "gitmoji"
-    ],
-    "rules": {
-      "header-max-length": [
-        0,
-        "always",
-        100
-      ]
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": ".dev/cz-config.cjs"
-    }
-  },
-  "extra": {
-    "id": "env-ai",
-    "productName": "Env AI",
-    "scopes": [
-      {
-        "name": "core"
-      },
-      {
-        "name": "env"
-      },
-      {
-        "name": "all"
-      }
-    ]
-  }
+	"scripts": {
+		"+": "run() { pnpm -F @*/\"${@:1}\"; }; run $@",
+		"++": "pnpm -F $@",
+		".": "dovenv",
+		"..": "dovenv x",
+		"build": "pnpm --parallel build",
+		"core": "pnpm --filter env-ai $@",
+		"lint": "pnpm --parallel /^lint/",
+		"test": "pnpm --parallel test"
+	},
+	"devDependencies": {
+		"@changesets/changelog-github": "0.5.1",
+		"@dovenv/core": "1.4.7",
+		"@dovenv/theme-pigeonposse": "1.4.7",
+		"@playwright/test": "1.52.0",
+		"@types/node": "22.15.14",
+		"binarium": "2.0.6",
+		"eslint": "9.26.0",
+		"publint": "0.3.12",
+		"tsx": "4.19.4",
+		"typescript": "5.8.3",
+		"unbuild": "3.5.0",
+		"vitest": "3.1.3"
+	},
+	"packageManager": "pnpm@10.10.0",
+	"engines": {
+		"node": ">=20.0.0",
+		"pnpm": ">=8.10.0"
+	},
+	"extra": {
+		"id": "env-ai",
+		"productName": "ENV AI",
+		"libraryURL": "https://www.npmjs.com/package/env-ai",
+		"licenseURL": "https://github.com/pigeonposse/env-ai/blob/main/LICENSE",
+		"changelogURL": "https://github.com/pigeonposse/env-ai/blob/main/packages/core/CHANGELOG.md",
+		"contributingURL": "https://github.com/pigeonposse/.github/blob/main/CONTRIBUTING.md",
+		"libraryID": "env-ai",
+		"repoID": "env-ai",
+		"rawRepoURL": "https://raw.githubusercontent.com/pigeonposse/env-ai",
+		"docsURL": "https://ai.pigeonposse.com/env-ai",
+		"type": [
+			"library",
+			"ai",
+			"cli",
+			"bin"
+		],
+		"collective": {
+			"id": "pigeonposse",
+			"name": "PigeonPosse",
+			"funding": "https://pigeonposse.com/contribute",
+			"gh": "https://github.com/pigeonposse",
+			"about": "https://pigeonposse.com/about",
+			"url": "https://pigeonposse.com",
+			"web": "https://pigeonposse.com",
+			"email": "dev@pigeonposse.com",
+			"socialUser": {
+				"twitter": "pigeonposse_",
+				"instagram": "pigeon.posse",
+				"medium": "pigeonposse"
+			},
+			"social": {
+				"twitter": "https://twitter.com/pigeonposse_",
+				"instagram": "https://www.instagram.com/pigeon.posse/",
+				"medium": "https://medium.com/@pigeonposse"
+			}
+		}
+	}
 }

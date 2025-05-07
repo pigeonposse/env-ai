@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { cli } from "./cli-super"
+import { cli } from './cli-super'
 
 const run = async ( ) => {
 

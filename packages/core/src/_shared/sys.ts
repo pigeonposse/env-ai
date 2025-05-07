@@ -1,14 +1,20 @@
 
-import {
-	writeFile, readFile, stat,
-} from "node:fs/promises"
-import {
-	resolve, extname, isAbsolute, join, basename,
-} from "node:path"
 import { globby } from 'globby'
-import yaml from 'yaml'
-import toml from 'toml'
-import { pathToFileURL } from "node:url"
+import {
+	writeFile,
+	readFile,
+	stat,
+} from 'node:fs/promises'
+import {
+	resolve,
+	extname,
+	isAbsolute,
+	join,
+	basename,
+} from 'node:path'
+import { pathToFileURL } from 'node:url'
+import toml              from 'toml'
+import yaml              from 'yaml'
 
 export const isPath = ( str: string ) => {
 
@@ -17,21 +23,22 @@ export const isPath = ( str: string ) => {
 		if ( isAbsolute( str ) || /^(\.\/|\.\.\/|[A-Za-z]:\\|\/)/.test( str ) ) {
 
 			if ( /\s(?!\\)/.test( str ) && !/\\\s/.test( str ) )
-				return false 
-			
+				return false
+
 			try {
 
 				const normalizedPath = join( str )
 				return normalizedPath !== ''
-			
-			} catch {
+
+			}
+			catch {
 
 				return false
-			
+
 			}
-		
+
 		}
-	
+
 	}
 	return false
 
@@ -44,12 +51,12 @@ export default class Sys {
 		extname,
 		basename,
 		isAbsolute,
-		join, 
+		join,
 	}
 
 	readFile = readFile
 	writeFile = writeFile
-	
+
 	isAbsolute = isAbsolute
 	join = join
 	isPath = isPath
@@ -60,16 +67,18 @@ export default class Sys {
 
 		try {
 
-			const fileStats = await stat( filePath ) 
-			return fileStats.isFile() 
-		
-		} catch {
+			const fileStats = await stat( filePath )
+			return fileStats.isFile()
 
-			return false 
-		
 		}
-	
+		catch {
+
+			return false
+
+		}
+
 	}
+
 	/**
 	 * Reads a configuration file and returns the parsed content.
 	 * @param {string} filePath - The path to the configuration file.
@@ -78,35 +87,39 @@ export default class Sys {
 	 */
 	async readConfigFile( filePath: string ): Promise<object> {
 
-		const ext = this.extname( filePath )
+		const ext     = this.extname( filePath )
 		const content = await this.readFile( filePath, 'utf8' )
 		let res
-	  
+
 		if ( ext === '.json' ) {
 
 			res = JSON.parse( content )
-		
-		} else if ( ext === '.yml' || ext === '.yaml' ) {
+
+		}
+		else if ( ext === '.yml' || ext === '.yaml' ) {
 
 			res = yaml.parse( content )
-		
-		} else if ( ext === '.toml' || ext === '.tml' ) {
+
+		}
+		else if ( ext === '.toml' || ext === '.tml' ) {
 
 			res = toml.parse( content )
-		
-		} else if ( ext === '.js' || ext === '.mjs' ) {
+
+		}
+		else if ( ext === '.js' || ext === '.mjs' ) {
 
 			const modulePath = pathToFileURL( filePath ).href
-			res = ( await import( modulePath ) ).default
-		
-		} else {
+			res              = ( await import( modulePath ) ).default
+
+		}
+		else {
 
 			throw new Error( `Unsupported file extension: ${ext}` )
-		
+
 		}
-	  
+
 		return res
-	
+
 	}
 
 }
