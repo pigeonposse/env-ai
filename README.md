@@ -12,24 +12,21 @@
 [![License](https://img.shields.io/github/license/pigeonposse/env-ai?color=green&style=for-the-badge&logoColor=white)](/LICENSE)
 [![Core](https://img.shields.io/npm/v/env-ai?color=blue&style=for-the-badge&logoColor=white)](https://www.npmjs.com/package/env-ai)
 
+**env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands.
 
-**env-ai** is an intelligent assistant tool for your terminal, designed to help you with tasks like documentation, performance optimization, refactoring, and more, using custom commands. 
-
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > **env-ai** needs the **[Ollama](https://ollama.com)** technology to work. Make sure you have it installed before using this CLI.
-
 
 ## 📑 Index
 
 - [🌟 Features](#-features)
 - [📦 Installation](#-installation)
 - [📖 Using the CLI](#-using-the-cli)
-   - [Main Commands](#main-commands)
-   - [Options](#options)
-   - [Usage Example](#usage-example)
+  - [Main Commands](#main-commands)
+  - [Options](#options)
 - [📚 Using the Library](#-using-the-library)
-   - [Import Example](#import-example)
-   - [Defined Configuration](#defined-configuration)
+  - [Import Example](#import-example)
+  - [Defined Configuration](#defined-configuration)
 - [🔍 Examples](#-examples)
 - [👨‍💻 Development](#-development)
 - [☕ Donate](#-donate)
@@ -114,10 +111,10 @@ env-ai chat
 - `-h, --help` - Show help. *(boolean)*
 - `-v, --version` - Show version number. *(boolean)*
 
-
 ## 📚 Using the Library
 
 **env-ai** can also be integrated as a library into your `JavaScript` or `TypeScript` project.
+
 ### Import Example
 
 ```javascript
@@ -148,7 +145,6 @@ export default defineConfig({
 
 You can see more examples [here](./examples).
 
-
 ### CLI
 
 ```bash
@@ -167,11 +163,12 @@ run({
 });
 ```
 
-### CLI With `js` config file 
+### CLI With `js` config file
 
 ```bash
 env-ai chat --config dovenv.config.js
 ```
+
 ```js
 import { defineConfig } from 'env-ai';
 
@@ -183,7 +180,7 @@ export default defineConfig({
 });
 ```
 
-### CLI With `json` config file 
+### CLI With `json` config file
 
 ```bash
 env-ai chat --config dovenv.config.json
@@ -196,7 +193,7 @@ env-ai chat --config dovenv.config.json
 }
 ```
 
-### CLI With `toml` config file 
+### CLI With `toml` config file
 
 ```bash
 env-ai chat --config documentation-context.toml
@@ -213,7 +210,7 @@ The content for the following code library:
 """
 ```
 
-### CLI With `yaml` config file 
+### CLI With `yaml` config file
 
 ```bash
 env-ai chat --config dovenv.config.yaml
@@ -223,6 +220,7 @@ env-ai chat --config dovenv.config.yaml
 theme: custom
 system: ./your-system-content.md
 ```
+
 ### CLI - Input with excluded files
 
 It includes all SRC files that are at the upper level.
@@ -254,7 +252,7 @@ This software is licensed with **[GPL-3.0](/LICENSE)**.
 
 ## 🐦 About us
 
-_PigeonPosse_ is a ✨ **code development collective** ✨ focused on creating practical and interesting tools that help developers and users enjoy a more agile and comfortable experience. Our projects cover various programming sectors and we do not have a thematic limitation in terms of projects.
+*PigeonPosse* is a ✨ **code development collective** ✨ focused on creating practical and interesting tools that help developers and users enjoy a more agile and comfortable experience. Our projects cover various programming sectors and we do not have a thematic limitation in terms of projects.
 
 [![More](https://img.shields.io/badge/Read-more-grey?style=for-the-badge)](https://github.com/pigeonposse)
 
