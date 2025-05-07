@@ -38,6 +38,7 @@
 	/**Important for vscode*/
 	"exclude": [
 		"./build",
-		"./dist"
+		"./dist",
+		"./*.js"
 	]
 }
