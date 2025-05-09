@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.4.2
+
+### Patch Changes
+
+- uo deps
+
 ## 0.4.1
 
 ### Patch Changes

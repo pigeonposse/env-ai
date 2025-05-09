@@ -5,8 +5,7 @@ import AiVectored from './ai-vector'
 type AiOptions = {
 	system : string
 	prompt : string
-
-	model : string
+	model  : string
 }
 
 export default class Ai {

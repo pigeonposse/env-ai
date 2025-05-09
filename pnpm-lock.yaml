@@ -54,23 +54,20 @@ importers:
         specifier: 0.10.1
         version: 0.10.1
       '@llamaindex/ollama':
-        specifier: 0.1.3
-        version: 0.1.3(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)
+        specifier: 0.1.4
+        version: 0.1.4(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)
       '@llamaindex/readers':
-        specifier: 3.1.1
-        version: 3.1.1(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(encoding@0.1.13)
+        specifier: 3.1.2
+        version: 3.1.2(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(encoding@0.1.13)
       globby:
         specifier: 14.1.0
         version: 14.1.0
       is-unicode-supported:
         specifier: 2.1.0
         version: 2.1.0
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
       llamaindex:
-        specifier: 0.10.4
-        version: 0.10.4(encoding@0.1.13)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0)(zod@3.24.4)
+        specifier: 0.10.5
+        version: 0.10.5(encoding@0.1.13)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0)(zod@3.24.4)
       ollama:
         specifier: 0.5.15
         version: 0.5.15
@@ -81,7 +78,7 @@ importers:
         specifier: 1.0.5
         version: 1.0.5
       smol-toml:
-        specifier: ^1.3.4
+        specifier: 1.3.4
         version: 1.3.4
       tiny-updater:
         specifier: 3.5.3
@@ -1589,19 +1586,19 @@ packages:
   '@keyv/serialize@1.0.3':
     resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
 
-  '@llamaindex/cloud@4.0.5':
-    resolution: {integrity: sha512-XS3W72o4ZH56TntvchSRXzvlwC829ynmqX2OUyyTDXez0o5ztkuXd3VSZ28o6MIjKxow0n2Bp5fFOjxIWMSQOA==}
+  '@llamaindex/cloud@4.0.6':
+    resolution: {integrity: sha512-rotXPn7MjSysDqTZn3MN9yNgvmiTuT6lgZYQt1LnMECUKbx4PYZbDRzINl+8DmyG/prPqTqN2rcDbF4//OMSiQ==}
     peerDependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
 
-  '@llamaindex/core@0.6.3':
-    resolution: {integrity: sha512-65v8+UdoCQqXo/3a8Icl0Tr0NSBeUUKGRFjJLKQY7kDnjly2rCUaOxmQE4y/JSo30cDFdlG4wuPtaAqqvbjtPg==}
+  '@llamaindex/core@0.6.4':
+    resolution: {integrity: sha512-M6Lwnp3CwqlPyJnn2xPPz8cGg2AFUt44BycOsY7Y/bNXm/tokTSFUhGSfL/etaubWOURvOeUYUm2Fs1lGI6YWw==}
 
-  '@llamaindex/env@0.1.29':
-    resolution: {integrity: sha512-GoITt+QLDNIhu2i1sGsPH8tHH13Gxp4i4ofMFlefrHagytvF761MG7nvTAQVIqP9kxBYk4dnSQ3lQnVPFAfMZQ==}
+  '@llamaindex/env@0.1.30':
+    resolution: {integrity: sha512-y6kutMcCevzbmexUgz+HXf7KiZemzAoFEYSjAILfR+cG6FmYSF8XvLbGOB34Kx8mlRi7EI8rZXpezJ5qCqOyZg==}
     peerDependencies:
-      '@huggingface/transformers': ^3.0.2
+      '@huggingface/transformers': ^3.5.0
       gpt-tokenizer: ^2.5.0
     peerDependenciesMeta:
       '@huggingface/transformers':
@@ -1609,16 +1606,16 @@ packages:
       gpt-tokenizer:
         optional: true
 
-  '@llamaindex/node-parser@2.0.3':
-    resolution: {integrity: sha512-Zlfp7xAtkKtlC7GgoLZBVHYu+Gk1+MsfCO6rAJE6qRF9pKIu6ed5tRJQmGxcS8xgnmZfV9DbBq/8DA02CkeiEA==}
+  '@llamaindex/node-parser@2.0.4':
+    resolution: {integrity: sha512-fwWE6c4T/ZcZOmXjEI0bHNZ+sEZjv5C3QqYdNsTNy8MglEitIP6hrMVe6L36sZqfhFAW4BJMBc4iwg7KHFFEBg==}
     peerDependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       tree-sitter: ^0.22.0
       web-tree-sitter: ^0.24.3
 
-  '@llamaindex/ollama@0.1.3':
-    resolution: {integrity: sha512-OdKk/xRv3beNJLUgYqi/h55LutCF6soaQGDAb8Vvu0bQ9Q+hZMnSntAM69s+5PSHmxSnzYhqe2BAm5q1CZCFag==}
+  '@llamaindex/ollama@0.1.4':
+    resolution: {integrity: sha512-IMaFjCwtaaZH8diYTsgG9sZOi+q/GCHLf1XCceloObeJKNYydl69PX0OAqJPfA6y16wRusAgypnIlrRxpEQwsA==}
     peerDependencies:
       zod: ^3.24.2
       zod-to-json-schema: ^3.23.3
@@ -1628,14 +1625,14 @@ packages:
       zod-to-json-schema:
         optional: true
 
-  '@llamaindex/openai@0.3.5':
-    resolution: {integrity: sha512-KgU9mqK4kgCgt2FvRp+1+TjxYzVqxNkxxsc0Bfu2EZlvjCFFhMT/PgutyGRoCduItfPOjAEPv5lqGF1okN4kwA==}
+  '@llamaindex/openai@0.3.6':
+    resolution: {integrity: sha512-Od7OdYswIDV8BPPS/L3QkzxSnaWuUp6rX0BB3ypdMD7aHn6gy7cJHrB0otw/bDKDLnHknagouS6psOZxs5QfeQ==}
 
-  '@llamaindex/readers@3.1.1':
-    resolution: {integrity: sha512-deaD53q+KnxGpfs49VuivpNG4o1Ai+DFuC9HkVCLc4sk1wYenMif/gi31GN2wZ7CapuWC6H68o7EGN+ryIc1Eg==}
+  '@llamaindex/readers@3.1.2':
+    resolution: {integrity: sha512-BiPmBPCVsNIdjn6ViuqhESOLrwlIxKxEEevYh367RrKLFSSzk7jVUs6wqtmlkPSbIwbGSq6wr1tCYBht4k3zBw==}
     peerDependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
 
   '@llamaindex/workflow@1.0.3':
     resolution: {integrity: sha512-GzYzLfn12BTQiLVwFr9tGl1Sa7PPVErLLQAJMgvfjUK8cv764SpJGqln8iKTxnKF05HcRrmJeE7ZD9Lzpf7UrA==}
@@ -2162,9 +2159,6 @@ packages:
 
   '@types/node@18.19.56':
     resolution: {integrity: sha512-4EMJlWwwGnVPflJAtM14p9eVSa6BOv5b92mCsh5zcM1UagNtEtrbbtaE6WE1tw2TabavatnwqXjlIpcAEuJJNg==}
-
-  '@types/node@22.15.14':
-    resolution: {integrity: sha512-BL1eyu/XWsFGTtDWOYULQEs4KR0qdtYfCxYAUYRoB7JP7h9ETYLgQTww6kH8Sj2C0pFGgrpM0XKv6/kbIzYJ1g==}
 
   '@types/node@22.15.15':
     resolution: {integrity: sha512-R5muMcZob3/Jjchn5LcO8jdKwSCbzqmPB6ruBxMcf9kbxtniZHP327s6C37iOfuw8mbKK3cAQa7sEl7afLrQ8A==}
@@ -5144,8 +5138,8 @@ packages:
     resolution: {integrity: sha512-vsBzcU4oE+v0lj4FhVLzr9dBTv4/fHIa57l+GCwovP8MoFNZJTOhGU8PXd4v2VJCbECAaijBiHntiekFMLvo0g==}
     engines: {node: '>=18.0.0'}
 
-  llamaindex@0.10.4:
-    resolution: {integrity: sha512-CI/q8g8dwsBAHC7j0nlPbKmgEw4/VbI+PWR6EwKRIBvtcHsimjbS87dz7Ie+ZBPdkeCjflrm2RSQebh61fdyog==}
+  llamaindex@0.10.5:
+    resolution: {integrity: sha512-ZxaP5B+n9hab6ELnG8fglvocfjDykC+VredoKexXN+KGB12Byw03vVJkQ3kwFsqN2oLMoO/vWh9WMYrkbg0WLg==}
     engines: {node: '>=18.0.0'}
 
   local-pkg@1.1.1:
@@ -9842,15 +9836,15 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@llamaindex/cloud@4.0.5(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)':
+  '@llamaindex/cloud@4.0.6(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)':
     dependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       p-retry: 6.2.1
 
-  '@llamaindex/core@0.6.3':
+  '@llamaindex/core@0.6.4':
     dependencies:
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/env': 0.1.30
       '@types/node': 22.15.15
       magic-bytes.js: 1.10.0
       zod: 3.24.4
@@ -9859,24 +9853,24 @@ snapshots:
       - '@huggingface/transformers'
       - gpt-tokenizer
 
-  '@llamaindex/env@0.1.29':
+  '@llamaindex/env@0.1.30':
     dependencies:
       '@aws-crypto/sha256-js': 5.2.0
       js-tiktoken: 1.0.15
       pathe: 1.1.2
 
-  '@llamaindex/node-parser@2.0.3(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)':
+  '@llamaindex/node-parser@2.0.4(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)':
     dependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       html-to-text: 9.0.5
       tree-sitter: 0.22.4
       web-tree-sitter: 0.24.7
 
-  '@llamaindex/ollama@0.1.3(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)':
+  '@llamaindex/ollama@0.1.4(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)':
     dependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       ollama: 0.5.15
       remeda: 2.21.3
     optionalDependencies:
@@ -9886,10 +9880,10 @@ snapshots:
       - '@huggingface/transformers'
       - gpt-tokenizer
 
-  '@llamaindex/openai@0.3.5(encoding@0.1.13)(ws@8.18.0)(zod@3.24.4)':
+  '@llamaindex/openai@0.3.6(encoding@0.1.13)(ws@8.18.0)(zod@3.24.4)':
     dependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       openai: 4.97.0(encoding@0.1.13)(ws@8.18.0)(zod@3.24.4)
     transitivePeerDependencies:
       - '@huggingface/transformers'
@@ -9898,11 +9892,11 @@ snapshots:
       - ws
       - zod
 
-  '@llamaindex/readers@3.1.1(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(encoding@0.1.13)':
+  '@llamaindex/readers@3.1.2(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(encoding@0.1.13)':
     dependencies:
       '@discoveryjs/json-ext': 0.6.3
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       csv-parse: 5.6.0
       mammoth: 1.9.0
       unpdf: 0.12.2(encoding@0.1.13)
@@ -9910,10 +9904,10 @@ snapshots:
       - encoding
       - supports-color
 
-  '@llamaindex/workflow@1.0.3(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(zod@3.24.4)':
+  '@llamaindex/workflow@1.0.3(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(zod@3.24.4)':
     dependencies:
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
       zod: 3.24.4
 
   '@manypkg/find-root@1.1.0':
@@ -10468,10 +10462,6 @@ snapshots:
   '@types/node@18.19.56':
     dependencies:
       undici-types: 5.26.5
-
-  '@types/node@22.15.14':
-    dependencies:
-      undici-types: 6.21.0
 
   '@types/node@22.15.15':
     dependencies:
@@ -13821,16 +13811,16 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  llamaindex@0.10.4(encoding@0.1.13)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0)(zod@3.24.4):
+  llamaindex@0.10.5(encoding@0.1.13)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)(ws@8.18.0)(zod@3.24.4):
     dependencies:
-      '@llamaindex/cloud': 4.0.5(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)
-      '@llamaindex/core': 0.6.3
-      '@llamaindex/env': 0.1.29
-      '@llamaindex/node-parser': 2.0.3(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)
-      '@llamaindex/openai': 0.3.5(encoding@0.1.13)(ws@8.18.0)(zod@3.24.4)
-      '@llamaindex/workflow': 1.0.3(@llamaindex/core@0.6.3)(@llamaindex/env@0.1.29)(zod@3.24.4)
+      '@llamaindex/cloud': 4.0.6(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)
+      '@llamaindex/core': 0.6.4
+      '@llamaindex/env': 0.1.30
+      '@llamaindex/node-parser': 2.0.4(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(tree-sitter@0.22.4)(web-tree-sitter@0.24.7)
+      '@llamaindex/openai': 0.3.6(encoding@0.1.13)(ws@8.18.0)(zod@3.24.4)
+      '@llamaindex/workflow': 1.0.3(@llamaindex/core@0.6.4)(@llamaindex/env@0.1.30)(zod@3.24.4)
       '@types/lodash': 4.17.10
-      '@types/node': 22.15.14
+      '@types/node': 22.15.15
       ajv: 8.17.1
       lodash: 4.17.21
       magic-bytes.js: 1.10.0

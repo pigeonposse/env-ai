@@ -16,8 +16,7 @@ import Sys               from './sys'
 
 type AiVectoredDOC = {
 	content : string
-
-	path : string
+	path    : string
 }
 
 export default class AiVectored {
@@ -138,13 +137,6 @@ export default class AiVectored {
 		} )
 
 		const docs = await Promise.all( docsPromise )
-
-		// const index     = await VectorStoreIndex.fromDocuments( docs, { serviceContext : serviceContextFromDefaults( {
-		// 	chunkSize    : 300,
-		// 	chunkOverlap : 20,
-		// 	embedModel   : this.#embedModel,
-		// 	llm          : this.#llm,
-		// } ) } )
 
 		const index     = await VectorStoreIndex.fromDocuments( docs )
 		const retriever = index.asRetriever( { similarityTopK: 3 } )

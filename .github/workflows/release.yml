@@ -1,5 +1,5 @@
 ###############################################################################
-# RELEASE 
+# RELEASE
 ###############################################################################
 
 name: 🚀 Release packages
@@ -13,13 +13,12 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   NPM_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
-
 ###############################################################################
 # JOBS
 ###############################################################################
 
 jobs:
-  
+
   release-lib:
 
     name: 🚀 Release
@@ -78,7 +77,7 @@ jobs:
       - name: ✅ tests
         run: |
           pnpm test
-  
+
       #########################################################################
       # PUBLISH
       #########################################################################
@@ -107,11 +106,10 @@ jobs:
           echo "CORE=$core_version CORE_MAJOR=$core_version_major"
           echo "core_version=$core_version" >> $GITHUB_OUTPUT
 
-
-      - name: Release binary 
+      - name: Release binary
         if: ${{ steps.updated.outputs.core_version != '' }}
         uses: ncipollo/release-action@v1
-        with: 
+        with:
           tag: "v${{ steps.updated.outputs.core_version }}"
           draft: false
           prerelease: false
