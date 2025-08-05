@@ -1,21 +1,25 @@
-import pc from 'picocolors'
+import { styleText } from 'node:util'
 
-export const green = pc.green
-export const italic = pc.italic
-export const yellow = pc.yellow
-export const red = pc.red
-export const magenta = pc.magenta
-export const blue = pc.cyan
-export const underline = pc.underline
-export const grayBright = pc.gray
-export const black = pc.black
+const din   = ( v: string ) => styleText( 'dim', v )
+const bold  = ( v: string ) => styleText( 'bold', v )
+const white = ( v: string ) => styleText( 'white', v )
 
-export const gray = ( v:string ) => pc.gray( pc.dim( v ) )
-export const blackBold = ( v:string ) => pc.black( pc.bold( v ) )
-export const introColor = ( v:string ) => pc.bgCyan( blackBold( ` ${v} ` ) )
-export const error = ( v:string ) => pc.bgRed( ` ${v} ` )
-export const warn = ( v:string ) => pc.bgYellow( blackBold( ` ${v} ` ) )
-export const success = ( v:string ) => pc.bgGreen( blackBold( ` ${v} ` ) )
-export const debug = ( v:string ) => pc.bgWhite( pc.black( ` ${v} ` ) )
-export const section = ( v:string ) => pc.bgBlue( pc.white( ` ${v} ` ) )
+export const green = ( v: string ) => styleText( 'green', v )
+export const italic = ( v: string ) => styleText( 'italic', v )
+export const yellow = ( v: string ) => styleText( 'yellow', v )
+export const red = ( v: string ) => styleText( 'red', v )
+export const magenta = ( v: string ) => styleText( 'magenta', v )
+export const blue = ( v: string ) => styleText( 'cyan', v )
+export const underline = ( v: string ) => styleText( 'underline', v )
+export const grayBright = ( v: string ) => styleText( 'gray', v )
+export const black = ( v: string ) => styleText( 'black', v )
+
+export const gray = ( v:string ) => styleText( 'gray', ( din( v ) ) )
+export const blackBold = ( v:string ) => black( bold( v ) )
+export const introColor = ( v:string ) => styleText( 'bgCyan', blackBold( ` ${v} ` ) )
+export const error = ( v:string ) => styleText( 'bgRed', ` ${v} ` )
+export const warn = ( v:string ) => styleText( 'bgYellow', blackBold( ` ${v} ` ) )
+export const success = ( v:string ) => styleText( 'bgGreen', blackBold( ` ${v} ` ) )
+export const debug = ( v:string ) => styleText( 'bgWhite', black( ` ${v} ` ) )
+export const section = ( v:string ) => styleText( 'bgBlue', white( ` ${v} ` ) )
 export const link = ( v:string ) => underline( italic( v ) )

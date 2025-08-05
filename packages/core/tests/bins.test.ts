@@ -17,15 +17,15 @@ describe( 'CLI Tests', () => {
 
 		{
 			name    : 'Deno',
-			command : 'deno run -A --unstable-fs dist/cli.mjs --help',
+			command : 'deno run -A --unstable-fs dist/bin.mjs --help',
 		},
 		{
 			name    : 'Bun',
-			command : 'bun dist/cli.mjs --help',
+			command : 'bun dist/bin.mjs --help',
 		},
 		{
 			name    : 'Node',
-			command : 'node dist/cli.mjs --help',
+			command : 'node dist/bin.mjs --help',
 		},
 	]
 

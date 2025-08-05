@@ -1,5 +1,5 @@
 
-import Ai      from '../../_shared/ai'
+import { Ai }  from '../../_shared/ai'
 import {
 	TypedError,
 	catchError,

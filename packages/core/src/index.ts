@@ -1,4 +1,4 @@
-import CLI from './chat/main'
+import CLI from './chat'
 
 export { CLI }
 
@@ -9,8 +9,9 @@ export type Config = Parameters<CLI['fn']>[0]
 
 /**
  * Run envai with the given configuration.
- * @param {object} config - The configuration to use.
- * @returns {Promise<void>} The promise that resolves when the CLI is finished.
+ *
+ * @param   {object}        config - The configuration to use.
+ * @returns {Promise<void>}        The promise that resolves when the CLI is finished.
  * @example
  * import { run } from 'env-ai'
  *
@@ -22,8 +23,8 @@ export type Config = Parameters<CLI['fn']>[0]
  */
 export const run = async ( config: Config ) => {
 
-	//@ts-ignore
-	const cli = new CLI( {} )
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const cli = new CLI( {} as any )
 
 	return await cli.fn( config )
 
@@ -31,8 +32,9 @@ export const run = async ( config: Config ) => {
 
 /**
  * Define a configuration for the CLI.
- * @param {object} config - The configuration to use.
- * @returns {object} The configuration object.
+ *
+ * @param   {object} config - The configuration to use.
+ * @returns {object}        The configuration object.
  * @example
  * import { defineConfig } from 'env-ai'
  *

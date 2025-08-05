@@ -108,12 +108,6 @@ export class CLI<C extends CmdProps = CmdProps> implements CliInterface<C> {
 
 	}
 
-	/**
-	 * Run the CLI.
-	 * @param argv The parsed command line arguments as provided by `yargs.argv`.
-	 * @param params
-	 * @returns The result of the CLI action.
-	 */
 	async fn( params: FnParams ) {
 
 		return await this.#handler( params )

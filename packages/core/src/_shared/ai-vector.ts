@@ -11,8 +11,8 @@ import {
 	ContextChatEngine,
 } from 'llamaindex'
 
-import { getStringType } from './string'
-import Sys               from './sys'
+import { getStringType } from '../_shared/string'
+import Sys               from '../_shared/sys'
 
 type AiVectoredDOC = {
 	content : string

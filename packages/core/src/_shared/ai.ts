@@ -8,7 +8,7 @@ type AiOptions = {
 	model  : string
 }
 
-export default class Ai {
+export class Ai {
 
 	#ollama : typeof ollama
 

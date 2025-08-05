@@ -5,17 +5,17 @@ import {
 	argv,
 	rmDeprecationAlerts,
 } from './_shared/process'
-import CHAT from './chat/main'
 
 rmDeprecationAlerts()
+console.warn = () => {}
 
 const args = hideBin( argv )
 
 export const cli = async () => {
 
-	const _cli = yargs( args )
-
-	const chat = new CHAT( _cli )
+	const _cli             = yargs( args )
+	const { default:CHAT } = await import( './chat' )
+	const chat             = new CHAT( _cli )
 
 	// @ts-ignore
 	const consts = chat._const
@@ -51,6 +51,7 @@ export const cli = async () => {
 		 * Runs the cli.
 		 *
 		 * If no command is provided, the help menu is shown.
+		 *
 		 * @returns {Promise<void>}
 		 */
 		run : async () => {

@@ -1,7 +1,7 @@
-import { createInterface } from 'readline'
+import { createInterface } from 'node:readline'
 
 import AiVectored from './ai-vector'
-import Sys        from './sys'
+import Sys        from '../_shared/sys'
 
 const sys = new Sys()
 const ai  = new AiVectored( {
@@ -67,7 +67,7 @@ const rl = createInterface( {
 } )
 
 /**
- *
+ * startChatLoop
  */
 async function startChatLoop() {
 

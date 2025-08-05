@@ -25,6 +25,7 @@ const S_BAR         = s( '│', '|' )
 /**
  * Spinner custom. Output is in blue.
  * Copy of https://github.com/bombshell-dev/clack/blob/main/packages/prompts/src/index.ts
+ *
  * @returns {void}
  */
 export const spinnerCustom = () => {

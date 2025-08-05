@@ -1,4 +1,4 @@
-import { defineConfig } from '../../src/main'
+import { defineConfig } from '../../src'
 
 export default defineConfig( {
 	theme  : 'custom',

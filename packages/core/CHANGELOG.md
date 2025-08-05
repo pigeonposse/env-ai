@@ -1,5 +1,17 @@
 # env-ai
 
+## 0.4.4
+
+### Patch Changes
+
+- refactor code, up deps
+
+## 0.4.3
+
+### Patch Changes
+
+- up deps
+
 ## 0.4.2
 
 ### Patch Changes

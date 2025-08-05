@@ -13,6 +13,7 @@ export class CoreConfig extends CoreSuper {
 
 	/**
 	 * Overwrite argv
+	 *
 	 * @description
 	 * Overwrite argv if exist argv.config with a config file. files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]
 	 */

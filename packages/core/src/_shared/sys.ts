@@ -1,5 +1,7 @@
 
-import { globby } from 'globby'
+import { deserialize as tomlparse } from '@structium/toml'
+import { deserialize as yamlParse } from '@structium/yaml'
+import { globby }                   from 'globby'
 import {
 	writeFile,
 	readFile,
@@ -12,9 +14,7 @@ import {
 	join,
 	basename,
 } from 'node:path'
-import { pathToFileURL }      from 'node:url'
-import { parse as tomlparse } from 'smol-toml'
-import yaml                   from 'yaml'
+import { pathToFileURL } from 'node:url'
 
 export const isPath = ( str: string ) => {
 
@@ -81,8 +81,9 @@ export default class Sys {
 
 	/**
 	 * Reads a configuration file and returns the parsed content.
-	 * @param {string} filePath - The path to the configuration file.
-	 * @returns {Promise<object>} - The parsed content of the configuration file.
+	 *
+	 * @param   {string}          filePath - The path to the configuration file.
+	 * @returns {Promise<object>}          - The parsed content of the configuration file.
 	 * @throws {Error} - If the file extension is not supported.
 	 */
 	async readConfigFile( filePath: string ): Promise<object> {
@@ -98,7 +99,7 @@ export default class Sys {
 		}
 		else if ( ext === '.yml' || ext === '.yaml' ) {
 
-			res = yaml.parse( content )
+			res = yamlParse( content )
 
 		}
 		else if ( ext === '.toml' || ext === '.tml' ) {

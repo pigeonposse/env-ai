@@ -1,4 +1,4 @@
-import { CLI } from '../cli/main'
+import { CLI } from '../cli'
 
 type CLIParams = ConstructorParameters<typeof CLI>[0]
 

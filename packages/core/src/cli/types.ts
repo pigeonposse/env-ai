@@ -76,12 +76,14 @@ export type CoreParams = {
 
 		/**
 		 * Only one response should be generated.
+		 *
 		 * @default false
 		 */
 		single? : ArgvSchema['single']
 
 		/**
 		 * Debug mode for additional logging and debugging.
+		 *
 		 * @default false
 		 */
 		debug? : ArgvSchema['debug']
