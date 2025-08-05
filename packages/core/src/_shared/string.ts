@@ -6,7 +6,7 @@ type Params = Record<string, ( ( arg: string ) => Promise<string> ) | string>
 
 type CustomParams = ( arg: string ) => Promise<string>
 
-export  const replacePlaceholders = async (
+export const replacePlaceholders = async (
 	content: string,
 	params: Params,
 	customParams?: CustomParams,
