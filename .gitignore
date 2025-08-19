@@ -19,6 +19,7 @@ lerna-debug.log*
 
 .pnpm-store
 node_modules
+**/node_modules
 dist
 dist-ssr
 build

@@ -10,11 +10,16 @@
 import { setConfig } from '@dovenv/theme-pigeonposse/eslint'
 
 export default setConfig( {
-	gitignore : true,
 	general   : 'ts',
-	md        : true,
+	jsdoc     : true,
+	gitignore : true,
 	package   : true,
 	json      : true,
-	jsdoc     : true,
-	ignore    : [ '**/docs/**' ],
+	toml      : true,
+	md        : true,
+	ignore    : [ 
+		'**/README.md',
+		'**/CHANGELOG.md',
+		'**/docs/**'
+	 ],
 } )
