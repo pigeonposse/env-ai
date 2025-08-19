@@ -56,8 +56,8 @@
 		"@changesets/changelog-github": "0.5.1",
 		"@dovenv/core": "1.6.1",
 		"@dovenv/theme-pigeonposse": "1.6.1",
-		"@types/node": "24.2.0",
-		"eslint": "9.32.0",
+		"@types/node": "24.3.0",
+		"eslint": "9.33.0",
 		"typescript": "5.9.2",
 		"vitest": "3.2.4"
 	},

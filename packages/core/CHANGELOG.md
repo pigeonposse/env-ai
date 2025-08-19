@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.4.5
+
+### Patch Changes
+
+- change updater dep
+
 ## 0.4.4
 
 ### Patch Changes

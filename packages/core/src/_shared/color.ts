@@ -1,9 +1,8 @@
 import { styleText } from 'node:util'
 
-const din   = ( v: string ) => styleText( 'dim', v )
-const bold  = ( v: string ) => styleText( 'bold', v )
-const white = ( v: string ) => styleText( 'white', v )
-
+export const dim  = ( v: string ) => styleText( 'dim', v )
+export const bold  = ( v: string ) => styleText( 'bold', v )
+export const white = ( v: string ) => styleText( 'white', v )
 export const green = ( v: string ) => styleText( 'green', v )
 export const italic = ( v: string ) => styleText( 'italic', v )
 export const yellow = ( v: string ) => styleText( 'yellow', v )
@@ -14,7 +13,7 @@ export const underline = ( v: string ) => styleText( 'underline', v )
 export const grayBright = ( v: string ) => styleText( 'gray', v )
 export const black = ( v: string ) => styleText( 'black', v )
 
-export const gray = ( v:string ) => styleText( 'gray', ( din( v ) ) )
+export const gray = ( v:string ) => styleText( 'gray', ( dim( v ) ) )
 export const blackBold = ( v:string ) => black( bold( v ) )
 export const introColor = ( v:string ) => styleText( 'bgCyan', blackBold( ` ${v} ` ) )
 export const error = ( v:string ) => styleText( 'bgRed', ` ${v} ` )

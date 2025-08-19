@@ -41,9 +41,8 @@ export const cli = async () => {
 		 */
 		updater : async () => {
 
-			const { notifier } = await import( './_shared/updater' )
-
-			notifier( consts.projectName, consts.version ).notify()
+			const { updater } = await import( './_shared/updater' )
+			await updater( { name: consts.projectName, version: consts.version } )
 
 		},
 

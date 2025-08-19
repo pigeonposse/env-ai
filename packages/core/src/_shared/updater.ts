@@ -1,12 +1,33 @@
-import updater from 'tiny-updater'
+import { Updater } from '@clippium/updater'
 
-export const notifier = ( name: string, version: string ) => {
+import {
+	bold,
+	dim,
+	green,
+	italic,
+	blue,
+} from './color'
 
-	const opts = {
-		name,
+export const updater = async ( {
+	name, version,
+}:{
+	name    : string
+	version : string
+} ) => {
+
+	const _updater = new Updater( {
 		version,
-		ttl : 86_400_000,
-	}
-	return { notify: () => updater( opts ) }
+		name,
+	} )
+
+	const data = await _updater.get()
+	if ( !data ) return
+
+	console.log( `
+        
+║ 📦 ${bold( 'Update available' )} ${dim( data.currentVersion )} → ${green( data.latestVersion )} ${italic( `(${data.type})` )}
+║ Run ${blue( data.packageManager + ' i ' + name )} to update
+		
+` )
 
 }

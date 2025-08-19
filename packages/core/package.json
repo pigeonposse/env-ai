@@ -1,6 +1,6 @@
 {
 	"name": "env-ai",
-	"version": "0.4.4",
+	"version": "0.4.5",
 	"description": "AI Assistant for Your Local Environment",
 	"keywords": [
 		"ai",
@@ -57,7 +57,7 @@
 	],
 	"scripts": {
 		"build": "node --run build:lib && node --run build:bin",
-		"build:bin": "pnpx binarium bun -i src/bin.ts -n env-ai",
+		"build:bin": "pnpx binarium bun -i src/binarium.ts -n env-ai",
 		"build:lib": "pnpx unbuild",
 		"dev": "bun src/bin.ts",
 		"dev:bun": "bun src/bin.ts",
@@ -85,7 +85,7 @@
 		"llamaindex": "0.11.26",
 		"ollama": "0.5.16",
 		"sisteransi": "1.0.5",
-		"tiny-updater": "3.5.3",
+		"@clippium/updater": "1.0.2",
 		"yargs": "18.0.0",
 		"zod": "3.25.76"
 	},
