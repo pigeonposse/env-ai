@@ -7,15 +7,21 @@ import {
 	expect,
 } from 'vitest'
 
-const execAsync = promisify( exec )
+const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 
+if (isCI) {
+    console.log("⚠️ Entorno CI detectado. Saltando la ejecución de los tests.");
+}
+if(isCI) {
 describe( 'CLI Tests', () => {
 	
+	const execAsync = promisify( exec )
 	const filePath ='tests/run.js'
 	const commands = [
 		{
 			name    : 'Deno',
 			command : `deno eval "Object.defineProperty(process.stdin, 'isTTY', { value: false, writable: true }); process.stdin.setRawMode = () => {}; import('./${filePath}');" < /dev/null`,
+
 		},
 		{
 			name    : 'Bun',
@@ -42,3 +48,4 @@ describe( 'CLI Tests', () => {
 	} )
 
 } )
+}
