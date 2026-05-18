@@ -4,7 +4,7 @@ export class CoreConfig extends CoreSuper {
 
 	validateProperties<V extends CoreSuper['_argv']>( properties: V ): V {
 
-		const res = this.argvSceham.parse( properties )
+		const res = this.paramsSchema.parse( properties )
 		// eslint-disable-next-line @stylistic/indent
         // @ts-ignore
 		return res

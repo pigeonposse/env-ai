@@ -6,6 +6,11 @@
 
 - Up deprecated deps, improve performance, add new core library
 
+### Patch Changes
+
+- Updated dependencies []:
+  - @env-ai/core@0.5.0
+
 ## 0.4.5
 
 ### Patch Changes

@@ -10,7 +10,7 @@ import {
 const OverwriteTypes = createLiteralUnion( Object.values( overwrite ) )
 const ThemeTypes     = createLiteralUnion( Object.values( theme ) )
 
-export const argvSchema = validate.object( {
+export const paramsSchema = validate.object( {
 	output    : validate.string().optional(),
 	input     : validate.array( validate.string() ).optional(),
 	overwrite : OverwriteTypes.optional(),

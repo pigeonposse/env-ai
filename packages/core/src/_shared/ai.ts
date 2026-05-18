@@ -1,97 +1,90 @@
 import ollama from 'ollama'
+import { ollama as aiOllama, } from 'ollama-ai-provider-v2'
+import { streamText, type ModelMessage } from 'ai'
 
 import AiVectored from './ai-vector'
 
 type AiOptions = {
-	system : string
-	prompt : string
-	model  : string
+    system : string
+    prompt : string
+    model  : string
 }
 
 export class Ai {
 
-	#ollama : typeof ollama
+    #ollamaClient = ollama
 
-	error = { NO_MODELS: 'no-models' } as const
+    error = { NO_MODELS: 'no-models' } as const
 
-	constructor() {
+    async getModels() {
 
-		this.#ollama = ollama
+        const output = await this.#ollamaClient.list()
+        if ( !output.models || output.models.length === 0 ) throw new Error( this.error.NO_MODELS )
+        return output.models.map( model => model.name )
 
-	}
+    }
 
-	async getModels() {
+    async installModel( name: string ) {
 
-		const output = await this.#ollama.list()
-		if ( !output.models || output.models.length === 0 ) throw new Error( this.error.NO_MODELS )
-		return output.models.map( model => model.name )
+        return await this.#ollamaClient.pull( {
+            model  : name,
+            stream : true,
+        } )
 
-	}
+    }
 
-	async installModel( name: string ) {
+    async chatVectored( opts: Omit<AiOptions, 'prompt'> & { docs: Parameters<AiVectored['generateChat']>[0] } ) {
 
-		return await ollama.pull( {
-			model  : name,
-			stream : true,
-		} )
+        const vectored = new AiVectored( {
+            model  : opts.model,
+            system : opts.system,
+        } )
 
-	}
+        await vectored.generateChat( opts.docs )
 
-	async chatVectored( opts: Omit<AiOptions, 'prompt'> & { docs: Parameters<AiVectored['generateChat']>[0] } ) {
+        return {
+            send  : vectored.chat.bind( vectored ),
+            reset : vectored.resetChatEngine.bind( vectored ),
+        }
 
-		const vectored = new AiVectored( {
-			model  : opts.model,
-			system : opts.system,
-		} )
+    }
 
-		await vectored.generateChat( opts.docs )
+    async chat( opts: Omit<AiOptions, 'prompt'> ) {
 
-		return {
-			send  : vectored.chat.bind( vectored ),
-			reset : vectored.resetChatEngine.bind( vectored ),
-		}
+        // Historial usando el tipado estricto CoreMessage de Vercel AI SDK
+        const messages: ModelMessage[] = [
+            {
+                role    : 'system',
+                content : opts.system,
+            },
+        ]
 
-	}
+        const sendMessage = async ( prompt: AiOptions['prompt'] ) => {
 
-	async chat( opts: Omit<AiOptions, 'prompt'> ) {
+            messages.push( {
+                role    : 'user',
+                content : prompt,
+            } )
 
-		// console.log( opts )
-		const ollama   = this.#ollama
-		const messages = [
-			{
-				role    : 'system',
-				content : opts.system,
-			},
-		]
+            // Migrado del cliente plano de ollama a streamText de Vercel AI SDK
+            const response = streamText( {
+                model    : aiOllama( opts.model ),
+                messages,
+                temperature: 0,
+            } )
 
-		const sendMessage = async ( prompt: AiOptions['prompt'] ) => {
+            return response.textStream
 
-			// console.log( { prompt } )
-			messages.push( {
-				role    : 'user',
-				content : prompt,
-			} )
+        }
 
-			// console.log( { messages: messages.length } )
-			const response = await ollama.chat( {
-				stream  : true,
-				model   : opts.model,
-				messages,
-				options : { temperature: 0 },
-			} )
+        return {
+            send                : sendMessage,
+            addAssistantMessage : ( content: string ) => messages.push( {
+                role : 'assistant',
+                content,
+            } ),
+        }
 
-			return response
-
-		}
-
-		return {
-			send                : sendMessage,
-			addAssistantMessage : ( content: string ) => messages.push( {
-				role : 'assistant',
-				content,
-			} ),
-		}
-
-	}
+    }
 
 }

@@ -1,11 +1,4 @@
-
-import {
-	Argv,
-	CommandModule,
-	Options,
-} from 'yargs'
-
-import { argvSchema }    from './schema'
+import { paramsSchema }    from './schema'
 import * as c            from '../_shared/color'
 import * as p            from '../_shared/prompt'
 import { ValidateInfer } from '../_shared/validate'
@@ -22,85 +15,76 @@ type Exact<A, B> = A extends B ? ( B extends A ? A : never ) : never
 
 ///////////////////////////
 
-export type CmdProps = CommandModule
 export type PromptGroup<L> = p.PromptGroup<L>
-export type CliInterface<C extends CmdProps> = {
-	name    : string
-	desc    : string
-	options : Record<string, Options>
-
-	run : () => C
-}
-
-type ArgvSchema = ValidateInfer<typeof argvSchema>
+type ParamsSchema = ValidateInfer<typeof paramsSchema>
 /**Type for check argv schema */
-type SetArgv<Opts> = Exact<Opts, ArgvSchema>
+type SeParams<Opts> = Exact<Opts, ParamsSchema>
 
 export type CoreParams = {
-	argv : SetArgv<{
+	options : SeParams<{
 
 		/**
 		 * Output path for generated response.
 		 */
-		output? : ArgvSchema['output']
+		output? : ParamsSchema['output']
 
 		/**
 		 * Glob patterns to input files and URLs.
 		 */
-		input? : ArgvSchema['input']
+		input? : ParamsSchema['input']
 
 		/**
 		 * Behavior when output file exists.
 		 */
-		overwrite? : ArgvSchema['overwrite']
+		overwrite? : ParamsSchema['overwrite']
 
 		/**
 		 * Ollama model name to be used for AI interactions.
 		 */
-		model? : ArgvSchema['model']
+		model? : ParamsSchema['model']
 
 		/**
 		 * Custom prompt text string or path.
 		 */
-		prompt? : ArgvSchema['prompt']
+		prompt? : ParamsSchema['prompt']
 
 		/**
 		 * Custom system text string or path.
 		 */
-		system? : ArgvSchema['system']
+		system? : ParamsSchema['system']
 
 		/**
 		 * Theme for CLI interface.
 		 */
-		theme? : ArgvSchema['theme']
+		theme? : ParamsSchema['theme']
 
 		/**
 		 * Only one response should be generated.
 		 *
 		 * @default false
 		 */
-		single? : ArgvSchema['single']
+		single? : ParamsSchema['single']
 
 		/**
 		 * Debug mode for additional logging and debugging.
 		 *
 		 * @default false
 		 */
-		debug? : ArgvSchema['debug']
+		debug? : ParamsSchema['debug']
 
 		/**
 		 * Path to config file.
 		 * files supported: [.mjs|.js|.json|.yml|.yaml|.toml|.tml]
 		 */
-		config? : ArgvSchema['config']
+		config? : ParamsSchema['config']
 	}>
 	c : typeof c
 	p : typeof p & { log: typeof p.log & { debug: ( title: string, msg: string ) => void } }
 }
 
-export type CliParams = { argv: Argv }
+
 export type LineParams = {
-	argv     : Argv
 	onCancel : () => Promise<void>
 	onError  : ( error: unknown ) => Promise<void>
 }
+export type EnvAIOptions = CoreParams['options']

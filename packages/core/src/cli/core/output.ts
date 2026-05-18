@@ -3,9 +3,7 @@ import { CoreSuper } from './super'
 
 export type OutputType = {
 	path? : string
-
 	overwrite? : 'always' | 'last'
-
 	single : boolean
 }
 

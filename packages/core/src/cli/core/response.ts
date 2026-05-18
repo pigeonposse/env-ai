@@ -7,11 +7,8 @@ type ChatDocs = Parameters<Chat>[0]['docs']
 
 type ChatParams = {
 	system : string
-
 	model : string
-
 	docs : ChatDocs
-
 	output : OutputType
 }
 
@@ -32,7 +29,7 @@ export class CoreResponse extends CoreSuper {
 		const title     = chatName + ':'
 		const lastLine  = ( ) => ( console.log( '\n\n\n' ), this._p.intro( line ) )
 		const firstLine = () => ( this._p.outro( line ), console.log( '\n' ) )
-		const spin      = this._p.spinnerCustom()
+		const spin      = this._p.spinner()
 		let output      = '',
 			exitResponse = false
 
@@ -60,8 +57,8 @@ export class CoreResponse extends CoreSuper {
 				}
 				else {
 
-					this._process.stdout.write( part.message.content.toString() )
-					output += part.message.content
+					this._process.stdout.write( part )
+					output += part
 
 				}
 
@@ -93,31 +90,15 @@ export class CoreResponse extends CoreSuper {
 			const spinMsg = 'Generating chat'
 			spin.message( spinMsg )
 
-			const capturedMessages: string[] = []
-
-			this.#chat = await this._process.onOutputWrite( {
-				fn : async ( ) => await this._ai.chatVectored( {
+			this.#chat = await this._ai.chatVectored( {
 					system,
 					model,
 					docs,
-				} ),
-				on : async value => {
-
-					if ( !value.includes( spinMsg ) && !value.includes( '\x1B[999D' ) && !value.includes( '\x1B[J' ) )
-						capturedMessages.push( value )
-					else return value
-
-				},
 			} )
 
 			spin.stop( 'Chat successfully generated! ✨' )
-			// console.log( {
-			// 	trim : capturedMessages.join( '\n' ).trim(),
-			// 	capturedMessages,
-			// } )
-			if ( capturedMessages.length || capturedMessages.join( '\n' ).trim() !== '' )
-				this._p.note( capturedMessages.join( '\n' ), 'Notifications' )
-			else this._p.log.message( this.#line )
+
+			this._p.log.message( this.#line )
 
 		}
 		catch ( e ) {

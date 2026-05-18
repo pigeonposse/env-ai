@@ -1,172 +1,136 @@
 /* eslint-disable camelcase */
-import {
-	OllamaEmbedding,
-	Ollama,
-} from '@llamaindex/ollama'
-import { JSONReader } from '@llamaindex/readers/json'
-import {
-	Document,
-	Settings,
-	VectorStoreIndex,
-	ContextChatEngine,
-} from 'llamaindex'
+import { ollama } from 'ollama-ai-provider-v2';
+import { streamText } from 'ai'
+import { MemoryVectorStore } from '@langchain/classic/vectorstores/memory'
+import { OllamaEmbeddings } from '@langchain/ollama'
+import { Document } from '@langchain/core/documents'
 
 import { getStringType } from '../_shared/string'
 import Sys               from '../_shared/sys'
 
 type AiVectoredDOC = {
-	content : string
-	path    : string
+    content : string
+    path    : string
 }
 
 export default class AiVectored {
 
-	#embedModel
-	#llm
-	#sys
-	#systemPrompt
+    #modelName : string
+    #systemPrompt : string
+    #sys : Sys
+    
+    #vectorStore : MemoryVectorStore | undefined 
+    #embeddingsManager : OllamaEmbeddings
 
-	#chatEngine : ContextChatEngine | undefined
+    constructor( args:{
+        model : string
+        system : string
+    } ) {
 
-	constructor( args:{
-		model : string
+        this.#modelName    = args.model
+        this.#systemPrompt = args.system
+        this.#sys          = new Sys()
+        
+        // Creador de embeddings compatible con Ollama y portable
+        this.#embeddingsManager = new OllamaEmbeddings( {
+            model: 'nomic-embed-text',
+        } )
 
-		system : string
-	} ) {
+    }
 
-		this.#embedModel   = new OllamaEmbedding( { model: 'nomic-embed-text' } )
-		this.#sys          = new Sys()
-		this.#systemPrompt = args.system
-		this.#llm          = new Ollama( {
-			model   : args.model,
-			options : { temperature: 0.50 },
-		} )
+    async #createContentFromJSONContent( contentJson: string ) {
+        // Al usar LangChain, JSONReader ya no es estrictamente necesario ya que procesamos 
+        // el texto directamente, pero mantenemos una estructura limpia para no romper tu flujo.
+        try {
+            const parsed = JSON.parse( contentJson )
+            return typeof parsed === 'object' && parsed !== null ? contentJson : contentJson
+        } catch {
+            return contentJson
+        }
+    }
 
-		this.#chatEngine = undefined
+    async generateChat( lcDocs: AiVectoredDOC[] ) {
 
-		Settings.embedModel   = this.#embedModel
-		Settings.llm          = this.#llm
-		Settings.chunkSize    = 300
-		Settings.chunkOverlap = 20
+        if ( lcDocs.length === 0 ) {
+            lcDocs.push( {
+                content : 'There are no documents loaded. Starting chat without documentation.',
+                path    : 'default_doc',
+            } )
+        }
 
-	}
+        const isJSON = ( str: string ) => {
+            try {
+                const parsed = JSON.parse( str )
+                return typeof parsed === 'object' && parsed !== null
+            }
+            catch {
+                return false
+            }
+        }
 
-	async #createContentFromJSONContent( contentJson: string ) {
+        const docsPromise = lcDocs.map( async lcDoc => {
 
-		const content = new TextEncoder().encode( contentJson )
+            const is_url = getStringType( lcDoc.path ) === 'url'
+            const isJSONUrl       = is_url && isJSON( lcDoc.content )
+            const is_JSON_content = lcDoc.path.endsWith( '.json' ) || isJSONUrl
 
-		const reader = new JSONReader( { levelsBack: 0 } )
-		const res    = await reader.loadDataAsContent( content )
-		return res
+            const metadata = {
+                is_url,
+                is_JSON_content,
+                is_local_path : !is_url,
+                file_path     : is_url ? lcDoc.path : this.#sys.path.resolve( lcDoc.path ),
+                file_name     : is_url ? lcDoc.path : this.#sys.path.basename( lcDoc.path ),
+            }
 
-	}
+            let textContent = lcDoc.content
+            if ( is_JSON_content ) {
+                textContent = await this.#createContentFromJSONContent( lcDoc.content )
+            }
 
-	async generateChat( lcDocs: AiVectoredDOC[] ) {
+            return new Document( {
+                pageContent : textContent,
+                metadata,
+            } )
 
-		if ( lcDocs.length == 0 ) {
+        } )
 
-			const defaultDoc = new Document( {
-				id_      : 'default_doc',
-				text     : 'There are no documents loaded.Starting chat without documentation.',
-				metadata : {
-					file_path : 'default',
-					file_name : 'default',
-				},
-			} )
+        const docs = await Promise.all( docsPromise )
 
-			lcDocs.push( {
-				content : defaultDoc.text,
-				path    : defaultDoc.id_,
-			} )
+        // Generamos el almacén vectorial en memoria usando LangChain
+        this.#vectorStore = await MemoryVectorStore.fromDocuments( 
+            docs, 
+            this.#embeddingsManager 
+        )
 
-		}
-		const isJSON = ( str: string ) => {
+    }
 
-			try {
+    async chat( query: string ) {
 
-				const parsed = JSON.parse( str )
-				return typeof parsed === 'object' && parsed !== null
+        if ( !this.#vectorStore ) return
 
-			}
-			catch {
+        // Búsqueda de similitud (RAG) para inyectar contexto relevante
+        const similarityResults = await this.#vectorStore.similaritySearch( query, 3 )
+        
+        const context = similarityResults
+            .map( doc => `[Source: ${doc.metadata.file_name}]: ${doc.pageContent}` )
+            .join( '\n\n' )
 
-				return false
+        // Streaming nativo de Vercel AI SDK
+        const result = streamText( {
+            model    : ollama( this.#modelName ),
+            system   : `${this.#systemPrompt}\n\nUse the following pieces of context to answer the question:\n${context}`,
+            prompt   : query,
+            temperature: 0.50,
+        } )
 
-			}
+        return result.textStream
 
-		}
+    }
 
-		const docsPromise = lcDocs.map( async lcDoc => {
+    async resetChatEngine() {
 
-			const is_url = getStringType( lcDoc.path ) === 'url'
+        this.#vectorStore = undefined
 
-			const isJSONUrl       = is_url && isJSON( lcDoc.content )
-			const is_JSON_content = lcDoc.path.endsWith( '.json' ) || isJSONUrl
-
-			const sharedProps = {
-				id_      : lcDoc.path,
-				metadata : {
-					is_url,
-					is_JSON_content,
-					is_local_path : !is_url,
-					file_path     : is_url ? lcDoc.path : this.#sys.path.resolve( lcDoc.path ),
-					file_name     : is_url ? lcDoc.path : this.#sys.path.basename( lcDoc.path ),
-				},
-			}
-
-			if ( is_JSON_content ) {
-
-				const data = await this.#createContentFromJSONContent( lcDoc.content )
-				const res  = {
-					...data[0],
-					...sharedProps,
-				}
-
-				return new Document( res )
-
-			}
-
-			return new Document( {
-				...{
-					text : lcDoc.content,
-					id_  : lcDoc.path,
-				},
-				...sharedProps,
-			} )
-
-		} )
-
-		const docs = await Promise.all( docsPromise )
-
-		const index     = await VectorStoreIndex.fromDocuments( docs )
-		const retriever = index.asRetriever( { similarityTopK: 3 } )
-		if ( this.#chatEngine ) this.#chatEngine.reset()
-
-		this.#chatEngine = new ContextChatEngine( {
-			retriever,
-			chatModel    : this.#llm,
-			systemPrompt : this.#systemPrompt,
-		} )
-
-	}
-
-	async chat( query: string ) {
-
-		if ( !this.#chatEngine ) return
-
-		const response = await this.#chatEngine.chat( {
-			message : query,
-			stream  : true,
-		} )
-		//const nodesText = queryResult.sourceNodes?.map( node => node.getContent( MetadataMode.LLM ) )
-		return response
-
-	}
-
-	async resetChatEngine() {
-
-		if ( this.#chatEngine ) this.#chatEngine.reset()
-
-	}
+    }
 
 }

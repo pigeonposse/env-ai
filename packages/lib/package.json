@@ -1,0 +1,87 @@
+{
+	"name": "env-ai",
+	"version": "0.5.0",
+	"description": "AI Assistant for Your Local Environment",
+	"keywords": [
+		"ai",
+		"artificial-intelligence",
+		"bun",
+		"deno",
+		"dev",
+		"docs",
+		"documentation",
+		"env",
+		"enviroment",
+		"node",
+		"ollama",
+		"pigeonposse",
+		"pp"
+	],
+	"homepage": "https://github.com/pigeonposse/env-ai",
+	"bugs": {
+		"url": "https://github.com/pigeonposse/env-ai/issues",
+		"email": "dev@pigeonposse.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pigeonposse/env-ai.git",
+		"directory": "packages/core"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://pigeonposse.com/contribute"
+	},
+	"license": "GPL-3.0",
+	"author": {
+		"name": "Angelo",
+		"email": "angelo@pigeonposse.com",
+		"url": "https://github.com/angelespejo"
+	},
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			}
+		}
+	},
+	"main": "dist/index.mjs",
+	"module": "./dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"bin": {
+		"env-ai": "dist/bin.mjs"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "node --run build:lib && node --run build:bin",
+		"build:bin": "pnpx binarium bun -i src/binarium.ts -n env-ai",
+		"build:lib": "pnpx unbuild",
+		"dev": "bun src/bin.ts",
+		"dev:bun": "bun src/bin.ts",
+		"dev:deno": "deno run -A --unstable-sloppy-imports src/bin.ts $@",
+		"example-cli": "bun examples/cli.ts",
+		"example-lib": "bun examples/lib.ts",
+		"lint:pub": "publint",
+		"preview": "node dist/bin.mjs",
+		"preview:bun": "bun dist/bin.mjs",
+		"preview:deno": "deno run -A --unstable-fs dist/bin.mjs",
+		"test": "node --run test:lib && node --run test:bin",
+		"test-watch:lib": "vitest src",
+		"test:bin": "vitest run tests",
+		"test:lib": "vitest run src --passWithNoTests"
+	},
+	"dependencies": {
+		"@clippium/preset-colored": "~1.0.3",
+		"@clippium/preset-default": "~1.0.3",
+		"@clippium/updater": "~1.0.3",
+		"@env-ai/core": "workspace:*",
+		"clippium": "~1.0.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
+}

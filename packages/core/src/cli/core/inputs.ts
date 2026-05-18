@@ -44,7 +44,7 @@ export class CoreInputs extends CoreSuper {
 
 				if ( error ) {
 
-					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ), 1 )
+					load.stop( 'Error reading url: ' + this._c.gray( input.toString() ) )
 					throw error
 
 				}

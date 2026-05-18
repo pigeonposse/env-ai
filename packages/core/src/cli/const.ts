@@ -1,15 +1,19 @@
 import {
-	name,
 	version,
 	bugs,
 	description,
 } from '../../package.json'
 
+import {
+	extra,
+
+} from '../../../../package.json'
+
 export { version }
 export const projectDesc = description
 export const bugsUrl = bugs.url
-export const projectName = name
-
+export const projectName = extra.id
+export const documentationUrl = extra.docsURL
 export const overwrite = {
 	always : 'always',
 	ask    : 'ask',

@@ -40,7 +40,7 @@ export class CoreModel extends CoreSuper {
 		}
 		catch ( e ) {
 
-			spin.stop( msg( 'Error installing model' ), 1 )
+			spin.stop( msg( 'Error installing model' ) )
 			// this._errorRes( `Error installing model ${embedModelName}`, this._setErrorMessage( e ) )
 			throw new Error( `Error installing [${modelName}] model: ${this._setErrorMessage( e )}` )
 

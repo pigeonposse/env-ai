@@ -56,8 +56,8 @@
 		"svelte",
 		"vue"
 	],
-	"javascript.updateImportsOnFileMove.enabled": "always",
-	"typescript.tsdk": "node_modules/typescript/lib",
+	"js/ts.updateImportsOnFileMove.enabled": "always",
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
 	/**
 	******************************************************************************
 	* MARKDOWN settings

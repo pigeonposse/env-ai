@@ -11,7 +11,8 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  NPM_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+  NPM_TOKEN: ${{ secrets.NPM_ENVAI_ACCESS_TOKEN }}
+
 permissions:
   contents: write # to create release (changesets/action)
   pull-requests: write # to create pull request (changesets/action)
@@ -46,9 +47,9 @@ jobs:
         with:
           run_install: false
       - name: 🟢 Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24.15.0
           cache: 'pnpm'
       - name: 🟢 Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -93,8 +94,8 @@ jobs:
         uses: changesets/action@v1
         with:
           title: "chore(release): version packages 🦋"
-          version: pnpm . pkg version --silent
-          publish: pnpm . pkg publish --silent
+          version: pnpm - pkg version --silent
+          publish: pnpm - pkg publish --silent
           commit: "chore(release): version packages 🦋 [skip ci]"
           createGithubReleases: true
         env:
@@ -135,7 +136,7 @@ jobs:
         id: check_package_json
       - name: ℹ️🐙😺➡️ Update repo info
         if: steps.check_package_json.outputs.stdout != 'No changes in package.json'
-        run: pnpm . gh info update
+        run: pnpm - gh info update
         continue-on-error: true
 
 ###############################################################################

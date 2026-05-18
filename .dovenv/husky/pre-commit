@@ -11,4 +11,4 @@ echo '🚀 Precommit'
 echo
 node --run lint:pkg
 echo
-node --run . -- lint staged --silent
+pnpm - lint staged --silent

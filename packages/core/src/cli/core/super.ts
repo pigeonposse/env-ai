@@ -8,7 +8,7 @@ import * as process   from '../../_shared/process'
 import * as string    from '../../_shared/string'
 import Sys            from '../../_shared/sys'
 import * as consts    from '../const'
-import { argvSchema } from '../schema'
+import { paramsSchema } from '../schema'
 import { CoreParams } from '../types'
 
 // se tiene que definir aqui para que acepte instaceof luego
@@ -17,11 +17,8 @@ const ErroClass = class CoreError extends TypedError {}
 export class CoreSuper {
 
 	protected _c : CoreParams['c']
-
 	protected _p : CoreParams['p']
-
-	protected _argv : CoreParams['argv']
-
+	protected _argv : CoreParams['options']
 	protected _sys = new Sys()
 	protected _ai = new Ai()
 	protected _string = string
@@ -38,16 +35,16 @@ export class CoreSuper {
 
 	title = 'core'
 	description : string | undefined
-	argvSceham = argvSchema
+	paramsSchema = paramsSchema
 
 	constructor( {
-		argv, c, p,
+		options, c, p,
 	}: CoreParams ) {
 
 		this._c = c
 		this._p = p
 
-		this._argv = argv
+		this._argv = options
 
 	}
 

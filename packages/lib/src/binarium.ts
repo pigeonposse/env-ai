@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { cli } from './cli-super'
+import { CLI } from './cli-super'
 
 const run = async ( ) => {
 
-    const app = await cli()
+    const app = new CLI()
     await app.run()
 
 }

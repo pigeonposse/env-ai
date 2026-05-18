@@ -3,6 +3,7 @@
 		"target": "ES2022",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
+		"types": ["node"],
 		/**
 		 * Options.
 		 */
@@ -34,6 +35,7 @@
 		"allowSyntheticDefaultImports": true,
 		"outDir": "./dist"
 	},
+	"include": ["./package.json", "../../package.json"],
 	/**Important for vscode*/
 	"exclude": [
 		"./build",

@@ -1,5 +1,5 @@
 {
-	"name": "env-ai-monorepo",
+	"name": "@env-ai/monorepo",
 	"private": true,
 	"description": "AI Assistant for Your Local Environment",
 	"keywords": [
@@ -38,7 +38,7 @@
 	],
 	"scripts": {
 		"+": "pnpm -F",
-		".": "dovenv",
+		"-": "dovenv",
 		"build": "pnpm --parallel build",
 		"core": "pnpm --filter env-ai $@",
 		"lint:commit": "dovenv lint commitlint --silent",
@@ -47,36 +47,42 @@
 		"lint:staged": "dovenv lint staged --silent",
 		"prepare": "dovenv git husky --silent",
 		"test": "pnpm run --sequential \"/test:.*/\"",
-		"test:check": "pnpm --parallel check",
 		"test:check-ws": "dovenv check --silent",
 		"test:pkg": "pnpm --parallel test",
 		"test:transform-ws": "dovenv transform --silent"
 	},
 	"devDependencies": {
-		"@changesets/changelog-github": "0.5.1",
-		"@dovenv/core": "1.6.1",
-		"@dovenv/theme-pigeonposse": "1.6.1",
-		"@types/node": "24.3.0",
-		"eslint": "9.33.0",
-		"typescript": "5.9.2",
-		"vitest": "3.2.4"
+		"@changesets/changelog-github": "0.7.0",
+		"@dovenv/core": "~1.6.1",
+		"@dovenv/theme-pigeonposse": "~1.6.1",
+		"@types/node": "25.9.0",
+		"eslint": "9.39.4",
+		"tsup": "8.5.1",
+		"typescript": "5.9.3",
+		"vite": "8.0.13",
+		"vitest": "4.1.6"
 	},
-	"packageManager": "pnpm@10.14.0",
+	"packageManager": "pnpm@11.1.3",
 	"engines": {
-		"node": ">=20.0.0",
-		"pnpm": ">=8.10.0"
+		"node": "24",
+		"pnpm": ">=11.1.0",
+		"runtime": {
+			"name": "node",
+			"version": "^24.15.0",
+			"onFail": "download"
+		}
 	},
 	"extra": {
 		"id": "env-ai",
 		"productName": "ENV AI",
-		"libraryURL": "https://www.npmjs.com/package/env-ai",
+		"libraryURL": "https://www.npmjs.com/package/guide/env-ai",
 		"licenseURL": "https://github.com/pigeonposse/env-ai/blob/main/LICENSE",
 		"changelogURL": "https://github.com/pigeonposse/env-ai/blob/main/packages/core/CHANGELOG.md",
 		"contributingURL": "https://github.com/pigeonposse/.github/blob/main/CONTRIBUTING.md",
 		"libraryID": "env-ai",
 		"repoID": "env-ai",
 		"rawRepoURL": "https://raw.githubusercontent.com/pigeonposse/env-ai",
-		"docsURL": "https://ai.pigeonposse.com/env-ai",
+		"docsURL": "https://ai.pigeonposse.com/guide/env-ai",
 		"type": [
 			"library",
 			"ai",
@@ -103,5 +109,6 @@
 				"medium": "https://medium.com/@pigeonposse"
 			}
 		}
-	}
+	},
+	"dependencies": {}
 }

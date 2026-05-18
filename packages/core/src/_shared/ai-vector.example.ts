@@ -5,7 +5,7 @@ import Sys        from '../_shared/sys'
 
 const sys = new Sys()
 const ai  = new AiVectored( {
-	model  : 'llama3.2:latest',
+	model  : 'qwen3.5:0.8b',
 	system : 'You are a helpful and knowledgeable programming assistant. Include relevant bits of context from files when you respond to enrich your answers. If the user mentions your project or a file in the context, respond briefly and accurately as needed and try to provide the paths (file_path) to the files to reference.',
 } )
 
@@ -105,7 +105,7 @@ async function startChatLoop() {
 		process.stdout.write( '\n\n' )
 		for await ( const part of response ) {
 
-			process.stdout.write( part.message.content.toString() )
+			process.stdout.write( part )
 
 		}
 		process.stdout.write( '\n\n' )

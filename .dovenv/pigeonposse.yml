@@ -6,9 +6,9 @@ web:
     name: ENV AI
     desc: AI Assistant for Your Local Environment
     homepage: https://github.com/pigeonposse/env-ai
-    library: https://www.npmjs.com/package/env-ai
+    library: https://www.npmjs.com/package/guide/env-ai
     changelog: https://github.com/pigeonposse/env-ai/blob/main/packages/core/CHANGELOG.md
-    docs: https://ai.pigeonposse.com/env-ai
+    docs: https://ai.pigeonposse.com/guide/env-ai
     type:
       - library
       - ai

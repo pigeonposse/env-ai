@@ -12,7 +12,7 @@ export const blue = ( v: string ) => styleText( 'cyan', v )
 export const underline = ( v: string ) => styleText( 'underline', v )
 export const grayBright = ( v: string ) => styleText( 'gray', v )
 export const black = ( v: string ) => styleText( 'black', v )
-
+export const inverse = ( v: string ) => styleText( 'inverse', v )
 export const gray = ( v:string ) => styleText( 'gray', ( dim( v ) ) )
 export const blackBold = ( v:string ) => black( bold( v ) )
 export const introColor = ( v:string ) => styleText( 'bgCyan', blackBold( ` ${v} ` ) )
