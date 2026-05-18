@@ -12,8 +12,8 @@ const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 if (isCI) {
     console.log("⚠️ Entorno CI detectado. Saltando la ejecución de los tests.");
 }
-if(isCI) {
-describe( 'CLI Tests', () => {
+
+describe.skipIf(isCI)( 'CLI Tests', () => {
 	
 	const execAsync = promisify( exec )
 	const filePath ='tests/run.js'
@@ -48,4 +48,3 @@ describe( 'CLI Tests', () => {
 	} )
 
 } )
-}
