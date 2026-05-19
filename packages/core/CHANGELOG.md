@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.5.1
+
+### Patch Changes
+
+- add binaries in release
+
 ## 0.5.0
 
 ### Minor Changes
