@@ -25,7 +25,7 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/pigeonposse/env-ai.git",
-		"directory": "packages/core"
+		"directory": "packages/lib"
 	},
 	"funding": {
 		"type": "individual",
@@ -69,9 +69,9 @@
 		"preview:bun": "bun dist/bin.mjs",
 		"preview:deno": "deno run -A --unstable-fs dist/bin.mjs",
 		"test": "node --run test:lib && node --run test:bin",
-		"test-watch:lib": "vitest src",
 		"test:bin": "vitest run tests",
-		"test:lib": "vitest run src --passWithNoTests"
+		"test:lib": "vitest run src --passWithNoTests",
+		"test-watch:lib": "vitest src"
 	},
 	"dependencies": {
 		"@clippium/preset-colored": "~1.0.3",
