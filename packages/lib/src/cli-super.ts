@@ -109,20 +109,35 @@ Documentation  ${styleTxt(this.envai.data.documentationUrl)}`.trim()
 	 * **IMPORTANT:** not use if you want build a binary of the cli
 	 */
 	async updater( )  {
+		
 		const { Updater } = await import('@clippium/updater')
 
+		const {dim,bold, blue, italic, green} = this.envai.color
+		const name = this.envai.data.projectName
+		const version = this.envai.data.version
+		const installCommands: Record<string, string> = {
+			npm: 'i',
+			pnpm: 'add',
+			yarn: 'add',
+			bun: 'add',
+			deno: 'add',
+		} 
+
 		const _updater = new Updater( {
-			version: this.envai.data.version,
-			name: this.envai.data.projectName,
+			version,
+			name,
 		} )
 
 		const data = await _updater.get()
 		if ( !data ) return
-		const {dim,bold, blue, italic, green} = this.envai.color
+
+		const cmd = installCommands[data.packageManager] || 'i'
+
+		
 		console.log( `
 			
-	║ 📦 ${bold( 'Update available' )} ${dim( data.currentVersion )} → ${green( data.latestVersion )} ${italic( `(${data.type})` )}
-	║ Run ${blue( data.packageManager + ' i ' + name )} to update
+║ 📦 ${bold( 'Update available' )} ${dim( data.currentVersion )} → ${green( data.latestVersion )} ${italic( `(${data.type})` )}
+║ Run ${blue( data.packageManager + ` ${cmd} ` + data.packageName )} to update
 			
 	` )
 
