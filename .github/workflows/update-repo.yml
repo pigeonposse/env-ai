@@ -5,7 +5,7 @@
 name: 🚀ℹ️ Update repo info
 
 on: 
-  workflow_dispatch
+  workflow_dispatch:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 env:
   GITHUB_TOKEN: ${{ github.token }}
