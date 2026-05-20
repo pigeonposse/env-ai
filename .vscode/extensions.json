@@ -6,5 +6,6 @@
 		"christian-kohler.npm-intellisense",
 		"redhat.vscode-yaml",
 		"github.vscode-github-actions",
+		"tamasfe.even-better-toml",
 	]
 }

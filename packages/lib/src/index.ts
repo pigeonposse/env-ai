@@ -1,2 +1,2 @@
-export * from "@env-ai/core"
+export * from '@env-ai/core'
 

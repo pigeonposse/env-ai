@@ -4,7 +4,8 @@ import { CoreSuper } from './super'
 type ThemeTypes = Exclude<CoreSuper['_argv']['theme'], undefined>
 
 const prompts: Record<Exclude<ThemeTypes, 'custom'>, { system: string }> = {
-	[theme.docs] : { system : `You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
+	[theme.docs] : {
+		system : `You are a helpful assistant explaining how to use the provided code library and provide detailed documentation.
 Generate a complete and user-oriented README in Markdown format for the provided code library. 
 Assume the documentation will be viewed by end-users who seek a clear understanding of how to install, configure, and use the library effectively. 
 If a package.json file is provided, extract relevant information such as project name, description, installation steps, available binaries, author(s), contributor(s), license, exports, and dependencies, integrating these details seamlessly into the documentation. 
@@ -65,8 +66,10 @@ Detail the license information as specified in package.json.
 ---
 
 The output should be written in strict Markdown format and provide a comprehensive, user-friendly guide.
-    ` },
-	[theme.fix] : { system : `You are a helpful assistant explaining how to identify and fix issues in the provided code library.
+    `,
+	},
+	[theme.fix] : {
+		system : `You are a helpful assistant explaining how to identify and fix issues in the provided code library.
 Analyze the provided code library and generate a detailed report in Markdown format on common issues and their solutions. 
 If a package.json file is provided, extract relevant information such as project name, description, and installation steps, integrating these details seamlessly into the report. 
 Include examples and details for each aspect of the library, aiming to cover both simple and complex issues.
@@ -99,9 +102,11 @@ Detail the license information as specified in package.json.
 
 ---
 
-The output should be written in strict Markdown format and provide a comprehensive guide to troubleshooting the library.` },
+The output should be written in strict Markdown format and provide a comprehensive guide to troubleshooting the library.`,
+	},
 	[theme.performance] : { system: `You are a helpful assistant explaining how to optimize the performance of the provided code library.` },
-	[theme.refactor]    : { system : `You are a helpful assistant explaining how to refactor code for the provided code library.
+	[theme.refactor]    : {
+		system : `You are a helpful assistant explaining how to refactor code for the provided code library.
 Generate a detailed guide in Markdown format on how to refactor the provided code library. 
     Include best practices and principles for writing clean, maintainable code. 
     
@@ -137,8 +142,10 @@ Generate a detailed guide in Markdown format on how to refactor the provided cod
     
     ---
     
-    The output should be written in strict Markdown format and provide a comprehensive guide to code refactoring.` },
-	[theme.explain] : { system : `You are a helpful assistant providing explanations for the provided code library.
+    The output should be written in strict Markdown format and provide a comprehensive guide to code refactoring.`,
+	},
+	[theme.explain] : {
+		system : `You are a helpful assistant providing explanations for the provided code library.
 Create a detailed explanation in Markdown format for the provided code library, focusing on its design, structure, and functionality. 
     Include examples to illustrate key concepts and usage.
     
@@ -174,8 +181,10 @@ Create a detailed explanation in Markdown format for the provided code library, 
     
     ---
     
-    The output should be written in strict Markdown format and provide a comprehensive guide to understanding the library.` },
-	[theme.test] : { system : `You are a helpful assistant guiding users on testing the provided code library.
+    The output should be written in strict Markdown format and provide a comprehensive guide to understanding the library.`,
+	},
+	[theme.test] : {
+		system : `You are a helpful assistant guiding users on testing the provided code library.
     Develop a detailed guide in Markdown format on testing the provided code library. 
     Assume the audience consists of developers who want to ensure their code is well-tested.
     
@@ -211,7 +220,8 @@ Create a detailed explanation in Markdown format for the provided code library, 
     
     ---
     
-    The output should be written in strict Markdown format and provide a comprehensive guide to testing the library.` },
+    The output should be written in strict Markdown format and provide a comprehensive guide to testing the library.`,
+	},
 }
 
 export default prompts

@@ -4,20 +4,20 @@ import {
 	TypedError,
 	catchError,
 } from '../../_shared/error'
-import * as process   from '../../_shared/process'
-import * as string    from '../../_shared/string'
-import Sys            from '../../_shared/sys'
-import * as consts    from '../const'
+import * as process     from '../../_shared/process'
+import * as string      from '../../_shared/string'
+import Sys              from '../../_shared/sys'
+import * as consts      from '../const'
 import { paramsSchema } from '../schema'
-import { CoreParams } from '../types'
+import { CoreParams }   from '../types'
 
 // se tiene que definir aqui para que acepte instaceof luego
 const ErroClass = class CoreError extends TypedError {}
 
 export class CoreSuper {
 
-	protected _c : CoreParams['c']
-	protected _p : CoreParams['p']
+	protected _c    : CoreParams['c']
+	protected _p    : CoreParams['p']
 	protected _argv : CoreParams['options']
 	protected _sys = new Sys()
 	protected _ai = new Ai()

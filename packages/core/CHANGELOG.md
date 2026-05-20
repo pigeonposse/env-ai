@@ -1,5 +1,11 @@
 # env-ai
 
+## 0.5.2
+
+### Patch Changes
+
+- add schema for config, fix issues...
+
 ## 0.5.1
 
 ### Patch Changes

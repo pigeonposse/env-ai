@@ -4,8 +4,8 @@ import { CLI } from './cli-super'
 
 const run = async ( ) => {
 
-    const app = new CLI()
-    await app.run()
+	const app = new CLI()
+	await app.run()
 
 }
 run()

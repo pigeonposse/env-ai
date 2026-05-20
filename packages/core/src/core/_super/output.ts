@@ -2,9 +2,9 @@
 import { CoreSuper } from './super'
 
 export type OutputType = {
-	path? : string
+	path?      : string
 	overwrite? : 'always' | 'last'
-	single : boolean
+	single     : boolean
 }
 
 export class CoreOutput extends CoreSuper {

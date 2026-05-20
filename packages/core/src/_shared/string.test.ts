@@ -64,15 +64,17 @@ describe( 'replacePlaceholders', () => {
 	it( 'should handle placeholders with different formats', async () => {
 
 		const content = 'Today is {{day(\'long\' )}} and tomorrow will be {{day( \'short\')}}.'
-		const params  = { day : async ( format: string ) => {
+		const params  = {
+			day : async ( format: string ) => {
 
-			const days = {
-				short : 'Tue',
-				long  : 'Tuesday',
-			}
-			return days[format as 'short' | 'long'] || 'Unknown'
+				const days = {
+					short : 'Tue',
+					long  : 'Tuesday',
+				}
+				return days[format as 'short' | 'long'] || 'Unknown'
 
-		} }
+			},
+		}
 
 		const result = await replacePlaceholders( content, params )
 		expect( result ).toBe( 'Today is Tuesday and tomorrow will be Tue.' )

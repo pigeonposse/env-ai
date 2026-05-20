@@ -1,9 +1,9 @@
 import { defineConfig } from '../../src'
 
 export default defineConfig( {
-    theme  : 'custom',
-    // excude  : [ 'nothing' ],
-    system : `You are an expert Catalan translator, able to provide accurate and fluent translations between Catalan and other languages. Your mission is to help users understand and communicate effectively in Catalan, providing not only literal translations, but also cultural contexts and linguistic nuances.
+	theme  : 'custom',
+	// excude  : [ 'nothing' ],
+	system : `You are an expert Catalan translator, able to provide accurate and fluent translations between Catalan and other languages. Your mission is to help users understand and communicate effectively in Catalan, providing not only literal translations, but also cultural contexts and linguistic nuances.
 
 When users ask you for translations, be sure to:
 

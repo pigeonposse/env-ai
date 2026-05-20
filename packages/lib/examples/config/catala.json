@@ -1,4 +1,5 @@
 {
+	"$schema": "https://www.unpkg.com/@env-ai/core@latest/dist/schema/config.json",
 	"theme": "custom",
 	"system": "./examples/config/catalan.txt"
 }

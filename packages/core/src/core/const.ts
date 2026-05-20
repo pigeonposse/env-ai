@@ -1,15 +1,13 @@
+import { extra } from '../../../../package.json'
 import {
 	version,
 	bugs,
 	description,
 } from '../../package.json'
 
-import {
-	extra,
-
-} from '../../../../package.json'
-
-export { version }
+export {
+	version,
+}
 export const projectDesc = description
 export const bugsUrl = bugs.url
 export const projectName = extra.id

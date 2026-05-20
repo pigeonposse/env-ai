@@ -7,8 +7,8 @@ type ChatDocs = Parameters<Chat>[0]['docs']
 
 type ChatParams = {
 	system : string
-	model : string
-	docs : ChatDocs
+	model  : string
+	docs   : ChatDocs
 	output : OutputType
 }
 
@@ -91,9 +91,9 @@ export class CoreResponse extends CoreSuper {
 			spin.message( spinMsg )
 
 			this.#chat = await this._ai.chatVectored( {
-					system,
-					model,
-					docs,
+				system,
+				model,
+				docs,
 			} )
 
 			spin.stop( 'Chat successfully generated! ✨' )
@@ -117,7 +117,8 @@ export class CoreResponse extends CoreSuper {
 	} | undefined = undefined ) {
 
 		const first = args?.first
-		let res     = ''
+		// eslint-disable-next-line no-useless-assignment
+		let res = ''
 		try {
 
 			const prompt = args?.prompt && first

@@ -1,7 +1,7 @@
 import { styleText } from 'node:util'
 
-export const dim  = ( v: string ) => styleText( 'dim', v )
-export const bold  = ( v: string ) => styleText( 'bold', v )
+export const dim = ( v: string ) => styleText( 'dim', v )
+export const bold = ( v: string ) => styleText( 'bold', v )
 export const white = ( v: string ) => styleText( 'white', v )
 export const green = ( v: string ) => styleText( 'green', v )
 export const italic = ( v: string ) => styleText( 'italic', v )

@@ -1,13 +1,11 @@
 
-import { EnvAI  } from './cli'
-import { EnvAIOptions } from './cli/types'
+import { EnvAI  } from './core/index'
+import { Config } from './core/types'
 
-export { EnvAI }
-
-/**
- * The configuration options for the CLI.
- */
-export type Config = EnvAIOptions
+export {
+	EnvAI,
+	type Config,
+}
 
 /**
  * Run envai with the given configuration.
@@ -25,7 +23,7 @@ export type Config = EnvAIOptions
  */
 export const run = async ( config: Config ) => {
 
-	const cli = new EnvAI( config)
+	const cli = new EnvAI( config )
 	return await cli.run( )
 
 }

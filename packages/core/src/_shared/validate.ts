@@ -1,12 +1,14 @@
 import {
 	z,
-	ZodType,
+	type ZodType,
 } from 'zod'
 
 export const validate = z
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ValidateSchema = ZodType<any, any, any>
+
+export type ValidateType<D> = ZodType<D>
 
 export type ValidateInfer<O extends ValidateSchema> = z.infer<O>
 

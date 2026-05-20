@@ -5,13 +5,18 @@ import {
 import {
 	createLiteralUnion,
 	validate,
+	type ValidateType,
 } from '../_shared/validate'
+
+import type { Config } from './types'
 
 const OverwriteTypes = createLiteralUnion( Object.values( overwrite ) )
 const ThemeTypes     = createLiteralUnion( Object.values( theme ) )
 
 export const paramsSchema = validate.object( {
-	output    : validate.string().optional(),
+	output : validate
+		.string()
+		.optional(),
 	input     : validate.array( validate.string() ).optional(),
 	overwrite : OverwriteTypes.optional(),
 	model     : validate.string().optional(),
@@ -21,5 +26,5 @@ export const paramsSchema = validate.object( {
 	single    : validate.boolean().optional(),
 	debug     : validate.boolean().optional(),
 	config    : validate.string().optional(),
-} )
+} ) satisfies ValidateType<Config>
 

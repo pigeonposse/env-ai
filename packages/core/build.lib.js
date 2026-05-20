@@ -31,7 +31,7 @@ const run = async opts => {
 		'-C',
 		'--transpile-only',
 	].join( ' ' )
-	
+
 	const tsupCommand = [
 		'tsup',
 		inputPath,
@@ -41,6 +41,7 @@ const run = async opts => {
 		'--format',
 		'esm',
 	].join( ' ' )
+
 	// console.log( {
 	// 	nccCommand,
 	// 	tsupCommand,
@@ -49,12 +50,13 @@ const run = async opts => {
 	await exec( nccCommand )
 	await exec( tsupCommand )
 
-	const targetFile = joinPath(outputPath, 'index.js')
-	
-    try {
-        let content = await readFile(targetFile, 'utf8')
-        
-        content = content.replace('from "module";', 'from "node:module";')
+	const targetFile = joinPath( outputPath, 'index.js' )
+
+	try {
+
+		let content = await readFile( targetFile, 'utf8' )
+
+		content = content.replace( 'from "module";', 'from "node:module";' )
 
 		const polyfills = [
 			'if (typeof global === "undefined") { globalThis.global = globalThis; }',
@@ -64,15 +66,20 @@ const run = async opts => {
 			'        return 0;',
 			'    };',
 			'    globalThis.clearImmediate = () => {};',
-			'}'
-		].join('\n') + '\n'
-        content = polyfills + content
+			'}',
+		].join( '\n' ) + '\n'
+		content         = polyfills + content
 
-        await writeFile(targetFile, content, 'utf8')
-        console.log('✅ Prefijo node:module restaurado para Deno.')
-    } catch (err) {
-        console.error('Error al parchear el build de ncc:', err)
-    }
+		await writeFile( targetFile, content, 'utf8' )
+		console.log( '✅ Prefijo node:module restaurado para Deno.' )
+
+	}
+	catch ( err ) {
+
+		console.error( 'Error al parchear el build de ncc:', err )
+
+	}
+
 }
 
 run()

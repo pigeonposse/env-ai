@@ -1,5 +1,14 @@
 # env-ai
 
+## 0.5.2
+
+### Patch Changes
+
+- add schema for config, fix issues...
+
+- Updated dependencies []:
+  - @env-ai/core@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes

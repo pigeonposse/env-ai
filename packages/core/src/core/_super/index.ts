@@ -9,17 +9,17 @@ import { CoreResponse } from './response'
 export const coreMessages = {}
 export class Core {
 
-	prompt : CorePrompt
-	model : CoreModel
-	config : CoreConfig
-	input : CoreInputs
+	prompt   : CorePrompt
+	model    : CoreModel
+	config   : CoreConfig
+	input    : CoreInputs
 	response : CoreResponse
-	output : CoreOutput
+	output   : CoreOutput
 
-	Error : CoreResponse['Error']
+	Error    : CoreResponse['Error']
 	ERROR_ID : CoreResponse['ERROR_ID']
 
-	exit : CoreResponse['exit']
+	exit   : CoreResponse['exit']
 	cancel : CoreResponse['cancel']
 
 	constructor( args: CoreParams ) {

@@ -1,7 +1,7 @@
-import { run } from "../dist/index.js";
+import { run } from '../dist/index.js'
 
-run({
-  input: ['./src/**', './package.json'],
-  theme: 'docs',
-  debug: true,
-})
+run( {
+	input : [ './src/**', './package.json' ],
+	theme : 'docs',
+	debug : true,
+} )

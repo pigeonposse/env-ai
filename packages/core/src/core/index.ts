@@ -1,20 +1,19 @@
 
-import * as consts from './const'
 import {
 	Core,
 	coreMessages,
-} from './core/main'
-import { setLine } from './line'
-import {
-	EnvAIOptions,
-} from './types'
+} from './_super/index'
+import * as consts        from './const'
+import { setLine }        from './line'
 import * as c             from '../_shared/color'
 import * as p             from '../_shared/prompt'
 import { setErrorString } from '../_shared/string'
 
-const projectName   = consts.projectName
+import type { Config as EnvAIOptions } from './types'
 
-export class EnvAI  {
+const projectName = consts.projectName
+
+export class EnvAI {
 
 	options
 	color = c
@@ -37,8 +36,8 @@ export class EnvAI  {
 
 	/**
 	 * Create a env-ai instance
-	 * @param options {EnvAIOptions} - Options for env-ai instance
-	 * 
+	 *
+	 * @param options - {EnvAIOptions} - Options for env-ai instance
 	 */
 	constructor( options?: EnvAIOptions ) {
 
@@ -71,44 +70,43 @@ export class EnvAI  {
 			p : prompts,
 		} )
 		const cancel   = () => ( core.cancel( this.message.cancel ) )
-		const { list } = await setLine( 
+		const { list } = await setLine(
 			{
 				options,
 				c,
 				p : prompts,
-			}, 
+			},
 			{
-			onCancel : async () => ( cancel() ),
-			onError  : async error => {
+				onCancel : async () => ( cancel() ),
+				onError  : async error => {
 
-				const e           = typeof error === 'string' ? error : setErrorString( error as Error )
-				const isCoreError = error instanceof core.Error
-				const errorMsg    = ( error instanceof Error ) ? error.message : typeof error === 'string' ? error : this.message.error.unexpected
-				
+					const e           = typeof error === 'string' ? error : setErrorString( error as Error )
+					const isCoreError = error instanceof core.Error
+					const errorMsg    = ( error instanceof Error ) ? error.message : typeof error === 'string' ? error : this.message.error.unexpected
 
-				const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v.toUpperCase() ) ), p.log.step( '' ), p.cancel( d ) )
+					const set = ( v:string, d: string ) => ( p.log.step( '' ), p.log.error( c.error( v.toUpperCase() ) ), p.log.step( '' ), p.cancel( d ) )
 
-				if ( isCoreError ) {
+					if ( isCoreError ) {
 
-					if ( error.message === core.ERROR_ID.CANCELLED ) cancel()
-					else set( this.message.error.general, errorMsg )
+						if ( error.message === core.ERROR_ID.CANCELLED ) cancel()
+						else set( this.message.error.general, errorMsg )
 
-				}
-				else if ( isDebug ) set( this.message.error.debug, e.trim() )
-				else
-					set(
-						this.message.error.general,
-						`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this.data.bugsUrl ) )}`,
-					)
+					}
+					else if ( isDebug ) set( this.message.error.debug, e.trim() )
+					else
+						set(
+							this.message.error.general,
+							`${errorMsg}\n\n   ${this.message.error.debugFlag( c.italic( '--debug' ) )}\n   ${this.message.error.debugContact( c.link( this.data.bugsUrl ) )}`,
+						)
 
-				// console.log( {
-				// 	isCoreError,
-				// 	isDebug,
-				// } )
-				core.exit( 'error' )
+					// console.log( {
+					// 	isCoreError,
+					// 	isDebug,
+					// } )
+					core.exit( 'error' )
 
 				},
-			} 
+			},
 		)
 
 		const UnexpectedError = new Error( this.message.error.unexpected )
@@ -138,7 +136,5 @@ export class EnvAI  {
 		} )
 
 	}
-
-
 
 }

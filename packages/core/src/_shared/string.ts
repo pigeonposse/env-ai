@@ -47,31 +47,13 @@ export const replacePlaceholders = async (
 
 		const value = params[key]
 
-		// Determine replacement value
-		let replacement = ''
-
-		if ( typeof value === 'function' ) {
-
-			replacement = await value( arg || '' )
-
-		}
-		else if ( value !== undefined ) {
-
-			replacement = value
-
-		}
-		else if ( customParams ) {
-
-			// Use customParams as a fallback if the key is not found in params
-			replacement = await customParams( key )
-
-		}
-		else {
-
-			// Keep the original placeholder if no replacement is possible
-			replacement = placeholder
-
-		}
+		const replacement = typeof value === 'function'
+			? await value( arg || '' )
+			: value !== undefined
+				? value
+				: customParams
+					? await customParams( key )
+					: placeholder
 
 		// Replace in the content
 		content = content.replace( placeholder, replacement )
@@ -127,7 +109,7 @@ export const getTextPlainFromURL = async ( url: string ): Promise<string> => {
 	catch ( error ) {
 
 		//@ts-ignore
-		throw new Error( `Failed to fetch URL [${url}]: ${error?.message || 'Unexpected error'}` )
+		throw new Error( `Failed to fetch URL [${url}]: ${error?.message || 'Unexpected error'}`, { cause: error } )
 
 	}
 

@@ -1,6 +1,6 @@
 {
 	"name": "@env-ai/core",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "AI Assistant for Your Local Environment",
 	"keywords": [
 		"ai",
@@ -53,7 +53,9 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "node build.lib.js",
+		"build": "pnpm build:lib && pnpm build:schema",
+		"build:lib": "node build.lib.js",
+		"build:schema": "pnpm dlx ts-json-schema-generator@latest -p ./src/core/types.ts -t Config --unstable -o ./dist/schema/config.json --tsconfig ./tsconfig.json --no-type-check",
 		"dev": "bun examples/index.ts",
 		"dev:bun": "bun examples/index.ts",
 		"dev:deno": "deno run -A --unstable-sloppy-imports examples/index.ts $@",
@@ -67,7 +69,7 @@
 		"@structium/toml": "~0.0.7",
 		"@structium/yaml": "~0.0.7",
 		"ai": "6.0.185",
-		"clippium": "~1.0.3",
+		"clippium": "~1.0.4",
 		"globby": "16.2.0",
 		"ollama": "0.6.3",
 		"ollama-ai-provider-v2": "3.5.1",

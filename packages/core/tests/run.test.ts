@@ -7,17 +7,19 @@ import {
 	expect,
 } from 'vitest'
 
-const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true'
 
-if (isCI) {
-    console.log("⚠️ Entorno CI detectado. Saltando la ejecución de los tests.");
+if ( isCI ) {
+
+	console.log( '⚠️ Entorno CI detectado. Saltando la ejecución de los tests.' )
+
 }
 
-describe.skipIf(isCI)( 'CLI Tests', () => {
-	
+describe.skipIf( isCI )( 'CLI Tests', () => {
+
 	const execAsync = promisify( exec )
-	const filePath ='tests/run.js'
-	const commands = [
+	const filePath  = 'tests/run.js'
+	const commands  = [
 		{
 			name    : 'Deno',
 			command : `deno eval "Object.defineProperty(process.stdin, 'isTTY', { value: false, writable: true }); process.stdin.setRawMode = () => {}; import('./${filePath}');" < /dev/null`,
